@@ -1,0 +1,2158 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Revisión de planes LH · Mercado Libre</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ── RESET ───────────────────────────────────────────────────────────── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --yellow:#FFE600; --blue:#3483FA; --blue-d:#2968C8; --blue-l:#EBF2FF;
+  --green:#00A650; --green-l:#E8F5E9;
+  --red:#F04040; --red-l:#FDECEA;
+  --orange:#FF7733; --orange-l:#FFF3E0;
+  --g50:#F5F5F5; --g100:#EBEBEB; --g200:#D4D4D4; --g300:#B0B0B0;
+  --g400:#888; --g500:#666; --g600:#444; --g700:#333; --g800:#1A1A1A;
+  --bg:#F5F5F5; --surface:#fff; --border:#E5E5E5;
+  --font:'DM Sans',system-ui,sans-serif; --mono:'DM Mono',monospace;
+  --nav-w:54px; --hdr-h:50px;
+  --action-right:20px;
+  /* Grid compartilhado entre header e linhas da tabela de veículos */
+  /* Última coluna: 278px para alinhar "Eliminar" com o ⋮ do header da rota */
+  --veh-grid: 48px 135px 145px 210px 102px 102px 86px 102px 102px 278px;
+}
+body{font-family:var(--font);background:var(--bg);color:var(--g800);font-size:14px;line-height:1.4;overflow-x:hidden}
+
+/* ── HEADER ──────────────────────────────────────────────────────────── */
+.hdr{position:fixed;top:0;left:0;right:0;height:var(--hdr-h);background:var(--yellow);
+  display:flex;align-items:center;padding:0 16px;gap:12px;z-index:100;
+  box-shadow:0 1px 3px rgba(0,0,0,.12)}
+.hdr-menu{font-size:18px;cursor:pointer;color:var(--g700);padding:6px;border-radius:4px;border:none;background:none}
+.hdr-menu:hover{background:rgba(0,0,0,.08)}
+.ml-logo{display:flex;align-items:center;gap:6px;text-decoration:none}
+.ml-logo-icon{width:32px;height:32px}
+.hdr-space{flex:1}
+.hdr-site{font-size:13px;color:var(--g700);display:flex;align-items:center;gap:4px}
+.hdr-site b{color:var(--g800);font-weight:600}
+.hdr-site-arr{font-size:11px;color:var(--g500)}
+.hdr-div{width:1px;height:22px;background:rgba(0,0,0,.15)}
+.hdr-user{display:flex;align-items:center;gap:6px;cursor:pointer;padding:4px 8px;border-radius:4px;transition:background .15s}
+.hdr-user:hover{background:rgba(0,0,0,.08)}
+.hdr-avatar{width:28px;height:28px;border-radius:50%;background:#4B5563;color:#fff;
+  display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600}
+.hdr-uname{font-size:13px;font-weight:500;color:var(--g700)}
+.hdr-chevron{font-size:10px;color:var(--g500)}
+.hdr-bell{width:36px;height:36px;border-radius:50%;border:none;background:none;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:18px;
+  color:var(--g600);transition:background .15s;position:relative}
+.hdr-bell:hover{background:rgba(0,0,0,.08)}
+
+/* ── LEFT NAV ────────────────────────────────────────────────────────── */
+.nav{position:fixed;top:var(--hdr-h);left:0;bottom:0;width:var(--nav-w);
+  background:#1A1A2E;display:flex;flex-direction:column;align-items:center;
+  padding:8px 0;z-index:90}
+.ni{width:38px;height:38px;border-radius:8px;display:flex;align-items:center;
+  justify-content:center;cursor:pointer;color:#9CA3AF;transition:all .15s;
+  margin-bottom:2px;position:relative}
+.ni:hover{background:rgba(255,255,255,.1);color:#E5E7EB}
+.ni.act{background:var(--blue);color:#fff}
+.ni svg{width:18px;height:18px}
+.ni-tip{display:none;position:absolute;left:46px;background:#374151;color:#fff;
+  font-size:11px;padding:4px 8px;border-radius:4px;white-space:nowrap;z-index:200;
+  box-shadow:0 2px 8px rgba(0,0,0,.2)}
+.ni:hover .ni-tip{display:block}
+.nav-bot{margin-top:auto}
+
+/* ── MAIN ────────────────────────────────────────────────────────────── */
+.main{margin-top:var(--hdr-h);margin-left:var(--nav-w);min-height:calc(100vh - var(--hdr-h))}
+.page{padding:24px 28px 100px;max-width:1400px}
+.page-title{font-size:22px;font-weight:700;color:var(--g800);margin-bottom:20px}
+
+/* ── FILTERS ─────────────────────────────────────────────────────────── */
+.filters{display:flex;flex-direction:column;gap:10px;margin-bottom:16px}
+.filter-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.filter-label{font-size:12px;color:var(--g500);font-weight:500;white-space:nowrap}
+.filter-select{display:flex;align-items:center;gap:6px;height:36px;padding:0 12px;
+  border:1px solid var(--border);border-radius:4px;background:var(--surface);
+  font-family:var(--font);font-size:13px;color:var(--g700);cursor:pointer;
+  transition:border-color .15s;white-space:nowrap;min-width:130px}
+.filter-select:hover{border-color:var(--blue)}
+.filter-select .chev{margin-left:auto;font-size:10px;color:var(--g400)}
+.filter-date{display:flex;align-items:center;gap:8px;height:36px;padding:0 12px;
+  border:1px solid var(--border);border-radius:4px;background:var(--surface);
+  font-family:var(--font);font-size:13px;color:var(--g700);cursor:pointer;white-space:nowrap}
+.filter-date .cal-icon{color:var(--g400)}
+.search-box{display:flex;align-items:center;gap:7px;height:36px;padding:0 12px;
+  border:1px solid var(--border);border-radius:4px;background:var(--surface);
+  min-width:220px}
+.search-box input{border:none;background:none;font-family:var(--font);font-size:13px;
+  color:var(--g800);outline:none;width:100%}
+.search-box input::placeholder{color:var(--g300)}
+.search-box:focus-within{border-color:var(--blue)}
+.filter-pill{display:flex;align-items:center;gap:4px;height:36px;padding:0 12px;
+  border:1px solid var(--border);border-radius:4px;background:var(--surface);
+  font-size:13px;color:var(--g700);cursor:pointer;transition:border-color .15s;white-space:nowrap}
+.filter-pill:hover{border-color:var(--blue)}
+.filter-pill .fp-val{color:var(--blue);font-weight:500}
+.filter-pill .fp-chev{font-size:10px;color:var(--g400);margin-left:2px}
+.filter-other{display:flex;align-items:center;gap:6px;height:36px;padding:0 12px;
+  border:1px solid var(--border);border-radius:4px;background:var(--surface);
+  font-size:13px;color:var(--g600);cursor:pointer;transition:border-color .15s}
+.filter-other:hover{border-color:var(--blue);color:var(--blue)}
+
+/* ── METRICS PANEL ───────────────────────────────────────────────────── */
+.metrics-panel{background:var(--surface);border:1px solid var(--border);border-radius:6px;margin-bottom:16px;overflow:hidden}
+.metrics-hdr{display:flex;align-items:center;justify-content:space-between;
+  padding:14px 20px;cursor:pointer;border-bottom:1px solid var(--border)}
+.metrics-hdr:hover{background:var(--g50)}
+.metrics-hdr-title{font-size:14px;font-weight:600;color:var(--g700)}
+.metrics-toggle{font-size:12px;color:var(--g400);transition:transform .2s}
+.metrics-toggle.open{transform:rotate(180deg)}
+.metrics-body{display:flex}
+.metric-col{flex:1;padding:16px 20px;border-right:1px solid var(--border);cursor:pointer;transition:background .15s}
+.metric-col:last-child{border-right:none}
+.metric-col:hover{background:var(--g50)}
+.metric-col.active{background:var(--blue-l);border-bottom:2px solid var(--blue)}
+.mc-title{font-size:12px;font-weight:600;color:var(--g500);text-transform:uppercase;
+  letter-spacing:.4px;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.mc-dot{width:8px;height:8px;border-radius:50%}
+.mc-dot-pending{background:var(--orange)}
+.mc-dot-reviewed{background:var(--green)}
+.mc-dot-sent{background:var(--blue)}
+.mc-row{display:flex;gap:20px;margin-bottom:6px}
+.mc-item{display:flex;flex-direction:column;gap:2px}
+.mc-item-label{font-size:11px;color:var(--g400)}
+.mc-item-val{font-size:20px;font-weight:700;color:var(--g800);font-family:var(--mono);line-height:1}
+.mc-item-sub{font-size:11px;color:var(--g500)}
+.mc-item-val span{font-size:13px;font-weight:400;color:var(--g400)}
+.mc-ftl{font-size:12px;color:var(--g500);display:flex;gap:12px;margin-top:4px}
+.mc-ftl b{font-weight:600;color:var(--g600)}
+
+/* .sel-bar replaced by .bulk-bar-wrapper */
+
+/* ── ROUTES TABLE ────────────────────────────────────────────────────── */
+.routes-table{width:100%;border-collapse:collapse}
+
+/* Route card wrapper */
+.route-card{background:var(--surface);border:1px solid var(--border);border-radius:6px;
+  margin-bottom:8px;overflow:hidden;transition:box-shadow .15s}
+.route-card:hover{box-shadow:0 2px 8px rgba(0,0,0,.07)}
+.route-card.selected{border-color:var(--blue);box-shadow:0 0 0 1px var(--blue)}
+
+/* ── ROUTE ROW — CSS Grid 5 grupos ──────────────────────────────────── */
+/* col: chk | exp | route-info | ftl-dfp | pallets(flex) | badge | actions */
+.route-row{
+  display:grid;
+  grid-template-columns: 48px 26px minmax(185px,230px) 105px 1fr 100px 44px;
+  align-items:center;min-height:62px;border-bottom:0;cursor:default}
+.route-row.has-vehicles{border-bottom:1px solid #E5E5E5}
+.rr-chk{display:flex;align-items:center;justify-content:center}
+.rr-expand{display:flex;align-items:center;justify-content:center}
+/* Chevron — azul, sem fundo, sem borda */
+.expand-btn{background:none;border:none;cursor:pointer;color:var(--blue);
+  font-size:11px;width:20px;height:20px;display:flex;align-items:center;
+  justify-content:center;padding:0;font-weight:800;transition:opacity .15s}
+.expand-btn:hover{opacity:.55}
+/* Grupo 1 — Route info */
+.rr-info{display:flex;flex-direction:column;justify-content:center;gap:3px;
+  padding:0 20px 0 0}
+.rr-route{font-size:14px;font-weight:700;color:var(--g800);white-space:nowrap;
+  overflow:hidden;text-overflow:ellipsis}
+.rr-cpt{font-size:11px;color:var(--g500);margin-top:1px;white-space:nowrap}
+/* Grupo 2 — FTL/DFP */
+.rr-modes{display:flex;align-items:center;font-size:13px;color:var(--g700);
+  font-weight:500;white-space:nowrap;padding:0 16px 0 0}
+/* Grupo 3 — Pallets agrupados em flex, gap:24px conforme referência */
+.rr-pallets{display:flex;align-items:center;gap:24px;padding:0 20px 0 0}
+.rr-cap,.rr-demand,.rr-lw{display:flex;flex-direction:column;justify-content:center;gap:1px}
+/* Grupo 4 — Badge */
+.rr-stat{display:flex;align-items:center;justify-content:center}
+/* Grupo 5 — Kebab */
+.rr-actions{display:flex;align-items:center;justify-content:flex-end;
+  padding-right:var(--action-right)}
+.col-label{font-size:10px;color:var(--g400);text-transform:uppercase;
+  letter-spacing:.3px;margin-bottom:1px;white-space:nowrap}
+.col-val{font-size:12px;font-weight:500;color:var(--g800)}
+.col-info{display:inline-flex;align-items:center;gap:3px}
+.info-icon{font-size:11px;color:var(--g300);cursor:default}
+
+/* Badges */
+.badge{display:inline-flex;align-items:center;font-size:11px;font-weight:700;
+  padding:3px 8px;border-radius:100px;white-space:nowrap}
+.badge-confiavel{background:var(--green-l);color:var(--green)}
+.badge-editada{background:var(--orange-l);color:var(--orange);font-size:10px;padding:2px 7px}
+.badge-ftl{background:var(--blue-l);color:var(--blue-d);font-size:11px;padding:2px 7px}
+.badge-dfp{background:#F0FFF4;color:#15803D;font-size:11px;padding:2px 7px}
+.badge-mode-row{display:flex;gap:4px;flex-direction:column}
+.badge-num{font-size:11px;color:var(--g500);margin-left:2px;font-weight:400}
+/* EDITADA tag — topo-esquerdo do card, hover abre histórico */
+.editada-tag{position:absolute;top:0;left:0;
+  background:#777;color:#fff;
+  font-size:9px;font-weight:600;padding:3px 8px;height:16px;
+  border-radius:0 0 4px 0;letter-spacing:.5px;
+  text-transform:uppercase;z-index:2;line-height:1;
+  cursor:pointer;display:flex;align-items:center;transition:background .15s}
+.editada-tag:hover{background:#555}
+
+/* Action buttons */
+.ab{height:30px;padding:0 12px;border-radius:4px;font-family:var(--font);font-size:12px;
+  font-weight:500;cursor:pointer;transition:all .15s;white-space:nowrap;
+  display:flex;align-items:center;gap:5px}
+.ab-outline{border:1px solid var(--border);background:var(--surface);color:var(--g600)}
+.ab-outline:hover{border-color:var(--blue);color:var(--blue);background:var(--blue-l)}
+.ab-primary{border:1px solid var(--blue);background:var(--blue);color:#fff}
+.ab-primary:hover{background:var(--blue-d);border-color:var(--blue-d)}
+.ab-success{border:1px solid var(--green);background:var(--green);color:#fff}
+.ab-success:hover{background:#008040}
+.ab-danger{border:1px solid var(--border);background:var(--surface);color:var(--red)}
+.ab-danger:hover{border-color:var(--red);background:var(--red-l)}
+/* Eliminar — oculto por padrão, visível no hover/focus-within da linha */
+.ab-ghost{border:none;background:none;color:var(--blue);font-weight:600;font-size:11px;
+  cursor:pointer;padding:0;font-family:var(--font);white-space:nowrap;
+  opacity:0;visibility:hidden;pointer-events:none;
+  transition:opacity .12s,visibility .12s}
+.vehicle-row:hover .ab-ghost,
+.vehicle-row:focus-within .ab-ghost{opacity:1;visibility:visible;pointer-events:auto}
+.ab-ghost:hover{text-decoration:underline}
+/* Kebab — transparente, sem borda, discreto */
+.ab-more{width:30px;height:30px;border-radius:4px;border:none;
+  background:none;cursor:pointer;display:flex;align-items:center;justify-content:center;
+  font-size:18px;color:#555;transition:background .12s;padding:0;line-height:1}
+.ab-more:hover{background:#F5F5F5}
+
+/* ── CÉLULAS EDITÁVEIS ───────────────────────────────────────────────── */
+.editable-cell{display:inline-flex;align-items:center;cursor:pointer;
+  padding:3px 6px;border-radius:4px;border:1.5px solid transparent;
+  transition:border-color .12s,background .12s;gap:5px}
+.editable-cell:hover{background:#FAFAFA;border-color:#E0E0E0}
+.editable-cell.active{border-color:var(--blue)!important;background:#EEF6FF!important}
+.editable-cell .ed-arr{font-size:9px;color:var(--g300);opacity:0;
+  transition:opacity .12s;margin-left:2px}
+.editable-cell:hover .ed-arr{opacity:1}
+
+/* ── CELL EDITORS (veículo, transportadora, ETA, ETD, TT) ───────────── */
+.cell-editor{display:none;position:fixed;background:#fff;
+  border:1px solid #DEDEDE;border-radius:6px;
+  box-shadow:0 4px 20px rgba(0,0,0,.13);width:340px;z-index:510;padding:16px;
+  animation:popIn .12s ease}
+.cell-editor.vis{display:block}
+.ed-title{font-size:14px;font-weight:600;color:#1A1A1A;margin-bottom:14px}
+.ed-field{margin-bottom:12px}
+.ed-label{display:block;font-size:12px;font-weight:600;color:#666;margin-bottom:6px}
+.ed-select{width:100%;height:40px;padding:0 10px;
+  border:1px solid #DEDEDE;border-radius:4px;
+  font-size:13px;color:#333;font-family:var(--font);
+  background:#fff;cursor:pointer;appearance:auto}
+.ed-select:focus{border-color:var(--blue);outline:none;box-shadow:0 0 0 2px rgba(52,131,250,.12)}
+.ed-footer{display:flex;align-items:center;justify-content:flex-end;
+  gap:20px;margin-top:16px;border-top:0}
+.ed-cancel{background:none;border:none;font-family:var(--font);font-size:13px;
+  font-weight:600;color:var(--blue);cursor:pointer;padding:0}
+.ed-cancel:hover{text-decoration:underline}
+.ed-apply{height:34px;padding:0 18px;border-radius:4px;
+  border:none;font-family:var(--font);font-size:13px;font-weight:600;
+  cursor:pointer;transition:all .15s}
+.ed-apply:disabled{background:#E8E8E8;color:#AAA;cursor:not-allowed}
+.ed-apply:not(:disabled){background:var(--blue);color:#fff}
+.ed-apply:not(:disabled):hover{background:var(--blue-d)}
+
+/* ── ATTRS EDITOR (checkbox dropdown) ───────────────────────────────── */
+.attrs-editor{display:none;position:fixed;background:#fff;
+  border:1px solid #DEDEDE;border-radius:6px;
+  box-shadow:0 4px 16px rgba(0,0,0,.12);width:200px;z-index:510;
+  padding:8px 0;animation:popIn .12s ease}
+.attrs-editor.vis{display:block}
+.ae-item{display:flex;align-items:center;gap:10px;height:34px;
+  padding:0 14px;font-size:13px;color:#333;cursor:pointer;
+  transition:background .1s;user-select:none}
+.ae-item:hover{background:#F5F5F5}
+.ae-item input[type=checkbox]{accent-color:var(--blue);width:15px;height:15px;cursor:pointer}
+
+/* ── CONTEXT MENU ─────────────────────────────────────────────────────── */
+.ctx-menu{display:none;position:fixed;background:#fff;border:1px solid #DEDEDE;
+  border-radius:6px;box-shadow:0 4px 16px rgba(0,0,0,.1);width:200px;z-index:500;
+  overflow:hidden;padding:4px 0}
+.ctx-menu.vis{display:block;animation:popIn .12s ease}
+.ctx-item{height:36px;padding:0 12px;display:flex;align-items:center;
+  font-size:12px;color:#333;cursor:pointer;transition:background .1s;
+  font-family:var(--font);background:none;border:none;width:100%;text-align:left}
+.ctx-item:hover{background:#F5F5F5}
+.ctx-item.danger{color:var(--red)}
+
+/* ── VEHICLE SUBTABLE — grid compartilhado via --veh-grid ───────────── */
+.vehicles-section{border-top:1px solid #DEDEDE;overflow-x:auto}
+/* Header e todas as linhas usam o MESMO grid-template-columns */
+.vehicles-header,.vehicle-row{
+  display:grid;
+  grid-template-columns:var(--veh-grid);
+  align-items:stretch}
+/* Header */
+.vehicles-header{background:#F4F4F4;border-bottom:1px solid #DEDEDE;min-height:36px}
+.vh-col{font-size:10px;font-weight:600;color:#777;
+  text-transform:uppercase;letter-spacing:.5px;white-space:nowrap;
+  display:flex;align-items:center;padding:0 12px;
+  border-right:1px solid #DEDEDE}
+.vh-col:last-child{border-right:none}
+/* Vehicle rows */
+.vehicle-row{min-height:60px;border-bottom:1px solid #E5E5E5;transition:background .1s}
+.vehicle-row:last-child{border-bottom:none}
+.vehicle-row:hover,.vehicle-row:focus-within{background:#FAFAFA}
+.vehicle-row.selected{background:#EBF3FF}
+/* Linha DFP — cinza, não editável */
+.vehicle-row.is-dfp{background:#F5F5F5;cursor:default}
+.vehicle-row.is-dfp:hover{background:#F5F5F5}
+.vehicle-row.is-dfp .editable-cell{cursor:default;pointer-events:none}
+.vehicle-row.is-dfp .editable-cell:hover{background:none;border-color:transparent}
+.vehicle-row.is-dfp .vt-time,.vehicle-row.is-dfp .carrier-txt,
+.vehicle-row.is-dfp .vt-tt{color:#888}
+/* Células — todas compartilham bordas via grid (sem flex-shrink/flex:0 0) */
+.vc-chk,.vc-type,.vc-carrier,.vc-attrs,.vc-eta,.vc-etd,.vc-tt,.vc-eta2,.vc-etd2,.vc-action{
+  display:flex;align-items:center;border-right:1px solid #DEDEDE;padding:0 12px}
+.vc-chk{justify-content:center}
+.vc-type{gap:6px}
+.vc-attrs{gap:5px;flex-wrap:nowrap}
+.vc-eta,.vc-etd,.vc-eta2,.vc-etd2{flex-direction:column;justify-content:center;gap:1px}
+.vc-action{border-right:none;justify-content:flex-end;
+  padding-right:20px}
+
+/* Células de tempo — bold + dia na mesma linha, local abaixo */
+.vt-time-row{display:flex;align-items:baseline;gap:3px}
+.vt-time{font-size:12px;font-weight:600;color:var(--g800)}
+.vt-day{font-size:11px;font-weight:400;color:var(--g500)}
+.vt-loc{font-size:11px;color:var(--g400)}
+.vt-tt{font-size:12px;font-weight:400;color:var(--g700)}
+
+/* Tipo de veículo — texto simples, sem chip colorido */
+.vt-chip{display:inline-flex;align-items:center;gap:6px;
+  font-size:14px;font-weight:400;color:var(--g800);cursor:pointer;
+  padding:2px 4px;border-radius:3px;border:1px solid transparent;transition:all .12s}
+.vt-chip:hover{background:var(--blue-l);border-color:#C5DCFF}
+.vt-chip .ed-hint{font-size:11px;color:var(--g300);opacity:0;transition:opacity .12s}
+.vt-chip:hover .ed-hint{opacity:1}
+
+/* Attribute tags — outlined pills, chips compactos para caber na coluna */
+.attr-tag{display:inline-flex;padding:2px 8px;border-radius:100px;font-size:11px;
+  font-weight:400;border:1px solid #C9C9C9;background:var(--surface);
+  color:#444;white-space:nowrap;line-height:1.3;flex-shrink:0}
+
+.carrier-txt{font-size:12px;font-weight:400;color:var(--g800)}
+
+/* Info icon — círculo azul com "i" */
+.vc-info-icon{width:17px;height:17px;border-radius:50%;border:1.5px solid var(--blue);
+  display:inline-flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;
+  color:var(--blue);cursor:default;flex-shrink:0;font-style:italic;font-family:serif}
+
+/* ── PAGINATION ──────────────────────────────────────────────────────── */
+.pagination{display:flex;align-items:center;justify-content:center;gap:4px;margin-top:24px}
+.pg-btn{width:32px;height:32px;border-radius:4px;border:1px solid var(--border);
+  background:var(--surface);font-family:var(--font);font-size:13px;color:var(--g600);
+  cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.pg-btn:hover{border-color:var(--blue);color:var(--blue)}
+.pg-btn.act{background:var(--blue-l);border-color:var(--blue);color:var(--blue);font-weight:700}
+.pg-next{width:auto;padding:0 12px;gap:4px;font-size:13px;color:var(--blue);font-weight:500}
+.pg-next:hover{background:var(--blue-l)}
+.pg-dots{color:var(--g300);padding:0 4px}
+
+/* ── BULK BAR — single-row, white, conforme referência ──────────────── */
+.bulk-bar-wrapper{
+  background:var(--surface);border:1px solid var(--border);border-radius:6px;
+  margin-bottom:12px}
+.bulk-top{
+  display:flex;align-items:center;padding:10px 16px;min-height:44px;gap:10px}
+.bulk-left{display:flex;align-items:center;gap:8px;flex:1;flex-wrap:wrap}
+.bulk-sel-text{font-size:13px;color:var(--g600);font-weight:500}
+.bulk-sel-text.active-sel{color:var(--g800);font-weight:600}
+.bulk-limpar{background:none;border:none;font-family:var(--font);font-size:13px;
+  font-weight:500;color:var(--blue);cursor:pointer;padding:0;text-decoration:none}
+.bulk-limpar:hover{text-decoration:underline}
+.bulk-right{display:flex;align-items:center;gap:12px;flex-shrink:0}
+/* Botões de ação na barra */
+.bb-link{background:none;border:none;font-family:var(--font);font-size:13px;
+  font-weight:500;color:var(--blue);cursor:pointer;padding:0;white-space:nowrap}
+.bb-link:disabled,.bb-link[disabled]{color:var(--g400);cursor:not-allowed}
+.bb-link:not(:disabled):hover{text-decoration:underline}
+.bb-link.bb-link-danger{color:var(--red)}
+.bb-link.bb-link-danger:hover{text-decoration:underline}
+/* Botão "Editar ▼" com dropdown */
+.bb-edit-btn{display:flex;align-items:center;gap:4px;height:30px;padding:0 12px;
+  border-radius:4px;border:1px solid var(--blue-d);background:var(--surface);
+  font-family:var(--font);font-size:13px;font-weight:500;color:var(--blue-d);
+  cursor:pointer;transition:all .15s;white-space:nowrap}
+.bb-edit-btn:hover{background:var(--blue-l)}
+.bb-edit-btn:disabled,.bb-edit-btn[disabled]{border-color:var(--border);color:var(--g400);cursor:not-allowed}
+.bb-edit-btn .bb-chev{font-size:9px}
+.bb-sep{width:1px;height:18px;background:var(--border);flex-shrink:0}
+/* Dropdown do botão Editar */
+.edit-dropdown{position:relative;display:inline-block}
+.edit-dropdown-menu{display:none;position:absolute;top:calc(100% + 4px);right:0;
+  background:#fff;border:1px solid #DEDEDE;border-radius:6px;
+  box-shadow:0 4px 16px rgba(0,0,0,.1);min-width:200px;z-index:500;
+  padding:4px 0;animation:popIn .12s ease}
+.edit-dropdown-menu.vis{display:block}
+.edit-dropdown-item{display:block;width:100%;padding:0 16px;height:36px;
+  background:none;border:none;font-family:var(--font);font-size:13px;
+  color:#333;cursor:pointer;text-align:left;line-height:36px;white-space:nowrap}
+.edit-dropdown-item:hover{background:#F5F5F5}
+.edit-dropdown-item.item-danger{color:var(--red)}
+.edit-dropdown-item.item-active{color:var(--blue);font-weight:600}
+.edit-dropdown-item.item-sep{border-top:1px solid #EBEBEB;margin-top:4px;padding-top:4px}
+
+/* ── EDIT POPOVER ────────────────────────────────────────────────────── */
+.pop{display:none;position:fixed;background:var(--surface);border:1px solid var(--border);
+  border-radius:8px;box-shadow:0 8px 28px rgba(0,0,0,.14);z-index:350;min-width:250px;
+  padding:14px;animation:popIn .15s ease}
+.pop.vis{display:block}
+@keyframes popIn{from{opacity:0;transform:scale(.96) translateY(-4px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.pop-title{font-size:11px;font-weight:700;color:var(--g400);text-transform:uppercase;
+  letter-spacing:.5px;margin-bottom:10px}
+.pop-opts{display:flex;flex-direction:column;gap:3px}
+.pop-opt{display:flex;align-items:center;gap:10px;padding:9px 11px;border-radius:6px;
+  cursor:pointer;border:1px solid transparent;transition:all .12s;background:none}
+.pop-opt:hover{background:var(--g50);border-color:var(--border)}
+.pop-opt.sel{background:var(--blue-l);border-color:var(--blue)}
+.pop-opt-ico{font-size:22px;width:30px;text-align:center}
+.pop-opt-name{font-size:13px;font-weight:600;color:var(--g800);font-family:var(--mono)}
+.pop-opt-desc{font-size:11px;color:var(--g400);margin-top:1px}
+.pop-footer{margin-top:10px;padding-top:10px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:6px}
+
+/* ── REASON MODAL ────────────────────────────────────────────────────── */
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:400;
+  align-items:center;justify-content:center;backdrop-filter:blur(1px)}
+.overlay.vis{display:flex;animation:fadeIn .15s ease}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.modal{background:var(--surface);border-radius:8px;box-shadow:0 20px 60px rgba(0,0,0,.2);
+  width:480px;max-width:92vw;animation:slideUp .18s ease;overflow:hidden}
+@keyframes slideUp{from{transform:translateY(10px);opacity:0}to{transform:translateY(0);opacity:1}}
+.modal-hdr{padding:18px 22px 14px;border-bottom:1px solid var(--border);
+  display:flex;align-items:flex-start;justify-content:space-between}
+.modal-title{font-size:15px;font-weight:700;color:var(--g800)}
+.modal-sub{font-size:12px;color:var(--g400);margin-top:3px}
+.modal-x{width:26px;height:26px;border-radius:4px;border:none;background:var(--g100);
+  cursor:pointer;font-size:14px;color:var(--g400);display:flex;align-items:center;
+  justify-content:center;transition:background .15s;flex-shrink:0}
+.modal-x:hover{background:var(--g200)}
+.modal-body{padding:18px 22px}
+.change-box{display:flex;align-items:center;gap:14px;background:var(--g50);
+  border:1px solid var(--border);padding:12px 16px;border-radius:6px;margin-bottom:16px}
+.ch-lbl{font-size:10px;font-weight:700;color:var(--g400);text-transform:uppercase;
+  letter-spacing:.4px;margin-bottom:3px}
+.ch-from{font-family:var(--mono);font-weight:600;color:var(--red);font-size:15px}
+.ch-to{font-family:var(--mono);font-weight:600;color:var(--green);font-size:15px}
+.ch-arr{font-size:22px;color:var(--g200);margin-top:8px}
+.flbl{font-size:12px;font-weight:600;color:var(--g600);display:block;margin-bottom:8px}
+.reason-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:12px}
+.ro{padding:9px 12px;border-radius:5px;border:1px solid var(--border);font-size:12px;
+  color:var(--g600);cursor:pointer;transition:all .15s;background:var(--surface);
+  font-family:var(--font);text-align:left;line-height:1.35}
+.ro:hover{border-color:var(--blue);background:var(--blue-l);color:var(--blue-d)}
+.ro.sel{border-color:var(--blue);background:var(--blue-l);color:var(--blue-d);font-weight:600}
+.reason-ta{width:100%;border:1px solid var(--border);border-radius:5px;padding:9px 12px;
+  font-family:var(--font);font-size:12px;color:var(--g800);resize:vertical;
+  min-height:60px;outline:none;transition:border-color .15s;background:var(--g50)}
+.reason-ta:focus{border-color:var(--blue);background:#fff}
+.modal-ftr{padding:14px 22px;border-top:1px solid var(--border);
+  display:flex;gap:8px;justify-content:flex-end}
+.btn{display:flex;align-items:center;gap:5px;padding:8px 18px;border-radius:4px;
+  font-family:var(--font);font-size:13px;font-weight:600;cursor:pointer;
+  transition:all .15s;border:1px solid transparent}
+.btn-sec{background:var(--surface);border-color:var(--border);color:var(--g600)}
+.btn-sec:hover{border-color:var(--g300);color:var(--g800)}
+.btn-pri{background:var(--blue);color:#fff}
+.btn-pri:hover{background:var(--blue-d)}
+
+/* ── BULK MODALS ─────────────────────────────────────────────────────── */
+.modal-wide{width:600px;max-width:96vw}
+.bm-body{padding:24px}
+.bm-field{margin-bottom:16px}
+.bm-label{display:block;font-size:12px;font-weight:600;color:var(--g600);margin-bottom:6px}
+.bm-select{width:100%;height:40px;padding:0 12px;border:1px solid #D5D9E0;border-radius:4px;
+  font-size:13px;color:var(--g800);font-family:var(--font);background:#fff;cursor:pointer}
+.bm-select:focus{border-color:var(--blue);outline:none;box-shadow:0 0 0 2px rgba(52,131,250,.12)}
+.bm-select:disabled{background:var(--g50);cursor:not-allowed;color:var(--g400)}
+/* Seções do modal de horário */
+.bm-section{margin-bottom:20px}
+.bm-section-title{font-size:11px;font-weight:700;color:var(--g500);text-transform:uppercase;
+  letter-spacing:.5px;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--g100)}
+.bm-grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+/* Checkboxes de atributos */
+.bm-attr-item{display:flex;align-items:center;gap:10px;height:36px;padding:0 2px;
+  font-size:13px;color:var(--g800);cursor:pointer;border-radius:4px;transition:background .1s}
+.bm-attr-item:hover{background:var(--g50)}
+.bm-attr-item input[type=checkbox]{accent-color:var(--blue);width:15px;height:15px;cursor:pointer}
+/* Rodapé */
+.bm-footer{padding:14px 24px;border-top:1px solid var(--border);
+  display:flex;align-items:center;justify-content:flex-end;gap:12px}
+
+/* ── HISTORY POPOVER ─────────────────────────────────────────────────── */
+.hist-pop{display:none;position:fixed;
+  background:var(--surface);border-radius:14px;
+  box-shadow:0 8px 40px rgba(0,0,0,.18);
+  width:320px;z-index:400;overflow:hidden}
+.hist-pop.vis{display:block;animation:popIn .18s ease}
+/* Caret pointing down */
+.hist-pop::after{content:'';position:absolute;bottom:-8px;left:50%;
+  transform:translateX(-50%);
+  border-left:9px solid transparent;border-right:9px solid transparent;
+  border-top:9px solid var(--surface);
+  filter:drop-shadow(0 2px 2px rgba(0,0,0,.08))}
+.hist-pop-body{padding:20px 20px 0}
+.hist-pop-title{font-size:18px;font-weight:700;color:var(--g800);
+  margin-bottom:14px;line-height:1.2}
+.hist-hr{border:none;border-top:1px solid #EBEBEB;margin:14px 0}
+.hist-entry{padding:2px 0 10px}
+.he-type{font-size:13px;color:var(--g400);margin-bottom:5px;line-height:1.3}
+.he-type b{color:var(--g600);font-weight:600}
+.he-change{font-size:16px;color:var(--g800);line-height:1.5;font-weight:400}
+.he-change b{font-weight:700}
+.he-meta{font-size:13px;color:var(--g400);margin-top:8px;line-height:1.4}
+.he-meta b{color:var(--g600);font-weight:600}
+.he-date{font-size:13px;color:var(--g400);margin-top:1px}
+/* Revert button — full-width, light blue */
+.hist-revert-btn{
+  width:100%;padding:15px 20px;
+  background:#EBF2FF;border:none;
+  font-family:var(--font);font-size:15px;font-weight:600;
+  color:var(--blue);cursor:pointer;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  transition:background .15s;margin-top:6px}
+.hist-revert-btn:hover{background:#D6E8FF}
+.hist-revert-btn:active{background:#C2DBFF}
+
+/* ── TOAST ───────────────────────────────────────────────────────────── */
+.toast{position:fixed;bottom:72px;right:20px;padding:10px 16px;border-radius:6px;
+  font-size:13px;font-weight:500;display:flex;align-items:center;gap:8px;z-index:600;
+  box-shadow:0 4px 16px rgba(0,0,0,.15);transform:translateY(10px);opacity:0;
+  transition:all .2s;pointer-events:none}
+.toast.vis{transform:translateY(0);opacity:1}
+.t-suc{background:#1B5E20;color:#fff}
+.t-info{background:#0D47A1;color:#fff}
+.t-warn{background:#E65100;color:#fff}
+
+/* demo panel css removed */
+
+/* ── CHECKBOX ────────────────────────────────────────────────────────── */
+input[type=checkbox]{width:15px;height:15px;cursor:pointer;accent-color:var(--blue)}
+
+/* ── SCROLLBAR ───────────────────────────────────────────────────────── */
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--g200);border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:var(--g300)}
+
+/* ── RELATIVE POSITION HELPER ────────────────────────────────────────── */
+.pos-rel{position:relative}
+</style>
+</head>
+<body>
+
+<!-- ═══ ML HEADER ═══════════════════════════════════════════════════════ -->
+<header class="hdr">
+  <button class="hdr-menu">☰</button>
+  <a class="ml-logo" href="#">
+    <svg class="ml-logo-icon" viewBox="0 0 32 32" fill="none">
+      <rect width="32" height="32" rx="6" fill="#FFE600"/>
+      <path d="M16 6C10.477 6 6 10.477 6 16s4.477 10 10 10 10-4.477 10-10S21.523 6 16 6zm0 2c4.418 0 8 3.582 8 8s-3.582 8-8 8-8-3.582-8-8 3.582-8 8-8z" fill="#333"/>
+      <path d="M13 14l3 4 3-4" stroke="#333" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </a>
+  <div class="hdr-space"></div>
+  <div class="hdr-site">Estás viendo: <b>MLB</b> <span class="hdr-site-arr">›</span></div>
+  <div class="hdr-div"></div>
+  <div class="hdr-user">
+    <div class="hdr-avatar">LP</div>
+    <span class="hdr-uname">Lucas P.</span>
+    <span class="hdr-chevron">▾</span>
+  </div>
+  <button class="hdr-bell">🔔</button>
+</header>
+
+<!-- ═══ LEFT NAV ════════════════════════════════════════════════════════ -->
+<nav class="nav">
+  <div class="ni"><svg viewBox="0 0 18 18" fill="currentColor"><rect x="1" y="1" width="6" height="6" rx="1.5"/><rect x="11" y="1" width="6" height="6" rx="1.5"/><rect x="1" y="11" width="6" height="6" rx="1.5"/><rect x="11" y="11" width="6" height="6" rx="1.5"/></svg><span class="ni-tip">Dashboard</span></div>
+  <div class="ni"><svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="14" height="3" rx="1"/><rect x="2" y="7.5" width="14" height="3" rx="1"/><rect x="2" y="13" width="14" height="3" rx="1"/></svg><span class="ni-tip">Listados</span></div>
+  <div class="ni"><svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="2,14 6,8 10,11 14,4"/></svg><span class="ni-tip">Métricas</span></div>
+  <div class="ni"><svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="9" cy="9" r="7"/><line x1="2" y1="9" x2="16" y2="9"/><path d="M9 2c-2 2-3 4.5-3 7s1 5 3 7M9 2c2 2 3 4.5 3 7s-1 5-3 7"/></svg><span class="ni-tip">Global</span></div>
+  <div class="ni act"><svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="7" width="16" height="6" rx="2"/><circle cx="4.5" cy="10" r="1.5" fill="currentColor"/><path d="M13 5l-2-3M15 5l2-3"/></svg><span class="ni-tip">Linehaul</span></div>
+  <div class="ni"><svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="14" height="12" rx="1.5"/><line x1="2" y1="7" x2="16" y2="7"/><line x1="6" y1="1" x2="6" y2="5"/><line x1="12" y1="1" x2="12" y2="5"/></svg><span class="ni-tip">Scheduling</span></div>
+  <div class="ni nav-bot"><svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="9" cy="9" r="7"/><line x1="9" y1="6" x2="9" y2="9"/><circle cx="9" cy="12" r=".5" fill="currentColor" stroke-width="1"/></svg><span class="ni-tip">Ayuda</span></div>
+</nav>
+
+<!-- ═══ MAIN CONTENT ════════════════════════════════════════════════════ -->
+<main class="main">
+<div class="page">
+
+  <h1 class="page-title">Revisión de planes LH</h1>
+
+  <!-- FILTERS -->
+  <div class="filters">
+    <div class="filter-row">
+      <span class="filter-label">Estás viendo</span>
+      <div class="filter-date">
+        <span class="cal-icon">📅</span>
+        18 al 25 de marzo
+      </div>
+      <div class="filter-select" style="min-width:160px">Regiones <span style="flex:1"></span><span class="chev">▾</span></div>
+      <div class="filter-select" style="min-width:150px">
+        <span style="color:var(--g400)">Origen:</span>&nbsp;<span style="color:var(--blue);font-weight:500">Todos</span>
+        <span style="flex:1"></span><span class="chev">▾</span>
+      </div>
+      <div class="filter-select" style="min-width:170px">
+        <span style="color:var(--g400)">Destino final:</span>&nbsp;<span style="color:var(--blue);font-weight:500">Todos</span>
+        <span style="flex:1"></span><span class="chev">▾</span>
+      </div>
+    </div>
+    <div class="filter-row">
+      <div class="search-box">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="6" cy="6" r="4.5" stroke="#B0B0B0" stroke-width="1.3"/><path d="M9.5 9.5L12 12" stroke="#B0B0B0" stroke-width="1.3" stroke-linecap="round"/></svg>
+        <input type="text" placeholder="Nodo, día, fecha, CPT" id="search-input">
+      </div>
+      <div class="filter-pill">Confianza: <span class="fp-val">Todos</span><span class="fp-chev">▾</span></div>
+      <div class="filter-pill">Días: <span class="fp-val">Todos</span><span class="fp-chev">▾</span></div>
+      <div class="filter-pill">CPT: <span class="fp-val">Todo el día</span><span class="fp-chev">▾</span></div>
+      <div class="filter-other">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="4" cy="7" r="2" stroke="currentColor" stroke-width="1.3"/><circle cx="10" cy="7" r="2" stroke="currentColor" stroke-width="1.3"/><line x1="1" y1="7" x2="2" y2="7" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><line x1="6" y1="7" x2="8" y2="7" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><line x1="12" y1="7" x2="13" y2="7" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+        Filtrar otras opciones
+      </div>
+    </div>
+  </div>
+
+  <!-- METRICS PANEL -->
+  <div class="metrics-panel" id="metrics-panel">
+    <div class="metrics-hdr" onclick="toggleMetrics()">
+      <span class="metrics-hdr-title">Métricas del plan</span>
+      <span class="metrics-toggle open" id="metrics-toggle">▾</span>
+    </div>
+    <div class="metrics-body" id="metrics-body">
+      <div class="metric-col active" id="mc-pending" onclick="switchTab('pending')" title="Ver Por revisar">
+        <div class="mc-title"><span class="mc-dot mc-dot-pending"></span>Por revisar</div>
+        <div class="mc-row">
+          <div class="mc-item">
+            <span class="mc-item-label">Rutas</span>
+            <span class="mc-item-val" id="mv-r-pending">70 <span>de 100</span></span>
+          </div>
+          <div class="mc-item">
+            <span class="mc-item-label">Vehículos</span>
+            <span class="mc-item-val" id="mv-v-pending">200 <span>de 350</span></span>
+          </div>
+        </div>
+        <div class="mc-ftl"><span>FTL <b>100</b></span><span>DFP <b>50</b></span></div>
+      </div>
+      <div class="metric-col" id="mc-reviewed" onclick="switchTab('reviewed')" title="Ver Revisado">
+        <div class="mc-title"><span class="mc-dot mc-dot-reviewed"></span>Revisado</div>
+        <div class="mc-row">
+          <div class="mc-item">
+            <span class="mc-item-label">Rutas</span>
+            <span class="mc-item-val">0 <span>de 100</span></span>
+          </div>
+          <div class="mc-item">
+            <span class="mc-item-label">Vehículos</span>
+            <span class="mc-item-val">0 <span>de 350</span></span>
+          </div>
+        </div>
+        <div class="mc-ftl"><span>FTL <b>0</b></span><span>DFP <b>0</b></span></div>
+      </div>
+      <div class="metric-col" id="mc-sent" onclick="switchTab('sent')" title="Ver Enviado a agendamiento">
+        <div class="mc-title"><span class="mc-dot mc-dot-sent"></span>Enviado a agendamiento</div>
+        <div class="mc-row">
+          <div class="mc-item">
+            <span class="mc-item-label">Rutas</span>
+            <span class="mc-item-val">0 <span>de 100</span></span>
+          </div>
+          <div class="mc-item">
+            <span class="mc-item-label">Vehículos</span>
+            <span class="mc-item-val">0 <span>de 350</span></span>
+          </div>
+        </div>
+        <div class="mc-ftl"><span>FTL <b>0</b></span><span>DFP <b>0</b></span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BULK / SELECTION BAR — single-row, white, context-sensitive -->
+  <div class="bulk-bar-wrapper" id="bulk-wrapper">
+    <div class="bulk-top" id="bulk-top">
+      <div class="bulk-left">
+        <input type="checkbox" id="hd-chk" onchange="toggleSelectAll(this)">
+        <span class="bulk-sel-text" id="sel-count">0 rutas seleccionadas</span>
+        <button class="bulk-limpar" id="bulk-limpar" style="display:none" onclick="clearSelection()">Limpar seleção</button>
+      </div>
+      <div class="bulk-right" id="bulk-right">
+        <!-- renderizado por renderBulkBar() -->
+      </div>
+    </div>
+  </div>
+  <!-- Dropdown do botão Editar (posicionado via JS) -->
+  <div class="edit-dropdown-menu" id="edit-dropdown-menu">
+    <button class="edit-dropdown-item item-active" onclick="bulkAction('vehículo');closeEditDropdown()">Veículo</button>
+    <button class="edit-dropdown-item" onclick="bulkAction('transportadora');closeEditDropdown()">Transportadora</button>
+    <button class="edit-dropdown-item" onclick="bulkAction('atributos');closeEditDropdown()">Atributos</button>
+    <button class="edit-dropdown-item" onclick="bulkAction('horario');closeEditDropdown()">Horário e transit time</button>
+    <button class="edit-dropdown-item item-danger item-sep" id="dropdown-eliminar" onclick="bulkAction('eliminar');closeEditDropdown()">Eliminar veículo</button>
+  </div>
+
+  <!-- ROUTES TABLE -->
+  <div id="routes-container"></div>
+
+  <!-- PAGINATION -->
+  <div class="pagination">
+    <button class="pg-btn" disabled>‹</button>
+    <button class="pg-btn act">1</button>
+    <button class="pg-btn" onclick="showToast('Página 2 cargada','info')">2</button>
+    <button class="pg-btn" onclick="showToast('Página 3 cargada','info')">3</button>
+    <button class="pg-btn" onclick="showToast('Página 4 cargada','info')">4</button>
+    <button class="pg-btn" onclick="showToast('Página 5 cargada','info')">5</button>
+    <span class="pg-dots">...</span>
+    <button class="pg-btn" onclick="showToast('Página 10 cargada','info')">10</button>
+    <button class="pg-btn pg-next" onclick="showToast('Página 2 cargada','info')">Siguiente ›</button>
+  </div>
+
+</div>
+</main>
+
+<!-- A bulk bar está integrada na .sel-bar / #bulk-wrapper abaixo das métricas -->
+
+<!-- ═══ EDITOR: VEÍCULO ══════════════════════════════════════════════════ -->
+<div class="cell-editor" id="ed-vehicle">
+  <div class="ed-title">Cambiar tipo de vehículo</div>
+  <div class="ed-field">
+    <label class="ed-label">Tipo de vehículo</label>
+    <select class="ed-select" id="ev-type" onchange="checkEditorValid('vehicle')">
+      <option value="">— seleccionar —</option>
+      <option value="Bitrem">Bitrem</option>
+      <option value="Carreta">Carreta</option>
+      <option value="Toco">Toco</option>
+      <option value="VUC">VUC</option>
+      <option value="Truck">Truck 3/4</option>
+    </select>
+  </div>
+  <div class="ed-field">
+    <label class="ed-label">Motivo del cambio</label>
+    <select class="ed-select" id="ev-reason" onchange="checkEditorValid('vehicle')">
+      <option value="">Selecciona un motivo</option>
+      <option>Disponibilidade de veículo</option>
+      <option>Ajuste de capacidade</option>
+      <option>Mudança de demanda</option>
+      <option>Restrição operacional</option>
+      <option>Solicitação de transportadora</option>
+    </select>
+  </div>
+  <div class="ed-footer">
+    <button class="ed-cancel" onclick="closeAllEditors()">Cancelar</button>
+    <button class="ed-apply" id="ev-apply" disabled onclick="applyVehicleEdit()">Aplicar</button>
+  </div>
+</div>
+
+<!-- ═══ EDITOR: TRANSPORTADORA ══════════════════════════════════════════ -->
+<div class="cell-editor" id="ed-carrier">
+  <div class="ed-title">Cambiar transportadora</div>
+  <div class="ed-field">
+    <label class="ed-label">Transportadora</label>
+    <select class="ed-select" id="ec-carrier" onchange="checkEditorValid('carrier')">
+      <option value="">— seleccionar —</option>
+      <option>Jomed</option>
+      <option>Maroni</option>
+      <option>OCA</option>
+      <option>TransBrasil</option>
+      <option>Multilog</option>
+      <option>FazendaSJT</option>
+    </select>
+  </div>
+  <div class="ed-field">
+    <label class="ed-label">Motivo del cambio</label>
+    <select class="ed-select" id="ec-reason" onchange="checkEditorValid('carrier')">
+      <option value="">Selecciona un motivo</option>
+      <option>Troca de parceiro logístico</option>
+      <option>Disponibilidade de frota</option>
+      <option>Ajuste contratual</option>
+      <option>Restrição operacional</option>
+    </select>
+  </div>
+  <div class="ed-footer">
+    <button class="ed-cancel" onclick="closeAllEditors()">Cancelar</button>
+    <button class="ed-apply" id="ec-apply" disabled onclick="applyCarrierEdit()">Aplicar</button>
+  </div>
+</div>
+
+<!-- ═══ EDITOR: ETA ══════════════════════════════════════════════════════ -->
+<div class="cell-editor" id="ed-eta">
+  <div class="ed-title" id="eta-title">Editar ETA</div>
+  <div class="ed-field">
+    <label class="ed-label">Fecha</label>
+    <select class="ed-select" id="eta-day" onchange="checkEditorValid('eta')">
+      <option>SEG</option><option>TER</option><option>QUA</option>
+      <option>QUI</option><option>SEX</option><option>SÁB</option><option>DOM</option>
+    </select>
+  </div>
+  <div class="ed-field">
+    <label class="ed-label">Hora</label>
+    <select class="ed-select" id="eta-hour" onchange="checkEditorValid('eta')">
+      <option>00:00</option><option>01:00</option><option>02:00</option><option>03:00</option>
+      <option>04:00</option><option>05:00</option><option>06:00</option><option>07:00</option>
+      <option>08:00</option><option>09:00</option><option>10:00</option><option>11:00</option>
+      <option>12:00</option><option>13:00</option><option>14:00</option><option>15:00</option>
+      <option>16:00</option><option>17:00</option><option>18:00</option><option>19:00</option>
+      <option>20:00</option><option>21:00</option><option>22:00</option><option>23:00</option>
+    </select>
+  </div>
+  <div class="ed-footer">
+    <button class="ed-cancel" onclick="closeAllEditors()">Cancelar</button>
+    <button class="ed-apply" id="eta-apply" disabled onclick="applyTimeEdit()">Aplicar</button>
+  </div>
+</div>
+
+<!-- ═══ EDITOR: TT ═══════════════════════════════════════════════════════ -->
+<div class="cell-editor" id="ed-tt" style="width:280px">
+  <div class="ed-title">Editar TT</div>
+  <div class="ed-field">
+    <label class="ed-label">Transit time</label>
+    <select class="ed-select" id="tt-value" onchange="checkEditorValid('tt')">
+      <option>30min</option><option>45min</option><option>1h</option>
+      <option>1h30min</option><option>2h</option><option>2h30min</option>
+      <option>3h</option><option>4h</option><option>5h</option>
+      <option>6h</option><option>8h</option><option>10h</option><option>12h</option>
+    </select>
+  </div>
+  <div class="ed-footer">
+    <button class="ed-cancel" onclick="closeAllEditors()">Cancelar</button>
+    <button class="ed-apply" id="tt-apply" disabled onclick="applyTTEdit()">Aplicar</button>
+  </div>
+</div>
+
+<!-- ═══ EDITOR: ATRIBUTOS (checkbox dropdown) ════════════════════════════ -->
+<div class="attrs-editor" id="ed-attrs">
+  <label class="ae-item"><input type="checkbox" value="PAL" onchange="applyAttrChange()"> PAL</label>
+  <label class="ae-item"><input type="checkbox" value="VEN" onchange="applyAttrChange()"> VEN</label>
+  <label class="ae-item"><input type="checkbox" value="CPT" onchange="applyAttrChange()"> CPT</label>
+  <label class="ae-item"><input type="checkbox" value="ETD" onchange="applyAttrChange()"> ETD</label>
+</div>
+
+<!-- ═══ REASON MODAL ════════════════════════════════════════════════════ -->
+<div class="overlay" id="overlay">
+  <div class="modal">
+    <div class="modal-hdr">
+      <div>
+        <div class="modal-title">Motivo de edición</div>
+        <div class="modal-sub" id="modal-ctx">Vehículo · ruta</div>
+      </div>
+      <button class="modal-x" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="change-box">
+        <div><div class="ch-lbl">Antes</div><div class="ch-from" id="ch-from">Bitrem</div></div>
+        <div class="ch-arr">→</div>
+        <div><div class="ch-lbl">Después</div><div class="ch-to" id="ch-to">Carreta</div></div>
+      </div>
+      <label class="flbl">¿Por qué realizas este cambio?</label>
+      <div class="reason-grid">
+        <button class="ro" onclick="selReason(this)">Ajuste de capacidad</button>
+        <button class="ro" onclick="selReason(this)">Disponibilidad de vehículo</button>
+        <button class="ro" onclick="selReason(this)">Cambio de demanda</button>
+        <button class="ro" onclick="selReason(this)">Restricción operacional</button>
+        <button class="ro" onclick="selReason(this)">Solicitud de transportadora</button>
+        <button class="ro" onclick="selReason(this)">Error en plan original</button>
+      </div>
+      <label class="flbl" style="margin-top:4px">Nota adicional (opcional)</label>
+      <textarea class="reason-ta" placeholder="Detalla el motivo si es necesario…"></textarea>
+    </div>
+    <div class="modal-ftr">
+      <button class="btn btn-sec" onclick="closeModal()">Cancelar</button>
+      <button class="btn btn-pri" onclick="confirmEdit()">Confirmar cambio</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ CONTEXT MENU ════════════════════════════════════════════════════ -->
+<div class="ctx-menu" id="ctx-menu">
+  <button class="ctx-item" id="ctx-deactivate" onclick="ctxDeactivate()">Desativar rota</button>
+  <button class="ctx-item" id="ctx-review" onclick="ctxMarkReviewed()">Marcar como revisado</button>
+  <button class="ctx-item" id="ctx-history" onclick="ctxHistory()">Ver histórico de edições</button>
+  <button class="ctx-item" id="ctx-back" style="display:none" onclick="ctxBackToPending()">← Voltar para edição</button>
+  <button class="ctx-item" id="ctx-send" style="display:none" onclick="ctxSend()">↑ Enviar a agendamiento</button>
+</div>
+
+<!-- ═══ HISTORY POPOVER ══════════════════════════════════════════════════ -->
+<div class="hist-pop" id="hist-pop">
+  <div class="hist-pop-body">
+    <div class="hist-pop-title">Histórico de edições</div>
+
+    <hr class="hist-hr">
+
+    <div class="hist-entry">
+      <div class="he-type">Edição de veículo</div>
+      <div class="he-change">Toco para <b>Carreta</b></div>
+      <div class="he-meta">Modificado por <b>lucasperei</b></div>
+      <div class="he-date">24/12/2024</div>
+    </div>
+
+    <hr class="hist-hr">
+
+    <div class="hist-entry">
+      <div class="he-type">Edição de horário em <b>BRXSP9</b></div>
+      <div class="he-change">ETA: 08:00 para 09:00</div>
+      <div class="he-change">ETD: 09:00 para 10:00</div>
+      <div class="he-change">TT: 1h30 para 2h</div>
+      <div class="he-meta">Modificado por <b>lucasperei</b></div>
+      <div class="he-date">24/12/2024</div>
+    </div>
+  </div>
+
+  <button class="hist-revert-btn" onclick="doRevert()">↩ Reverter edição</button>
+</div>
+
+<!-- ═══ BULK MODALS OVERLAY ═════════════════════════════════════════════ -->
+<div class="overlay" id="bulk-overlay" onclick="onBulkOverlayClick(event)">
+
+  <!-- Modal: Cambiar vehículo -->
+  <div class="modal" id="bm-vehicle" style="display:none" role="dialog" aria-labelledby="bm-veh-title">
+    <div class="modal-hdr">
+      <span class="modal-title" id="bm-veh-title">Cambiar vehículo</span>
+      <button class="modal-x" onclick="closeBulkModal()" aria-label="Cerrar">✕</button>
+    </div>
+    <div class="bm-body">
+      <div class="bm-field">
+        <label class="bm-label" for="bm-veh-type">Vehículo</label>
+        <select id="bm-veh-type" class="bm-select" onchange="checkBulkValid('vehicle')">
+          <option value="">Selecciona un vehículo</option>
+          <option value="Bitrem">Bitrem</option>
+          <option value="Carreta">Carreta</option>
+          <option value="Toco">Toco</option>
+          <option value="VUC">VUC</option>
+          <option value="Truck">Truck 3/4</option>
+        </select>
+      </div>
+      <div class="bm-field">
+        <label class="bm-label" for="bm-veh-reason">Motivo del cambio</label>
+        <select id="bm-veh-reason" class="bm-select" onchange="checkBulkValid('vehicle')">
+          <option value="">Selecciona un motivo</option>
+          <option>Disponibilidade de veículo</option>
+          <option>Ajuste de capacidade</option>
+          <option>Mudança de demanda</option>
+          <option>Restrição operacional</option>
+          <option>Solicitação de transportadora</option>
+        </select>
+      </div>
+    </div>
+    <div class="bm-footer">
+      <button class="btn btn-sec" onclick="closeBulkModal()">Cancelar</button>
+      <button class="btn btn-pri" id="bm-veh-apply" disabled onclick="applyBulkVehicle()">Aplicar</button>
+    </div>
+  </div>
+
+  <!-- Modal: Cambiar transportadora -->
+  <div class="modal" id="bm-carrier" style="display:none" role="dialog" aria-labelledby="bm-car-title">
+    <div class="modal-hdr">
+      <span class="modal-title" id="bm-car-title">Cambiar transportadora</span>
+      <button class="modal-x" onclick="closeBulkModal()" aria-label="Cerrar">✕</button>
+    </div>
+    <div class="bm-body">
+      <div class="bm-field">
+        <label class="bm-label" for="bm-car-carrier">Transportadora</label>
+        <select id="bm-car-carrier" class="bm-select" onchange="checkBulkValid('carrier')">
+          <option value="">Selecciona una transportadora</option>
+          <option>Jomed</option>
+          <option>Maroni</option>
+          <option>OCA</option>
+          <option>TransBrasil</option>
+          <option>Multilog</option>
+          <option>FazendaSJT</option>
+        </select>
+      </div>
+      <div class="bm-field">
+        <label class="bm-label" for="bm-car-reason">Motivo del cambio</label>
+        <select id="bm-car-reason" class="bm-select" onchange="checkBulkValid('carrier')">
+          <option value="">Selecciona un motivo</option>
+          <option>Troca de parceiro logístico</option>
+          <option>Disponibilidade de frota</option>
+          <option>Ajuste contratual</option>
+          <option>Restrição operacional</option>
+        </select>
+      </div>
+    </div>
+    <div class="bm-footer">
+      <button class="btn btn-sec" onclick="closeBulkModal()">Cancelar</button>
+      <button class="btn btn-pri" id="bm-car-apply" disabled onclick="applyBulkCarrier()">Aplicar</button>
+    </div>
+  </div>
+
+  <!-- Modal: Cambiar atributos -->
+  <div class="modal" id="bm-attrs" style="display:none" role="dialog" aria-labelledby="bm-att-title">
+    <div class="modal-hdr">
+      <span class="modal-title" id="bm-att-title">Cambiar atributos</span>
+      <button class="modal-x" onclick="closeBulkModal()" aria-label="Cerrar">✕</button>
+    </div>
+    <div class="bm-body">
+      <label class="bm-label">Atributos</label>
+      <label class="bm-attr-item"><input type="checkbox" id="bm-att-pal" value="PAL" onchange="checkBulkValid('attrs')"> PAL</label>
+      <label class="bm-attr-item"><input type="checkbox" id="bm-att-ven" value="VEN" onchange="checkBulkValid('attrs')"> VEN</label>
+      <label class="bm-attr-item"><input type="checkbox" id="bm-att-cpt" value="CPT" onchange="checkBulkValid('attrs')"> CPT</label>
+      <label class="bm-attr-item"><input type="checkbox" id="bm-att-etd" value="ETD" onchange="checkBulkValid('attrs')"> ETD</label>
+    </div>
+    <div class="bm-footer">
+      <button class="btn btn-sec" onclick="closeBulkModal()">Cancelar</button>
+      <button class="btn btn-pri" id="bm-att-apply" onclick="applyBulkAttrs()">Aplicar</button>
+    </div>
+  </div>
+
+  <!-- Modal: Cambiar horario -->
+  <div class="modal modal-wide" id="bm-schedule" style="display:none" role="dialog" aria-labelledby="bm-sch-title">
+    <div class="modal-hdr">
+      <span class="modal-title" id="bm-sch-title">Cambiar horario</span>
+      <button class="modal-x" onclick="closeBulkModal()" aria-label="Cerrar">✕</button>
+    </div>
+    <div class="bm-body" style="max-height:72vh;overflow-y:auto">
+      <div class="bm-section">
+        <div class="bm-section-title">Fechas y horarios para Origen</div>
+        <div class="bm-grid2">
+          <div class="bm-field">
+            <label class="bm-label" for="bm-eta1-day">Fecha ETA</label>
+            <select id="bm-eta1-day" class="bm-select" onchange="checkBulkValid('schedule')">
+              <option value="">— día —</option>
+              <option>SEG</option><option>TER</option><option>QUA</option>
+              <option>QUI</option><option>SEX</option><option>SÁB</option><option>DOM</option>
+            </select>
+          </div>
+          <div class="bm-field">
+            <label class="bm-label" for="bm-eta1-hour">Hora ETA</label>
+            <select id="bm-eta1-hour" class="bm-select" onchange="checkBulkValid('schedule')">
+              <option value="">— hora —</option>
+              <option>00:00</option><option>01:00</option><option>02:00</option><option>03:00</option>
+              <option>04:00</option><option>05:00</option><option>06:00</option><option>07:00</option>
+              <option>08:00</option><option>09:00</option><option>10:00</option><option>11:00</option>
+              <option>12:00</option><option>13:00</option><option>14:00</option><option>15:00</option>
+              <option>16:00</option><option>17:00</option><option>18:00</option><option>19:00</option>
+              <option>20:00</option><option>21:00</option><option>22:00</option><option>23:00</option>
+            </select>
+          </div>
+          <div class="bm-field">
+            <label class="bm-label" for="bm-etd1-day">Fecha ETD</label>
+            <select id="bm-etd1-day" class="bm-select" onchange="checkBulkValid('schedule')">
+              <option value="">— día —</option>
+              <option>SEG</option><option>TER</option><option>QUA</option>
+              <option>QUI</option><option>SEX</option><option>SÁB</option><option>DOM</option>
+            </select>
+          </div>
+          <div class="bm-field">
+            <label class="bm-label" for="bm-etd1-hour">Hora ETD</label>
+            <select id="bm-etd1-hour" class="bm-select" onchange="checkBulkValid('schedule')">
+              <option value="">— hora —</option>
+              <option>00:00</option><option>01:00</option><option>02:00</option><option>03:00</option>
+              <option>04:00</option><option>05:00</option><option>06:00</option><option>07:00</option>
+              <option>08:00</option><option>09:00</option><option>10:00</option><option>11:00</option>
+              <option>12:00</option><option>13:00</option><option>14:00</option><option>15:00</option>
+              <option>16:00</option><option>17:00</option><option>18:00</option><option>19:00</option>
+              <option>20:00</option><option>21:00</option><option>22:00</option><option>23:00</option>
+            </select>
+          </div>
+        </div>
+        <div class="bm-field" style="max-width:48%">
+          <label class="bm-label" for="bm-tt1">TT</label>
+          <select id="bm-tt1" class="bm-select" onchange="checkBulkValid('schedule')">
+            <option value="">— transit time —</option>
+            <option>30min</option><option>45min</option><option>1h</option>
+            <option>1h30min</option><option>2h</option><option>2h30min</option>
+            <option>3h</option><option>4h</option><option>5h</option>
+            <option>6h</option><option>8h</option><option>10h</option><option>12h</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="bm-section">
+        <div class="bm-section-title">Fechas y horarios para Destino</div>
+        <div class="bm-grid2">
+          <div class="bm-field">
+            <label class="bm-label" for="bm-eta2-day">Fecha ETA</label>
+            <select id="bm-eta2-day" class="bm-select" onchange="checkBulkValid('schedule')">
+              <option value="">— día —</option>
+              <option>SEG</option><option>TER</option><option>QUA</option>
+              <option>QUI</option><option>SEX</option><option>SÁB</option><option>DOM</option>
+            </select>
+          </div>
+          <div class="bm-field">
+            <label class="bm-label" for="bm-eta2-hour">Hora ETA</label>
+            <select id="bm-eta2-hour" class="bm-select" onchange="checkBulkValid('schedule')">
+              <option value="">— hora —</option>
+              <option>00:00</option><option>01:00</option><option>02:00</option><option>03:00</option>
+              <option>04:00</option><option>05:00</option><option>06:00</option><option>07:00</option>
+              <option>08:00</option><option>09:00</option><option>10:00</option><option>11:00</option>
+              <option>12:00</option><option>13:00</option><option>14:00</option><option>15:00</option>
+              <option>16:00</option><option>17:00</option><option>18:00</option><option>19:00</option>
+              <option>20:00</option><option>21:00</option><option>22:00</option><option>23:00</option>
+            </select>
+          </div>
+          <div class="bm-field">
+            <label class="bm-label" for="bm-etd2-day">Fecha ETD</label>
+            <select id="bm-etd2-day" class="bm-select" onchange="checkBulkValid('schedule')">
+              <option value="">— día —</option>
+              <option>SEG</option><option>TER</option><option>QUA</option>
+              <option>QUI</option><option>SEX</option><option>SÁB</option><option>DOM</option>
+            </select>
+          </div>
+          <div class="bm-field">
+            <label class="bm-label" for="bm-etd2-hour">Hora ETD</label>
+            <select id="bm-etd2-hour" class="bm-select" onchange="checkBulkValid('schedule')">
+              <option value="">— hora —</option>
+              <option>00:00</option><option>01:00</option><option>02:00</option><option>03:00</option>
+              <option>04:00</option><option>05:00</option><option>06:00</option><option>07:00</option>
+              <option>08:00</option><option>09:00</option><option>10:00</option><option>11:00</option>
+              <option>12:00</option><option>13:00</option><option>14:00</option><option>15:00</option>
+              <option>16:00</option><option>17:00</option><option>18:00</option><option>19:00</option>
+              <option>20:00</option><option>21:00</option><option>22:00</option><option>23:00</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="bm-field">
+        <label class="bm-label" for="bm-sch-reason">Motivo de edición <span style="font-weight:400;color:var(--g400)">(opcional)</span></label>
+        <select id="bm-sch-reason" class="bm-select">
+          <option value="">Selecciona un motivo</option>
+          <option>Ajuste de janela de carga</option>
+          <option>Restrição operacional</option>
+          <option>Solicitação de transportadora</option>
+          <option>Erro no plano original</option>
+        </select>
+      </div>
+    </div>
+    <div class="bm-footer">
+      <button class="btn btn-sec" onclick="closeBulkModal()">Cancelar</button>
+      <button class="btn btn-pri" id="bm-sch-apply" disabled onclick="applyBulkSchedule()">Aplicar</button>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══ TOAST ════════════════════════════════════════════════════════════ -->
+<div class="toast" id="toast"></div>
+
+<!-- demo panel removed -->
+
+<script>
+/* ═══════════════════════════════════
+   DATA
+═══════════════════════════════════ */
+const DATA = {
+  pending: [
+    { id:'r1', code:'BRXSP9 → SAL1', cpt:'10:00', day:'Seg 29/01', ftl:2, dfp:0,
+      capTotal:76, capUsed:56, demand:38, lastWeek:52, conf:'CONFIÁVEL', edited:false,
+      vehicles:[
+        { id:'v1', type:'Carreta', mode:'FTL', carrier:'Jomed', attrs:['ETD','PAL','PAL'],
+          eta1:'08:00', eta1Day:'SEG', eta1Loc:'BRXSP9',
+          etd1:'09:00', etd1Day:'SEG', etd1Loc:'BRXSP9',
+          tt1:'1h30min',
+          eta2:'10:30', eta2Day:'SEG', eta2Loc:'SAL1',
+          etd2:'11:30', etd2Day:'SEG', etd2Loc:'SAL1', hasInfo:false },
+        { id:'v2', type:'Toco', mode:'FTL', carrier:'Maroni', attrs:['ETD','PAL','PAL'],
+          eta1:'08:00', eta1Day:'SEG', eta1Loc:'BRXSP9',
+          etd1:'09:00', etd1Day:'SEG', etd1Loc:'BRXSP9',
+          tt1:'1h30min',
+          eta2:'10:30', eta2Day:'SEG', eta2Loc:'SAL1',
+          etd2:'11:30', etd2Day:'SEG', etd2Loc:'SAL1', hasInfo:false }
+      ]},
+    { id:'r2', code:'BRXSP9 → SAL1', cpt:'10:00', day:'Seg 29/01', ftl:2, dfp:1,
+      capTotal:76, capUsed:56, demand:38, lastWeek:52, conf:'CONFIÁVEL', edited:true,
+      history:[
+        { label:'Edição de veículo', changes:['Toco para Carreta'], who:'lucasperei', date:'24/12/2024' },
+        { label:'Edição de horário em BRXSP9', changes:['ETA: 08:00 para 09:00','ETD: 09:00 para 10:00','TT: 1h30 para 2h'], who:'lucasperei', date:'24/12/2024' }
+      ],
+      vehicles:[
+        { id:'v3', type:'Carreta', mode:'FTL', carrier:'Jomed', attrs:['ETD','PAL','PAL'],
+          eta1:'08:00', eta1Day:'SEG', eta1Loc:'BRXSP9',
+          etd1:'09:00', etd1Day:'SEG', etd1Loc:'BRXSP9',
+          tt1:'1h30min',
+          eta2:'10:30', eta2Day:'SEG', eta2Loc:'SAL1',
+          etd2:'11:30', etd2Day:'SEG', etd2Loc:'SAL1', hasInfo:true },
+        { id:'v4', type:'Carreta', mode:'FTL', carrier:'Maroni', attrs:['ETD','PAL','PAL'],
+          eta1:'08:00', eta1Day:'SEG', eta1Loc:'BRXSP9',
+          etd1:'09:00', etd1Day:'SEG', etd1Loc:'BRXSP9',
+          tt1:'1h30min',
+          eta2:'10:30', eta2Day:'SEG', eta2Loc:'SAL1',
+          etd2:'11:30', etd2Day:'SEG', etd2Loc:'SAL1', hasInfo:true },
+        { id:'v5', type:'Carreta', mode:'FTL', carrier:'FazendaSJT', attrs:['ETD','PAL','PAL'],
+          eta1:'08:00', eta1Day:'SEG', eta1Loc:'BRXSP9',
+          etd1:'09:00', etd1Day:'SEG', etd1Loc:'BRXSP9',
+          tt1:'1h30min',
+          eta2:'10:30', eta2Day:'SEG', eta2Loc:'SAL1',
+          etd2:'11:30', etd2Day:'SEG', etd2Loc:'SAL1', hasInfo:true, noChk:true }
+      ]},
+    { id:'r3', code:'BRMG01 → BRSP01', cpt:'10:00', day:'Mié 30/01', ftl:2, dfp:1,
+      capTotal:120, capUsed:105, demand:98, lastWeek:88, conf:'CONFIÁVEL', edited:false, vehicles:[] },
+    { id:'r4', code:'BRCWB → BRPOA', cpt:'14:00', day:'Jue 31/01', ftl:3, dfp:0,
+      capTotal:180, capUsed:162, demand:155, lastWeek:140, conf:'REVISAR', edited:false, vehicles:[] },
+    { id:'r5', code:'BRRJ01 → BRSP01', cpt:'09:00', day:'Vie 01/02', ftl:1, dfp:2,
+      capTotal:90, capUsed:70, demand:67, lastWeek:60, conf:'CONFIÁVEL', edited:false, vehicles:[] },
+  ],
+  reviewed: [
+    { id:'r6', code:'BRCWB → BRMG01', cpt:'08:00', day:'Mié 30/01', ftl:2, dfp:0,
+      capTotal:90, capUsed:82, demand:78, lastWeek:75, conf:'CONFIÁVEL', edited:true,
+      vehicles:[
+        { id:'v6', type:'Bitrem', mode:'FTL', carrier:'OCA', attrs:['CPT'],
+          eta1:'06:00', eta1Day:'MIE', eta1Loc:'BRCWB',
+          etd1:'07:00', etd1Day:'MIE', etd1Loc:'BRCWB',
+          tt1:'1h',
+          eta2:'14:00', eta2Day:'MIE', eta2Loc:'BRMG01',
+          etd2:'15:00', etd2Day:'MIE', etd2Loc:'BRMG01', hasInfo:false }
+      ]},
+    { id:'r7', code:'BRSP01 → BRSBO', cpt:'10:00', day:'Jue 31/01', ftl:1, dfp:2,
+      capTotal:60, capUsed:54, demand:50, lastWeek:48, conf:'CONFIÁVEL', edited:false, vehicles:[] },
+    { id:'r8', code:'BRRJ01 → BRMG01', cpt:'13:00', day:'Sáb 02/02', ftl:3, dfp:0,
+      capTotal:180, capUsed:165, demand:160, lastWeek:155, conf:'REVISAR', edited:false, vehicles:[] },
+  ],
+  sent: [
+    { id:'r9', code:'BRMG01 → BRPOA', cpt:'07:00', day:'Jue 31/01', ftl:2, dfp:1,
+      capTotal:120, capUsed:115, demand:110, lastWeek:102, conf:'CONFIÁVEL', edited:false,
+      travelId:'TRV-2026-00142',
+      vehicles:[
+        { id:'v7', type:'Bitrem', mode:'FTL', carrier:'OCA', attrs:['CPT'],
+          eta1:'05:00', eta1Day:'JUE', eta1Loc:'BRMG01',
+          etd1:'06:00', etd1Day:'JUE', etd1Loc:'BRMG01',
+          tt1:'1h',
+          eta2:'13:00', eta2Day:'JUE', eta2Loc:'BRPOA',
+          etd2:'14:00', etd2Day:'JUE', etd2Loc:'BRPOA', hasInfo:false }
+      ]},
+    { id:'r10', code:'BRSP01 → BRRJ01', cpt:'09:00', day:'Vie 01/02', ftl:1, dfp:1,
+      capTotal:90, capUsed:85, demand:80, lastWeek:75, conf:'CONFIÁVEL', edited:true,
+      travelId:'TRV-2026-00143', vehicles:[] },
+    { id:'r11', code:'BRSBO → BRRJ01', cpt:'14:00', day:'Sáb 02/02', ftl:3, dfp:1,
+      capTotal:180, capUsed:170, demand:162, lastWeek:155, conf:'CONFIÁVEL', edited:false,
+      travelId:'TRV-2026-00144', vehicles:[] },
+    { id:'r12', code:'BRCWB → BRSP01', cpt:'11:00', day:'Lun 03/02', ftl:2, dfp:2,
+      capTotal:150, capUsed:140, demand:135, lastWeek:128, conf:'CONFIÁVEL', edited:false,
+      travelId:null, vehicles:[] },
+  ]
+};
+
+/* ═══════════════════════════════════
+   STATE
+═══════════════════════════════════ */
+let currentTab = 'pending';
+let expanded = new Set();
+let selRoutes = new Set();
+let selVehicles = new Set();
+let pendingEdit = null;
+let currentEditVId = null;
+let currentEditFrom = '';
+let currentEditField = '';
+
+function routes() { return DATA[currentTab]; }
+
+/* ═══════════════════════════════════
+   RENDER
+═══════════════════════════════════ */
+function render() {
+  const container = document.getElementById('routes-container');
+  container.innerHTML = routes().map(r => renderRoute(r)).join('');
+  syncBulk();
+}
+
+function renderRoute(r) {
+  const sel = selRoutes.has(r.id);
+  const exp = expanded.has(r.id);
+  const hasVeh = r.vehicles && r.vehicles.length > 0;
+  const capPct = r.capTotal > 0 ? Math.round((r.capUsed / r.capTotal) * 100) : 0;
+  const isSent = currentTab === 'sent';
+  const isPending = currentTab === 'pending';
+  const isReviewed = currentTab === 'reviewed';
+
+  const confBadge = r.conf === 'CONFIÁVEL'
+    ? `<span class="badge badge-confiavel">CONFIÁVEL</span>`
+    : `<span class="badge" style="background:#FFF8E1;color:#F57F17">REVISAR</span>`;
+
+  // Apenas Travel ID quando enviado, mais o kebab — sem botões inline no header
+  let travelIdHtml = '';
+  if (isSent && r.travelId) {
+    travelIdHtml = `<span style="font-family:var(--mono);font-size:11px;font-weight:600;
+      color:var(--blue);background:var(--blue-l);padding:3px 8px;border-radius:4px;
+      cursor:pointer;margin-right:8px" onclick="copyTravelId('${r.travelId}')">🔗 ${r.travelId}</span>`;
+  } else if (isSent) {
+    travelIdHtml = `<span style="font-size:11px;color:var(--g400);font-style:italic;margin-right:8px">Procesando…</span>`;
+  }
+  const actionsHtml = `${travelIdHtml}<button class="ab-more" onclick="openCtxMenu(event,'${r.id}','${currentTab}')" title="Ações">⋮</button>`;
+
+  return `
+<div class="route-card${sel?' selected':''}${r.edited?' has-editada':''}" id="rc-${r.id}" style="position:relative">
+  ${r.edited ? `<span class="editada-tag" tabindex="0"
+    onmouseenter="onEditadaEnter(event,'${r.id}')"
+    onmouseleave="onEditadaLeave()"
+    onfocus="onEditadaEnter(event,'${r.id}')"
+    onblur="onEditadaLeave()"
+    title="Ver histórico de edições">EDITADA</span>` : ''}
+  <div class="route-row${hasVeh?' has-vehicles':''}">
+    <div class="rr-chk" style="${r.edited?'padding-top:18px':''}">
+      <input type="checkbox" ${sel?'checked':''} onchange="toggleRoute('${r.id}',this)">
+    </div>
+    <div class="rr-expand">
+      ${hasVeh
+        ? `<button class="expand-btn" onclick="toggleExpand('${r.id}')" title="${exp?'Colapsar':'Expandir'}">${exp?'▲':'▼'}</button>`
+        : `<span style="width:24px;display:inline-block"></span>`}
+    </div>
+    <div class="rr-info">
+      <div class="rr-route">${r.code}</div>
+      <div class="rr-cpt">CPT ${r.cpt} | ${r.day}</div>
+    </div>
+    <div class="rr-modes">
+      FTL&nbsp;<b>${r.ftl}</b>&nbsp;<span style="color:var(--g300)">|</span>&nbsp;DFP&nbsp;<b>${r.dfp}</b>
+    </div>
+    <div class="rr-pallets">
+      <div class="rr-cap">
+        <div class="col-label">Capacidad total</div>
+        <div class="col-val col-info">
+          ${r.capTotal} de <span style="color:var(--blue);font-weight:600">${r.capUsed}</span> pallets
+          <span class="info-icon" title="Capacidad utilizada vs. total">ⓘ</span>
+        </div>
+      </div>
+      <div class="rr-demand">
+        <div class="col-label">Demanda esperada</div>
+        <div class="col-val col-info">
+          ${r.demand} pallets
+          <span class="info-icon" title="Demanda esperada para la ruta">ⓘ</span>
+        </div>
+      </div>
+      <div class="rr-lw">
+        <div class="col-label">Última semana</div>
+        <div class="col-val col-info">
+          ${r.lastWeek} pallets
+          <span class="info-icon" title="Volumen de la semana anterior">ⓘ</span>
+        </div>
+      </div>
+    </div>
+    <div class="rr-stat">${confBadge}</div>
+    <div class="rr-actions">${actionsHtml}</div>
+  </div>
+  ${exp && hasVeh ? renderVehicles(r) : ''}
+</div>`;
+}
+
+function renderVehicles(route) {
+  const isEditable = currentTab !== 'sent';
+  return `
+<div class="vehicles-section">
+  <div class="vehicles-header">
+    <div class="vh-col" style="border-right:1px solid #DEDEDE"></div>
+    <div class="vh-col">Veículo</div>
+    <div class="vh-col">Transportadora</div>
+    <div class="vh-col">Atributos</div>
+    <div class="vh-col">ETA 1</div>
+    <div class="vh-col">ETD 1</div>
+    <div class="vh-col">TT 1</div>
+    <div class="vh-col">ETA 2</div>
+    <div class="vh-col">ETD 2</div>
+    <div class="vh-col" style="border-right:none"></div>
+  </div>
+  ${route.vehicles.map(v => renderVehicleRow(v, route, isEditable)).join('')}
+</div>`;
+}
+
+function renderVehicleRow(v, route, editable) {
+  const selV = selVehicles.has(v.id);
+  const attrs = v.attrs.map(a => `<span class="attr-tag">${a}</span>`).join('');
+  // noChk identifica linha DFP — não editável, não selecionável
+  const isDFP = v.noChk === true;
+  const canEdit = editable && !isDFP;
+  const modeHint = isDFP ? 'Modelo: DFP' : 'Modelo: FTL';
+
+  const timeCell = (t, day, loc) =>
+    `<div class="vt-time-row"><span class="vt-time">${t}</span><span class="vt-day">${day}</span></div>
+     <div class="vt-loc">${loc}</div>`;
+
+  const editCell = (content, handler) => canEdit
+    ? `<div class="editable-cell" onclick="${handler}">${content}<span class="ed-arr">▾</span></div>`
+    : `<div style="padding:3px 6px">${content}</div>`;
+
+  const attrCell = canEdit
+    ? `<div class="editable-cell" onclick="openAttrsEditor(event,'${v.id}')" style="flex-wrap:nowrap;gap:5px">${attrs || '—'}<span class="ed-arr">▾</span></div>`
+    : `<div style="display:flex;gap:5px;flex-wrap:nowrap;padding:3px 0">${attrs || '—'}</div>`;
+
+  const timeEditCell = (t, day, loc, field) => canEdit
+    ? `<div class="editable-cell" onclick="openETAEditor(event,'${v.id}','${field}','${t}','${day}')" style="flex-direction:column;align-items:flex-start;gap:1px">
+         ${timeCell(t, day, loc)}
+       </div>`
+    : `<div>${timeCell(t, day, loc)}</div>`;
+
+  const ttEditCell = canEdit
+    ? `<div class="editable-cell" onclick="openTTEditor(event,'${v.id}','${v.tt1}')">
+         <span class="vt-tt">${v.tt1}</span><span class="ed-arr">▾</span>
+       </div>`
+    : `<span class="vt-tt">${v.tt1}</span>`;
+
+  // Rótulo do veículo — DFP mostra "Tipo | DFP" em cinza
+  const typeLabel = isDFP
+    ? `<span style="font-size:12px;color:#888">${v.type} | DFP</span>`
+    : `<span style="font-size:12px;color:#1A1A1A">${v.type}</span>`;
+
+  const infoIcon = v.hasInfo || true
+    ? `<span class="vc-info-icon" title="${modeHint}">i</span>`
+    : '';
+
+  return `
+<div class="vehicle-row${isDFP?' is-dfp':''}${selV?' selected':''}" id="vr-${v.id}">
+  <div class="vc-chk">
+    ${!isDFP ? `<input type="checkbox" ${selV?'checked':''} onchange="toggleVehicle('${v.id}',this)">` : ''}
+  </div>
+  <div class="vc-type">
+    ${editCell(`${typeLabel}${infoIcon}`, `openVehicleEditor(event,'${v.id}','${v.type}')`)}
+  </div>
+  <div class="vc-carrier">
+    ${editCell(`<span class="carrier-txt">${v.carrier}</span>`, `openCarrierEditor(event,'${v.id}','${v.carrier}')`)}
+  </div>
+  <div class="vc-attrs">${attrCell}</div>
+  <div class="vc-eta">${timeEditCell(v.eta1, v.eta1Day, v.eta1Loc, 'eta1')}</div>
+  <div class="vc-etd">${timeEditCell(v.etd1, v.etd1Day, v.etd1Loc, 'etd1')}</div>
+  <div class="vc-tt">${ttEditCell}</div>
+  <div class="vc-eta2">${timeEditCell(v.eta2, v.eta2Day, v.eta2Loc, 'eta2')}</div>
+  <div class="vc-etd2">${timeEditCell(v.etd2, v.etd2Day, v.etd2Loc, 'etd2')}</div>
+  <div class="vc-action">
+    ${canEdit ? `<button class="ab-ghost" onclick="removeVehicle('${v.id}','${route.id}')">Eliminar</button>` : ''}
+  </div>
+</div>`;
+} // fim renderVehicleRow
+
+/* ═══════════════════════════════════
+   TABS & METRICS
+═══════════════════════════════════ */
+function switchTab(tab) {
+  currentTab = tab;
+  selRoutes.clear(); selVehicles.clear(); expanded.clear();
+  ['pending','reviewed','sent'].forEach(t => {
+    document.getElementById('mc-'+t).classList.toggle('active', t === tab);
+  });
+  render(); syncBulk();
+}
+
+let metricsOpen = true;
+function toggleMetrics() {
+  metricsOpen = !metricsOpen;
+  document.getElementById('metrics-body').style.display = metricsOpen ? 'flex' : 'none';
+  document.getElementById('metrics-toggle').classList.toggle('open', metricsOpen);
+}
+
+/* ═══════════════════════════════════
+   SELECTION
+═══════════════════════════════════ */
+function toggleSelectAll(el) {
+  routes().forEach(r => el.checked ? selRoutes.add(r.id) : selRoutes.delete(r.id));
+  render(); syncBulk();
+}
+function toggleRoute(id, el) {
+  el.checked ? selRoutes.add(id) : selRoutes.delete(id);
+  document.getElementById('rc-'+id)?.classList.toggle('selected', el.checked);
+  syncBulk(); syncSelBar();
+}
+function toggleVehicle(id, el) {
+  el.checked ? selVehicles.add(id) : selVehicles.delete(id);
+  syncBulk();
+}
+function clearSelection() {
+  selRoutes.clear(); selVehicles.clear();
+  render(); syncBulk();
+}
+function syncSelBar() { syncBulk(); } /* alias para compatibilidade */
+function syncBulk() {
+  const nR = selRoutes.size, nV = selVehicles.size, total = nR + nV;
+  const selText = document.getElementById('sel-count');
+  const limpar = document.getElementById('bulk-limpar');
+
+  if (total === 0) {
+    selText.textContent = '0 rutas seleccionadas';
+    selText.classList.remove('active-sel');
+    limpar.style.display = 'none';
+    document.getElementById('hd-chk').checked = false;
+    document.getElementById('hd-chk').indeterminate = false;
+  } else {
+    let txt = '';
+    if (nR > 0 && nV === 0)      txt = `${nR} ruta${nR>1?'s':''} seleccionada${nR>1?'s':''}`;
+    else if (nV > 0 && nR === 0) txt = `${nV} vehículo${nV>1?'s':''} seleccionado${nV>1?'s':''}`;
+    else                          txt = `${nR} rota${nR>1?'s':''} e ${nV} veículo${nV>1?'s':''} selecionados.`;
+    selText.textContent = txt;
+    selText.classList.add('active-sel');
+    limpar.style.display = nR+nV > 0 ? 'inline' : 'none';
+    const n = routes().length;
+    document.getElementById('hd-chk').checked = selRoutes.size > 0 && selRoutes.size >= n;
+    document.getElementById('hd-chk').indeterminate = selRoutes.size > 0 && selRoutes.size < n;
+  }
+  renderBulkBar(nR, nV);
+}
+
+/* Renderiza o lado direito da barra conforme o tipo de seleção */
+function renderBulkBar(nR, nV) {
+  const right = document.getElementById('bulk-right');
+  const isPending = currentTab === 'pending';
+  const isReviewed = currentTab === 'reviewed';
+
+  if (nR === 0 && nV === 0) {
+    // Estado vazio — "Editar ▼" + ações de rota desabilitadas
+    right.innerHTML = `
+      <button class="bb-edit-btn" disabled>Editar <span class="bb-chev">▼</span></button>
+      <div class="bb-sep"></div>
+      <button class="bb-link" disabled>Revertir ediciones</button>
+      <button class="bb-link" disabled>Marcar como revisado</button>`;
+    return;
+  }
+
+  if (nV > 0 && nR === 0) {
+    // Somente veículos — barra enxuta: "Eliminar vehículos" | sep | [Editar ▼]
+    right.innerHTML = `
+      <button class="bb-link bb-link-danger" onclick="bulkAction('eliminar')">Eliminar vehículos</button>
+      <div class="bb-sep"></div>
+      <div class="edit-dropdown" id="edit-dd-wrap">
+        <button class="bb-edit-btn" id="bb-edit-toggle" onclick="toggleEditDropdown(event)">
+          Editar <span class="bb-chev" id="bb-chev-icon">▼</span>
+        </button>
+      </div>`;
+    setTimeout(() => positionEditDropdown(), 0);
+    return;
+  }
+
+  if (nR > 0 && nV === 0) {
+    // Somente rotas
+    right.innerHTML = `
+      <button class="bb-link" onclick="bulkRevert()">Revertir ediciones</button>
+      ${isPending ? `<button class="bb-link" onclick="bulkMarkReviewed()">Marcar como revisado</button>` : ''}
+      ${isReviewed ? `<button class="bb-link" onclick="bulkSend()">Enviar a agendamiento</button>` : ''}`;
+    return;
+  }
+
+  // Seleção mista — "Editar ▼" dropdown + ações de rota (conforme referencia-dropdown@2x)
+  document.getElementById('dropdown-eliminar').classList.remove('item-sep'); // já tem separador no DOM
+  right.innerHTML = `
+    <div class="edit-dropdown" id="edit-dd-wrap">
+      <button class="bb-edit-btn" id="bb-edit-toggle" onclick="toggleEditDropdown(event)">
+        Editar <span class="bb-chev" id="bb-chev-icon">▼</span>
+      </button>
+    </div>
+    <div class="bb-sep"></div>
+    <button class="bb-link" onclick="bulkRevert()">Revertir ediciones</button>
+    ${isPending ? `<button class="bb-link" onclick="bulkMarkReviewed()">Marcar rotas como revisado</button>` : ''}
+    ${isReviewed ? `<button class="bb-link" onclick="bulkSend()">Enviar a agendamiento</button>` : ''}`;
+  // Posiciona o dropdown flutuante em relação ao botão depois de renderizar
+  setTimeout(() => positionEditDropdown(), 0);
+}
+
+/* Dropdown do botão Editar */
+function toggleEditDropdown(event) {
+  event.stopPropagation();
+  const menu = document.getElementById('edit-dropdown-menu');
+  const isOpen = menu.classList.contains('vis');
+  menu.classList.toggle('vis', !isOpen);
+  const chevron = document.getElementById('bb-chev-icon');
+  if (chevron) chevron.textContent = isOpen ? '▼' : '▲';
+  if (!isOpen) positionEditDropdown();
+}
+function positionEditDropdown() {
+  const btn = document.getElementById('bb-edit-toggle');
+  const menu = document.getElementById('edit-dropdown-menu');
+  if (!btn || !menu) return;
+  const r = btn.getBoundingClientRect();
+  menu.style.top = (r.bottom + 4) + 'px';
+  menu.style.left = 'auto';
+  menu.style.right = (window.innerWidth - r.right) + 'px';
+  menu.style.position = 'fixed';
+}
+function closeEditDropdown() {
+  document.getElementById('edit-dropdown-menu').classList.remove('vis');
+  const chevron = document.getElementById('bb-chev-icon');
+  if (chevron) chevron.textContent = '▼';
+}
+
+/* ═══════════════════════════════════
+   EXPAND
+═══════════════════════════════════ */
+function toggleExpand(id) {
+  expanded.has(id) ? expanded.delete(id) : expanded.add(id);
+  render();
+}
+
+/* ═══════════════════════════════════
+   CELL EDITORS
+═══════════════════════════════════ */
+const EDITORS = ['ed-vehicle','ed-carrier','ed-eta','ed-tt','ed-attrs'];
+function closeAllEditors() {
+  EDITORS.forEach(id => { const el = document.getElementById(id); if(el) el.classList.remove('vis'); });
+  document.querySelectorAll('.editable-cell.active').forEach(c => c.classList.remove('active'));
+  currentEditVId = null; currentEditField = '';
+}
+function positionEditor(editorId, triggerEl) {
+  const ed = document.getElementById(editorId);
+  ed.style.visibility = 'hidden'; ed.style.display = 'block';
+  const ew = ed.offsetWidth; const eh = ed.offsetHeight;
+  ed.style.display = ''; ed.style.visibility = '';
+  const r = triggerEl.getBoundingClientRect();
+  let top = r.bottom + 6; let left = r.left;
+  if (left + ew > window.innerWidth - 12) left = window.innerWidth - ew - 12;
+  if (left < 8) left = 8;
+  if (top + eh > window.innerHeight - 12) top = r.top - eh - 6;
+  ed.style.top = top + 'px'; ed.style.left = left + 'px';
+}
+
+/* VEÍCULO */
+function openVehicleEditor(event, vid, currentType) {
+  event.stopPropagation(); closeAllEditors();
+  currentEditVId = vid; currentEditFrom = currentType; currentEditField = 'vehicle';
+  event.currentTarget.classList.add('active');
+  document.getElementById('ev-type').innerHTML =
+    `<option value="${currentType}">${currentType} (actual)</option>
+     <option value="">— seleccionar —</option>
+     <option value="Bitrem">Bitrem</option><option value="Carreta">Carreta</option>
+     <option value="Toco">Toco</option><option value="VUC">VUC</option>
+     <option value="Truck">Truck 3/4</option>`;
+  document.getElementById('ev-reason').value = '';
+  document.getElementById('ev-apply').disabled = true;
+  const ed = document.getElementById('ed-vehicle'); ed.classList.add('vis');
+  positionEditor('ed-vehicle', event.currentTarget);
+}
+function checkEditorValid(type) {
+  if (type==='vehicle') {
+    const t = document.getElementById('ev-type').value;
+    const r = document.getElementById('ev-reason').value;
+    document.getElementById('ev-apply').disabled = !t || t===currentEditFrom || !r;
+  } else if (type==='carrier') {
+    const c = document.getElementById('ec-carrier').value;
+    const r = document.getElementById('ec-reason').value;
+    document.getElementById('ec-apply').disabled = !c || !r;
+  } else if (type==='eta') {
+    document.getElementById('eta-apply').disabled = false;
+  } else if (type==='tt') {
+    document.getElementById('tt-apply').disabled = false;
+  }
+}
+function addHistory(routeId, entry) {
+  const route = Object.values(DATA).flat().find(r => r.id === routeId);
+  if (!route) return;
+  if (!route.history) route.history = [];
+  route.history.unshift({ ...entry, who:'lucasperei', date:new Date().toLocaleDateString('pt-BR') });
+}
+function findRouteByVehicle(vid) {
+  return Object.values(DATA).flat().find(r => r.vehicles?.some(v => v.id === vid));
+}
+function applyVehicleEdit() {
+  const newType = document.getElementById('ev-type').value;
+  const r = findRouteByVehicle(currentEditVId);
+  if (r) {
+    const v = r.vehicles.find(vv => vv.id === currentEditVId);
+    if (v) {
+      addHistory(r.id, { label:'Edição de veículo', changes:[`${v.type} para ${newType}`] });
+      v.type = newType; r.edited = true;
+    }
+  }
+  closeAllEditors(); render(); showToast('Tipo de vehículo actualizado', 'success');
+}
+
+/* TRANSPORTADORA */
+function openCarrierEditor(event, vid, currentCarrier) {
+  event.stopPropagation(); closeAllEditors();
+  currentEditVId = vid; currentEditFrom = currentCarrier;
+  event.currentTarget.classList.add('active');
+  document.getElementById('ec-carrier').innerHTML =
+    `<option value="${currentCarrier}">${currentCarrier} (actual)</option>
+     <option value="">— seleccionar —</option>
+     <option>Jomed</option><option>Maroni</option><option>OCA</option>
+     <option>TransBrasil</option><option>Multilog</option><option>FazendaSJT</option>`;
+  document.getElementById('ec-reason').value = '';
+  document.getElementById('ec-apply').disabled = true;
+  const ed = document.getElementById('ed-carrier'); ed.classList.add('vis');
+  positionEditor('ed-carrier', event.currentTarget);
+}
+function applyCarrierEdit() {
+  const newCarrier = document.getElementById('ec-carrier').value;
+  const r = findRouteByVehicle(currentEditVId);
+  if (r) {
+    const v = r.vehicles.find(vv => vv.id === currentEditVId);
+    if (v) {
+      addHistory(r.id, { label:'Edição de transportadora', changes:[`${v.carrier} para ${newCarrier}`] });
+      v.carrier = newCarrier; r.edited = true;
+    }
+  }
+  closeAllEditors(); render(); showToast('Transportadora atualizada', 'success');
+}
+
+/* ATRIBUTOS */
+function openAttrsEditor(event, vid) {
+  event.stopPropagation(); closeAllEditors();
+  currentEditVId = vid; event.currentTarget.classList.add('active');
+  const v = Object.values(DATA).flat().flatMap(r => r.vehicles||[]).find(vv => vv.id===vid);
+  const cur = v?.attrs || [];
+  document.getElementById('ed-attrs').querySelectorAll('input').forEach(cb => { cb.checked = cur.includes(cb.value); });
+  const ed = document.getElementById('ed-attrs'); ed.classList.add('vis');
+  positionEditor('ed-attrs', event.currentTarget);
+}
+function applyAttrChange() {
+  const checked = [...document.getElementById('ed-attrs').querySelectorAll('input:checked')].map(c => c.value);
+  const allRoutes = Object.values(DATA).flat();
+  for (const r of allRoutes) {
+    const v = r.vehicles?.find(vv => vv.id === currentEditVId);
+    if (v) { v.attrs = checked; r.edited = true; break; }
+  }
+  render();
+}
+
+/* ETA / ETD */
+function openETAEditor(event, vid, field, currentTime, currentDay) {
+  event.stopPropagation(); closeAllEditors();
+  currentEditVId = vid; currentEditField = field; event.currentTarget.classList.add('active');
+  document.getElementById('eta-title').textContent = field.startsWith('eta') ? 'Editar ETA' : 'Editar ETD';
+  document.getElementById('eta-day').value = currentDay;
+  document.getElementById('eta-hour').value = currentTime;
+  document.getElementById('eta-apply').disabled = true;
+  const ed = document.getElementById('ed-eta'); ed.classList.add('vis');
+  positionEditor('ed-eta', event.currentTarget);
+}
+function applyTimeEdit() {
+  const day = document.getElementById('eta-day').value;
+  const hour = document.getElementById('eta-hour').value;
+  const r = findRouteByVehicle(currentEditVId);
+  if (r) {
+    const v = r.vehicles.find(vv => vv.id === currentEditVId);
+    if (v) {
+      const f = currentEditField;
+      const isETA = f.startsWith('eta');
+      const fieldName = f.toUpperCase().replace('1','').replace('2','');
+      const oldVal = v[f];
+      if(f==='eta1'){v.eta1=hour;v.eta1Day=day}else if(f==='etd1'){v.etd1=hour;v.etd1Day=day}
+      else if(f==='eta2'){v.eta2=hour;v.eta2Day=day}else if(f==='etd2'){v.etd2=hour;v.etd2Day=day}
+      addHistory(r.id, {
+        label:`Edição de horário em ${v.eta1Loc||''}`,
+        changes:[`${fieldName}: ${oldVal} para ${hour}`]
+      });
+      r.edited = true;
+    }
+  }
+  closeAllEditors(); render(); showToast('Horário atualizado', 'success');
+}
+
+/* TT */
+function openTTEditor(event, vid, currentTT) {
+  event.stopPropagation(); closeAllEditors();
+  currentEditVId = vid; event.currentTarget.classList.add('active');
+  document.getElementById('tt-value').value = currentTT;
+  document.getElementById('tt-apply').disabled = true;
+  const ed = document.getElementById('ed-tt'); ed.classList.add('vis');
+  positionEditor('ed-tt', event.currentTarget);
+}
+function applyTTEdit() {
+  const val = document.getElementById('tt-value').value;
+  const allRoutes = Object.values(DATA).flat();
+  for (const r of allRoutes) {
+    const v = r.vehicles?.find(vv => vv.id === currentEditVId);
+    if (v) { v.tt1 = val; r.edited = true; break; }
+  }
+  closeAllEditors(); render(); showToast('Transit time atualizado', 'success');
+}
+
+/* aliases para compatibilidade */
+function closePop() { closeAllEditors(); }
+function closeModal() { document.getElementById('overlay')?.classList.remove('vis'); }
+function selReason(el) { document.querySelectorAll('.ro').forEach(o=>o.classList.remove('sel')); el.classList.add('sel'); }
+function confirmEdit() { closeModal(); }
+
+/* ═══════════════════════════════════
+   CONTEXT MENU
+═══════════════════════════════════ */
+let ctxRouteId = null;
+let ctxTab = null;
+function openCtxMenu(event, routeId, tab) {
+  event.stopPropagation();
+  ctxRouteId = routeId; ctxTab = tab;
+  const menu = document.getElementById('ctx-menu');
+
+  // Mostra/esconde itens conforme tab
+  document.getElementById('ctx-deactivate').style.display = tab === 'pending' ? 'flex' : 'none';
+  document.getElementById('ctx-review').style.display = tab === 'pending' ? 'flex' : 'none';
+  document.getElementById('ctx-back').style.display = tab === 'reviewed' ? 'flex' : 'none';
+  document.getElementById('ctx-send').style.display = tab === 'reviewed' ? 'flex' : 'none';
+  document.getElementById('ctx-history').style.display = 'flex';
+
+  menu.classList.add('vis');
+  const rect = event.currentTarget.getBoundingClientRect();
+  let left = rect.right - 200;
+  if (left < 8) left = 8;
+  menu.style.left = left + 'px';
+  menu.style.top = (rect.bottom + 4) + 'px';
+}
+function closeCtxMenu() { document.getElementById('ctx-menu').classList.remove('vis'); }
+function ctxDeactivate() { closeCtxMenu(); deactivate(ctxRouteId); }
+function ctxMarkReviewed() { closeCtxMenu(); markReviewed(ctxRouteId); }
+function ctxBackToPending() { closeCtxMenu(); backToPending(ctxRouteId); }
+function ctxSend() { closeCtxMenu(); sendToScheduling(ctxRouteId); }
+function ctxHistory() {
+  closeCtxMenu();
+  const btn = document.querySelector(`#rc-${ctxRouteId} .ab-more`);
+  openDrawer(ctxRouteId, btn);
+}
+
+/* ═══════════════════════════════════
+   HISTORY POPOVER
+═══════════════════════════════════ */
+function openDrawer(routeId, triggerEl) {
+  const pop = document.getElementById('hist-pop');
+  pop.classList.add('vis');
+
+  // Posiciona o popover acima do elemento que disparou
+  if (triggerEl) {
+    const rect = triggerEl.getBoundingClientRect();
+    const pw = 320;
+    let left = rect.left + rect.width / 2 - pw / 2;
+    // Guardar dentro da viewport
+    if (left < 8) left = 8;
+    if (left + pw > window.innerWidth - 8) left = window.innerWidth - pw - 8;
+    const top = rect.top - pop.offsetHeight - 16;
+    pop.style.left = left + 'px';
+    pop.style.top = Math.max(8, top) + 'px';
+  }
+}
+function closeDrawer() {
+  document.getElementById('hist-pop').classList.remove('vis');
+}
+function doRevert(routeId) {
+  const route = Object.values(DATA).flat().find(x => x.id === routeId);
+  if (route && route.history) {
+    // Registra a reversão como nova entrada de histórico
+    route.history.unshift({
+      label: 'Reversão de edição',
+      changes: ['Valores restaurados para o estado anterior'],
+      who: 'lucasperei',
+      date: new Date().toLocaleDateString('pt-BR')
+    });
+  }
+  closeDrawer();
+  showToast('Reversão registrada como nova edição', 'warn');
+}
+
+/* ═══════════════════════════════════
+   ROUTE ACTIONS
+═══════════════════════════════════ */
+function markReviewed(id) {
+  const idx = DATA.pending.findIndex(r => r.id === id);
+  if (idx !== -1) { const r = DATA.pending.splice(idx,1)[0]; r.status='reviewed'; DATA.reviewed.push(r); }
+  render(); showToast('Ruta marcada como revisada', 'success');
+}
+function backToPending(id) {
+  const idx = DATA.reviewed.findIndex(r => r.id === id);
+  if (idx !== -1) { const r = DATA.reviewed.splice(idx,1)[0]; DATA.pending.push(r); }
+  render(); showToast('Ruta movida a Por revisar', 'info');
+}
+function sendToScheduling(id) {
+  const allRoutes = [...DATA.pending,...DATA.reviewed];
+  const r = allRoutes.find(x => x.id === id);
+  if (r) {
+    DATA.pending.splice(DATA.pending.indexOf(r),1);
+    DATA.reviewed.splice(DATA.reviewed.indexOf(r),1);
+    r.travelId = 'TRV-2026-' + (Math.floor(Math.random()*900)+100);
+    DATA.sent.push(r);
+  }
+  render(); showToast('Ruta enviada a agendamiento · ' + r?.travelId, 'success');
+}
+function deactivate(id) { showToast('Ruta desactivada', 'info'); }
+function removeVehicle(vid, rid) { showToast('Vehículo eliminado', 'warn'); }
+function copyTravelId(tid) {
+  navigator.clipboard.writeText(tid).catch(()=>{});
+  showToast('Travel ID copiado: ' + tid, 'info');
+}
+function bulkMarkReviewed() {
+  const n = selRoutes.size; clearSelection();
+  showToast(`${n} ruta${n>1?'s':''} marcada${n>1?'s':''} como revisada${n>1?'s':''}`, 'success');
+}
+function bulkSend() {
+  const n = selRoutes.size; clearSelection();
+  showToast(`${n} ruta${n>1?'s':''} enviada${n>1?'s':''} a agendamiento`, 'success');
+}
+function bulkRevert() {
+  const n = selRoutes.size; clearSelection();
+  showToast(`Ediciones de ${n} ruta${n>1?'s':''} revertidas`, 'warn');
+}
+/* ─── BULK MODALS ───────────────────────────────────────────────────── */
+
+/** Retorna veículos selecionados que podem ser editados (exclui DFP/noChk) */
+function getEditableSelectedVehicles() {
+  const allRoutes = Object.values(DATA).flat();
+  return [...selVehicles].map(vid => {
+    const route = allRoutes.find(r => r.vehicles?.some(v => v.id === vid));
+    const vehicle = route?.vehicles?.find(v => v.id === vid);
+    if (!vehicle || vehicle.noChk) return null;
+    return { vehicle, route };
+  }).filter(Boolean);
+}
+
+function openBulkOverlay(modalId) {
+  ['bm-vehicle','bm-carrier','bm-attrs','bm-schedule'].forEach(id => {
+    document.getElementById(id).style.display = 'none';
+  });
+  document.getElementById(modalId).style.display = '';
+  document.getElementById('bulk-overlay').classList.add('vis');
+  setTimeout(() => {
+    const first = document.querySelector('#' + modalId + ' select:not(:disabled), #' + modalId + ' input');
+    if (first) first.focus();
+  }, 120);
+}
+
+function closeBulkModal() {
+  document.getElementById('bulk-overlay').classList.remove('vis');
+}
+
+function onBulkOverlayClick(e) {
+  if (e.target === document.getElementById('bulk-overlay')) closeBulkModal();
+}
+
+function bulkAction(type) {
+  const editableVehicles = getEditableSelectedVehicles();
+  if (type === 'eliminar') { bulkEliminar(editableVehicles); return; }
+  if (editableVehicles.length === 0) {
+    showToast('Nenhum veículo editável selecionado', 'warn'); return;
+  }
+  const n = editableVehicles.length;
+  switch (type) {
+    case 'vehículo':       openBulkVehicleModal(n); break;
+    case 'transportadora': openBulkCarrierModal(n); break;
+    case 'atributos':      openBulkAttrsModal(editableVehicles, n); break;
+    case 'horario':        openBulkScheduleModal(n); break;
+    default: showToast(`Ação: ${type}`, 'info');
+  }
+}
+
+/* ── Modal: Vehículo ──────────────────────────────────────────────────── */
+function openBulkVehicleModal(n) {
+  document.getElementById('bm-veh-title').textContent = `Cambiar vehículo (${n})`;
+  document.getElementById('bm-veh-type').value = '';
+  document.getElementById('bm-veh-reason').value = '';
+  document.getElementById('bm-veh-apply').disabled = true;
+  openBulkOverlay('bm-vehicle');
+}
+function checkBulkValid(type) {
+  if (type === 'vehicle') {
+    const ok = document.getElementById('bm-veh-type').value &&
+               document.getElementById('bm-veh-reason').value;
+    document.getElementById('bm-veh-apply').disabled = !ok;
+  } else if (type === 'carrier') {
+    const ok = document.getElementById('bm-car-carrier').value &&
+               document.getElementById('bm-car-reason').value;
+    document.getElementById('bm-car-apply').disabled = !ok;
+  } else if (type === 'schedule') {
+    const anyFilled = ['bm-eta1-day','bm-eta1-hour','bm-etd1-day','bm-etd1-hour',
+      'bm-tt1','bm-eta2-day','bm-eta2-hour','bm-etd2-day','bm-etd2-hour']
+      .some(id => document.getElementById(id).value);
+    document.getElementById('bm-sch-apply').disabled = !anyFilled;
+  }
+  // attrs: always enabled (handled in openBulkAttrsModal)
+}
+function applyBulkVehicle() {
+  const vehicles = getEditableSelectedVehicles();
+  const newType = document.getElementById('bm-veh-type').value;
+  const reason  = document.getElementById('bm-veh-reason').value;
+  const affected = new Set();
+  vehicles.forEach(({ vehicle, route }) => {
+    const oldType = vehicle.type;
+    vehicle.type = newType; route.edited = true; affected.add(route);
+    addHistory(route.id, {
+      label: `Edição massiva de veículo (${vehicles.length} veíc.)`,
+      changes: [`${oldType} → ${newType}`, `Motivo: ${reason}`]
+    });
+  });
+  closeBulkModal(); render();
+  showToast(`Tipo de veículo atualizado · ${vehicles.length} veículo${vehicles.length>1?'s':''}`, 'success');
+}
+
+/* ── Modal: Transportadora ────────────────────────────────────────────── */
+function openBulkCarrierModal(n) {
+  document.getElementById('bm-car-title').textContent = `Cambiar transportadora (${n})`;
+  document.getElementById('bm-car-carrier').value = '';
+  document.getElementById('bm-car-reason').value = '';
+  document.getElementById('bm-car-apply').disabled = true;
+  openBulkOverlay('bm-carrier');
+}
+function applyBulkCarrier() {
+  const vehicles   = getEditableSelectedVehicles();
+  const newCarrier = document.getElementById('bm-car-carrier').value;
+  const reason     = document.getElementById('bm-car-reason').value;
+  vehicles.forEach(({ vehicle, route }) => {
+    const old = vehicle.carrier;
+    vehicle.carrier = newCarrier; route.edited = true;
+    addHistory(route.id, {
+      label: `Edição massiva de transportadora (${vehicles.length} veíc.)`,
+      changes: [`${old} → ${newCarrier}`, `Motivo: ${reason}`]
+    });
+  });
+  closeBulkModal(); render();
+  showToast(`Transportadora atualizada · ${vehicles.length} veículo${vehicles.length>1?'s':''}`, 'success');
+}
+
+/* ── Modal: Atributos ─────────────────────────────────────────────────── */
+function openBulkAttrsModal(editableVehicles, n) {
+  document.getElementById('bm-att-title').textContent = `Cambiar atributos (${n})`;
+  // Pré-seleciona a interseção de atributos dos veículos selecionados
+  const allAttrs = editableVehicles.map(({ vehicle }) => vehicle.attrs || []);
+  const intersection = allAttrs.length > 0
+    ? allAttrs.reduce((a, b) => a.filter(x => b.includes(x)))
+    : [];
+  ['PAL','VEN','CPT','ETD'].forEach(attr => {
+    const cb = document.getElementById('bm-att-' + attr.toLowerCase());
+    if (cb) cb.checked = intersection.includes(attr);
+  });
+  openBulkOverlay('bm-attrs');
+}
+function applyBulkAttrs() {
+  const vehicles = getEditableSelectedVehicles();
+  const newAttrs = ['PAL','VEN','CPT','ETD'].filter(a => {
+    const cb = document.getElementById('bm-att-' + a.toLowerCase());
+    return cb && cb.checked;
+  });
+  vehicles.forEach(({ vehicle, route }) => {
+    const old = [...vehicle.attrs];
+    vehicle.attrs = newAttrs; route.edited = true;
+    addHistory(route.id, {
+      label: `Edição massiva de atributos (${vehicles.length} veíc.)`,
+      changes: [`${old.join(', ')||'—'} → ${newAttrs.join(', ')||'—'}`]
+    });
+  });
+  closeBulkModal(); render();
+  showToast(`Atributos atualizados · ${vehicles.length} veículo${vehicles.length>1?'s':''}`, 'success');
+}
+
+/* ── Modal: Horario ───────────────────────────────────────────────────── */
+function openBulkScheduleModal(n) {
+  document.getElementById('bm-sch-title').textContent = `Cambiar horario (${n})`;
+  ['bm-eta1-day','bm-eta1-hour','bm-etd1-day','bm-etd1-hour','bm-tt1',
+   'bm-eta2-day','bm-eta2-hour','bm-etd2-day','bm-etd2-hour','bm-sch-reason']
+    .forEach(id => { document.getElementById(id).value = ''; });
+  document.getElementById('bm-sch-apply').disabled = true;
+  openBulkOverlay('bm-schedule');
+}
+function applyBulkSchedule() {
+  const vehicles = getEditableSelectedVehicles();
+  const f = (id) => document.getElementById(id).value;
+  const changes = [];
+  if (f('bm-eta1-day') || f('bm-eta1-hour')) changes.push(`ETA origem: ${f('bm-eta1-day')} ${f('bm-eta1-hour')}`);
+  if (f('bm-etd1-day') || f('bm-etd1-hour')) changes.push(`ETD origem: ${f('bm-etd1-day')} ${f('bm-etd1-hour')}`);
+  if (f('bm-tt1'))                            changes.push(`TT: ${f('bm-tt1')}`);
+  if (f('bm-eta2-day') || f('bm-eta2-hour')) changes.push(`ETA destino: ${f('bm-eta2-day')} ${f('bm-eta2-hour')}`);
+  if (f('bm-etd2-day') || f('bm-etd2-hour')) changes.push(`ETD destino: ${f('bm-etd2-day')} ${f('bm-etd2-hour')}`);
+  if (f('bm-sch-reason')) changes.push(`Motivo: ${f('bm-sch-reason')}`);
+
+  vehicles.forEach(({ vehicle, route }) => {
+    if (f('bm-eta1-day'))  vehicle.eta1Day = f('bm-eta1-day');
+    if (f('bm-eta1-hour')) vehicle.eta1    = f('bm-eta1-hour');
+    if (f('bm-etd1-day'))  vehicle.etd1Day = f('bm-etd1-day');
+    if (f('bm-etd1-hour')) vehicle.etd1    = f('bm-etd1-hour');
+    if (f('bm-tt1'))       vehicle.tt1     = f('bm-tt1');
+    if (f('bm-eta2-day'))  vehicle.eta2Day = f('bm-eta2-day');
+    if (f('bm-eta2-hour')) vehicle.eta2    = f('bm-eta2-hour');
+    if (f('bm-etd2-day'))  vehicle.etd2Day = f('bm-etd2-day');
+    if (f('bm-etd2-hour')) vehicle.etd2    = f('bm-etd2-hour');
+    route.edited = true;
+    addHistory(route.id, {
+      label: `Edição massiva de horários (${vehicles.length} veíc.)`,
+      changes
+    });
+  });
+  closeBulkModal(); render();
+  showToast(`Horários atualizados · ${vehicles.length} veículo${vehicles.length>1?'s':''}`, 'success');
+}
+
+function bulkEliminar(vehicles) {
+  if (vehicles.length === 0) return;
+  vehicles.forEach(({ vehicle, route }) => {
+    const idx = route.vehicles.findIndex(v => v.id === vehicle.id);
+    if (idx !== -1) route.vehicles.splice(idx, 1);
+    selVehicles.delete(vehicle.id);
+  });
+  render(); syncBulk();
+  showToast(`${vehicles.length} veículo${vehicles.length>1?'s':''} eliminado${vehicles.length>1?'s':''}`, 'warn');
+}
+
+/* ═══════════════════════════════════
+   TOAST
+═══════════════════════════════════ */
+let toastT = null;
+function showToast(msg, type='info') {
+  const t = document.getElementById('toast');
+  const ico = {success:'✓',info:'ℹ',warn:'⚠'};
+  t.className = `toast t-${type} vis`;
+  t.innerHTML = `<span>${ico[type]}</span> ${msg}`;
+  if (toastT) clearTimeout(toastT);
+  toastT = setTimeout(() => t.classList.remove('vis'), 3200);
+}
+
+/* ═══════════════════════════════════
+   DEMO STATES
+═══════════════════════════════════ */
+/* demo() removed — funcionalidade de prototipação removida da UI final */
+
+/* ═══════════════════════════════════
+   EDITADA TAG — hover abre histórico
+═══════════════════════════════════ */
+let editadaLeaveTimer = null;
+function onEditadaEnter(event, routeId) {
+  clearTimeout(editadaLeaveTimer);
+  // Encontra a rota e renderiza histórico real
+  const route = Object.values(DATA).flat().find(x => x.id === routeId);
+  const pop = document.getElementById('hist-pop');
+  if (route && route.history && route.history.length > 0) {
+    const body = pop.querySelector('.hist-pop-body');
+    let html = `<div class="hist-pop-title">Histórico de edições</div>`;
+    route.history.forEach((item, i) => {
+      html += `<hr class="hist-hr">
+        <div class="hist-entry">
+          <div class="he-type">${item.label}</div>
+          ${item.changes.map(c => `<div class="he-change">${c}</div>`).join('')}
+          ${item.who ? `<div class="he-meta">Modificado por <b>${item.who}</b></div>` : ''}
+          ${item.date ? `<div class="he-date">${item.date}</div>` : ''}
+        </div>`;
+    });
+    body.innerHTML = html;
+    // Botão reverter aponta para a rota real
+    pop.querySelector('.hist-revert-btn').onclick = () => doRevert(routeId);
+  }
+  const r = event.currentTarget.getBoundingClientRect();
+  const pw = 320;
+  let left = r.left;
+  if (left + pw > window.innerWidth - 12) left = window.innerWidth - pw - 12;
+  if (left < 8) left = 8;
+  pop.style.left = left + 'px';
+  pop.style.top = (r.bottom + 8) + 'px';
+  pop.classList.add('vis');
+}
+function onEditadaLeave() {
+  editadaLeaveTimer = setTimeout(() => {
+    const pop = document.getElementById('hist-pop');
+    if (!pop.matches(':hover')) pop.classList.remove('vis');
+  }, 120);
+}
+document.addEventListener('mouseleave', e => {
+  if (e.target?.id === 'hist-pop') {
+    editadaLeaveTimer = setTimeout(() => closeDrawer(), 120);
+  }
+}, true);
+
+/* ═══════════════════════════════════
+   CLOSE ON OUTSIDE CLICK / ESC
+═══════════════════════════════════ */
+document.addEventListener('click', e => {
+  const inEditor = EDITORS.some(id => e.target.closest('#'+id));
+  const inCell = e.target.closest('.editable-cell');
+  if (!inEditor && !inCell) closeAllEditors();
+  if (!e.target.closest('#hist-pop') && !e.target.closest('.editada-tag')) closeDrawer();
+  if (!e.target.closest('#ctx-menu') && !e.target.closest('.ab-more')) closeCtxMenu();
+  if (!e.target.closest('#ed-attrs') && !e.target.closest('.editable-cell')) {
+    document.getElementById('ed-attrs')?.classList.remove('vis');
+  }
+  // Fecha dropdown "Editar"
+  if (!e.target.closest('#edit-dropdown-menu') && !e.target.closest('#bb-edit-toggle')) {
+    closeEditDropdown();
+  }
+});
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    closeAllEditors(); closeDrawer(); closeCtxMenu(); closeEditDropdown(); closeBulkModal();
+  }
+});
+
+/* ═══════════════════════════════════
+   INIT — estado inicial: Por revisar, r1 e r2 expandidas
+═══════════════════════════════════ */
+expanded.add('r1');
+expanded.add('r2');
+render();
+syncBulk();
+</script>
+</body>
+</html>
