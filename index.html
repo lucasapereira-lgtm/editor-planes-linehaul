@@ -1363,6 +1363,9 @@ const DATA = {
   ]
 };
 
+/* Snapshot imutável do estado original — fonte de verdade para reversão */
+const ORIGINAL_DATA = JSON.parse(JSON.stringify(DATA));
+
 /* ═══════════════════════════════════
    STATE
 ═══════════════════════════════════ */
@@ -1923,32 +1926,91 @@ function confirmEdit() { closeModal(); }
 ═══════════════════════════════════ */
 let ctxRouteId = null;
 let ctxTab = null;
+/* ─── CONTEXT MENU ─────────────────────────────────────────────────── */
+let ctxTriggerEl = null; // rastreia o trigger específico que abriu o menu
+
 function openCtxMenu(event, routeId, tab) {
   event.stopPropagation();
   ctxRouteId = routeId; ctxTab = tab;
+  ctxTriggerEl = event.currentTarget;
+
   const menu = document.getElementById('ctx-menu');
 
-  // Mostra/esconde itens conforme tab
+  // Fecha menu anterior se já havia outro aberto
+  if (menu.classList.contains('vis')) {
+    closeCtxMenu();
+    // Se era o mesmo trigger, só fecha (toggle)
+    if (ctxTriggerEl === event.currentTarget) { ctxTriggerEl = null; return; }
+  }
+  ctxTriggerEl = event.currentTarget;
+
   document.getElementById('ctx-deactivate').style.display = tab === 'pending' ? 'flex' : 'none';
   document.getElementById('ctx-review').style.display    = tab === 'pending' ? 'flex' : 'none';
   document.getElementById('ctx-revert').style.display    = tab === 'pending' ? 'flex' : 'none';
   document.getElementById('ctx-back').style.display      = tab === 'reviewed' ? 'flex' : 'none';
   document.getElementById('ctx-send').style.display      = tab === 'reviewed' ? 'flex' : 'none';
-  // ctx-history removido — histórico é ação contextual da tag EDITADA, não do menu
 
   menu.classList.add('vis');
   const rect = event.currentTarget.getBoundingClientRect();
-  let left = rect.right - 200;
+  let left = rect.right - 210;
   if (left < 8) left = 8;
   menu.style.left = left + 'px';
   menu.style.top = (rect.bottom + 4) + 'px';
+
+  // Listener de pointerdown para fechar ao clicar fora
+  setTimeout(() => {
+    document.addEventListener('pointerdown', ctxOutsideHandler);
+  }, 0);
 }
-function closeCtxMenu() { document.getElementById('ctx-menu').classList.remove('vis'); }
+
+function ctxOutsideHandler(e) {
+  const menu = document.getElementById('ctx-menu');
+  const insideMenu    = menu.contains(e.target);
+  const insideTrigger = ctxTriggerEl && ctxTriggerEl.contains(e.target);
+  if (!insideMenu && !insideTrigger) closeCtxMenu();
+}
+
+function closeCtxMenu() {
+  document.getElementById('ctx-menu').classList.remove('vis');
+  document.removeEventListener('pointerdown', ctxOutsideHandler);
+  ctxTriggerEl = null;
+}
+
 function ctxDeactivate()    { closeCtxMenu(); deactivate(ctxRouteId); }
 function ctxMarkReviewed()  { closeCtxMenu(); markReviewed(ctxRouteId); }
-function ctxRevert()        { closeCtxMenu(); showToast('Edições da rota revertidas', 'warn'); }
+function ctxRevert()        { closeCtxMenu(); revertRouteEdits(ctxRouteId); }
 function ctxBackToPending() { closeCtxMenu(); backToPending(ctxRouteId); }
-function ctxSend() { closeCtxMenu(); sendToScheduling(ctxRouteId); }
+function ctxSend()          { closeCtxMenu(); sendToScheduling(ctxRouteId); }
+
+/* ─── REVERTER EDIÇÕES — restaura snapshot original ─────────────────── */
+function revertRouteEdits(routeId) {
+  const allTabs = ['pending','reviewed','sent'];
+  let found = false;
+
+  for (const tab of allTabs) {
+    const route = DATA[tab].find(r => r.id === routeId);
+    if (!route) continue;
+    found = true;
+
+    // Restaura veículos do snapshot original
+    const originalRoute = ORIGINAL_DATA[tab]?.find(r => r.id === routeId);
+    if (originalRoute) {
+      route.vehicles = JSON.parse(JSON.stringify(originalRoute.vehicles));
+    }
+
+    // Limpa estado de edição
+    route.edited   = false;
+    route.history  = [];
+
+    // Fecha popover de histórico se estiver aberto para esta rota
+    if (currentHistRouteId === routeId) closeDrawer();
+    break;
+  }
+
+  if (!found) return;
+  render();
+  showToast('Edições revertidas — valores originais restaurados', 'success');
+}
 function ctxHistory() {
   closeCtxMenu();
   const btn = document.querySelector(`#rc-${ctxRouteId} .ab-more`);
@@ -1984,18 +2046,8 @@ function closeDrawer() {
   }
 }
 function doRevert(routeId) {
-  const route = Object.values(DATA).flat().find(x => x.id === routeId);
-  if (route && route.history) {
-    // Registra a reversão como nova entrada de histórico
-    route.history.unshift({
-      label: 'Reversão de edição',
-      changes: ['Valores restaurados para o estado anterior'],
-      who: 'lucasperei',
-      date: new Date().toLocaleDateString('pt-BR')
-    });
-  }
+  revertRouteEdits(routeId);
   closeDrawer();
-  showToast('Reversão registrada como nova edição', 'warn');
 }
 
 /* ═══════════════════════════════════
@@ -2370,7 +2422,7 @@ document.addEventListener('click', e => {
   const inCell = e.target.closest('.editable-cell');
   if (!inEditor && !inCell) closeAllEditors();
   if (!e.target.closest('#hist-pop') && !e.target.closest('.editada-tag')) closeDrawer();
-  if (!e.target.closest('#ctx-menu') && !e.target.closest('.ab-more')) closeCtxMenu();
+  // ctx-menu close handled by ctxOutsideHandler (pointerdown) — não duplicar aqui
   if (!e.target.closest('#ed-attrs') && !e.target.closest('.editable-cell')) {
     document.getElementById('ed-attrs')?.classList.remove('vis');
   }
