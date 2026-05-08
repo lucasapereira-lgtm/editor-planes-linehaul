@@ -193,7 +193,8 @@ body{font-family:var(--font);background:var(--bg);color:var(--g800);font-size:14
 /* Badges */
 .badge{display:inline-flex;align-items:center;font-size:11px;font-weight:700;
   padding:3px 8px;border-radius:100px;white-space:nowrap}
-.badge-confiavel{background:var(--green-l);color:var(--green)}
+.badge-confiavel{background:#E6F7EE;color:#00A650;white-space:nowrap}
+.badge-nao-confiavel{background:#FDECEC;color:#D1242F;white-space:nowrap}
 .badge-editada{background:var(--orange-l);color:var(--orange);font-size:10px;padding:2px 7px}
 .badge-ftl{background:var(--blue-l);color:var(--blue-d);font-size:11px;padding:2px 7px}
 .badge-dfp{background:#F0FFF4;color:#15803D;font-size:11px;padding:2px 7px}
@@ -331,6 +332,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--g800);font-size:14
 .vc-type{gap:6px}
 .vc-attrs{gap:5px;flex-wrap:nowrap}
 .vc-eta,.vc-etd,.vc-eta2,.vc-etd2{flex-direction:column;justify-content:center;gap:1px}
+.vc-eta,.vc-etd,.vc-tt,.vc-eta2,.vc-etd2{padding-left:0}
 .vc-action{border-right:none;justify-content:flex-end;
   padding-right:20px}
 
@@ -351,7 +353,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--g800);font-size:14
 
 /* Attribute tags — outlined pills, chips compactos para caber na coluna */
 .attr-tag{display:inline-flex;padding:2px 8px;border-radius:100px;font-size:11px;
-  font-weight:400;border:1px solid #C9C9C9;background:var(--surface);
+  font-weight:400;border:1px solid #C9C9C9;background:transparent;
   color:#444;white-space:nowrap;line-height:1.3;flex-shrink:0}
 
 .carrier-txt{font-size:12px;font-weight:400;color:var(--g800)}
@@ -673,7 +675,7 @@ input[type=checkbox]{width:15px;height:15px;cursor:pointer;accent-color:var(--bl
         <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="6" cy="6" r="4.5" stroke="#B0B0B0" stroke-width="1.3"/><path d="M9.5 9.5L12 12" stroke="#B0B0B0" stroke-width="1.3" stroke-linecap="round"/></svg>
         <input type="text" placeholder="Nó, dia, data, CPT" id="search-input">
       </div>
-      <div class="filter-pill">Confiança: <span class="fp-val">Todos</span><span class="fp-chev">▾</span></div>
+      <div class="filter-pill" title="Filtrar por: Todos · Confiável · Não confiável">Confiança: <span class="fp-val">Todos</span><span class="fp-chev">▾</span></div>
       <div class="filter-pill">Dias: <span class="fp-val">Todos</span><span class="fp-chev">▾</span></div>
       <div class="filter-pill">CPT: <span class="fp-val">O dia todo</span><span class="fp-chev">▾</span></div>
       <div class="filter-other">
@@ -1366,6 +1368,11 @@ const DATA = {
 /* Snapshot imutável do estado original — fonte de verdade para reversão */
 const ORIGINAL_DATA = JSON.parse(JSON.stringify(DATA));
 
+/* Flag de exibição do ícone de info ao lado do veículo.
+   false = oculto para validação com usuários.
+   Alterar para true para reativar futuramente. */
+const SHOW_VEHICLE_INFO_ICON = false;
+
 /* ═══════════════════════════════════
    STATE
 ═══════════════════════════════════ */
@@ -1398,9 +1405,12 @@ function renderRoute(r) {
   const isPending = currentTab === 'pending';
   const isReviewed = currentTab === 'reviewed';
 
-  const confBadge = r.conf === 'CONFIÁVEL'
-    ? `<span class="badge badge-confiavel">CONFIÁVEL</span>`
-    : `<span class="badge" style="background:#FFF8E1;color:#F57F17">REVISAR</span>`;
+  // Mapper: CONFIÁVEL / HIGH_CONFIDENCE / RELIABLE → "Confiável"
+  //         REVISAR / LOW_CONFIDENCE / NOT_RELIABLE → "Não confiável"
+  const isConfiavel = ['CONFIÁVEL','HIGH_CONFIDENCE','RELIABLE','CONFIABLE'].includes(r.conf);
+  const confBadge = isConfiavel
+    ? `<span class="badge badge-confiavel" title="Status de confiança: Confiável">Confiável</span>`
+    : `<span class="badge badge-nao-confiavel" title="Status de confiança: Não confiável">Não confiável</span>`;
 
   // Apenas Travel ID quando enviado, mais o kebab — sem botões inline no header
   let travelIdHtml = '';
@@ -1524,7 +1534,8 @@ function renderVehicleRow(v, route, editable) {
     ? `<span style="font-size:12px;color:#888">${v.type} | DFP</span>`
     : `<span style="font-size:12px;color:#1A1A1A">${v.type}</span>`;
 
-  const infoIcon = v.hasInfo || true
+  // Controlado por SHOW_VEHICLE_INFO_ICON — lógica preservada para reativação
+  const infoIcon = SHOW_VEHICLE_INFO_ICON && (v.hasInfo || true)
     ? `<span class="vc-info-icon" title="${modeHint}">i</span>`
     : '';
 
