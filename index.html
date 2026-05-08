@@ -144,35 +144,46 @@ body{font-family:var(--font);background:var(--bg);color:var(--g800);font-size:14
 
 /* ── ROUTE ROW — CSS Grid 5 grupos ──────────────────────────────────── */
 /* col: chk | exp | route-info | ftl-dfp | pallets(flex) | badge | actions */
+/*
+  Route header — flex layout
+  Grupos: chk | exp | route-info | ftl-dfp | cap | dem | lw
+          [margin-left:auto empurra o resto para a direita]
+          CONFIÁVEL + 24px + ⋮ + 16px borda
+*/
 .route-row{
-  display:grid;
-  grid-template-columns: 48px 26px minmax(185px,230px) 105px 1fr 100px 44px;
-  align-items:center;min-height:62px;border-bottom:0;cursor:default}
+  display:flex;align-items:center;
+  min-height:62px;border-bottom:0;cursor:default;
+  gap:20px}
 .route-row.has-vehicles{border-bottom:1px solid #E5E5E5}
-.rr-chk{display:flex;align-items:center;justify-content:center}
-.rr-expand{display:flex;align-items:center;justify-content:center}
-/* Chevron — azul, sem fundo, sem borda */
+.rr-chk{width:48px;flex-shrink:0;display:flex;align-items:center;justify-content:center}
+.rr-expand{width:26px;flex-shrink:0;display:flex;align-items:center;justify-content:center}
+/* Chevron */
 .expand-btn{background:none;border:none;cursor:pointer;color:var(--blue);
   font-size:11px;width:20px;height:20px;display:flex;align-items:center;
   justify-content:center;padding:0;font-weight:800;transition:opacity .15s}
 .expand-btn:hover{opacity:.55}
 /* Grupo 1 — Route info */
-.rr-info{display:flex;flex-direction:column;justify-content:center;gap:3px;
-  padding:0 20px 0 0}
+.rr-info{flex:0 0 205px;width:205px;display:flex;flex-direction:column;
+  justify-content:center;gap:3px}
 .rr-route{font-size:14px;font-weight:700;color:var(--g800);white-space:nowrap;
   overflow:hidden;text-overflow:ellipsis}
 .rr-cpt{font-size:11px;color:var(--g500);margin-top:1px;white-space:nowrap}
 /* Grupo 2 — FTL/DFP */
-.rr-modes{display:flex;align-items:center;font-size:13px;color:var(--g700);
-  font-weight:500;white-space:nowrap;padding:0 16px 0 0}
-/* Grupo 3 — Pallets agrupados em flex, gap:24px conforme referência */
-.rr-pallets{display:flex;align-items:center;gap:24px;padding:0 20px 0 0}
-.rr-cap,.rr-demand,.rr-lw{display:flex;flex-direction:column;justify-content:center;gap:1px}
-/* Grupo 4 — Badge */
-.rr-stat{display:flex;align-items:center;justify-content:center}
-/* Grupo 5 — Kebab */
-.rr-actions{display:flex;align-items:center;justify-content:flex-end;
-  padding-right:var(--action-right)}
+.rr-modes{flex:0 0 188px;width:188px;display:flex;align-items:center;
+  font-size:13px;color:var(--g700);font-weight:500;white-space:nowrap}
+/* Grupo 3 — Métricas (display:contents faz os filhos serem flex items diretos) */
+.rr-pallets{display:contents}
+.rr-cap{flex:0 0 auto;min-width:115px;display:flex;flex-direction:column;
+  justify-content:center;gap:1px}
+.rr-demand{flex:0 0 auto;min-width:108px;display:flex;flex-direction:column;
+  justify-content:center;gap:1px}
+.rr-lw{flex:0 0 auto;min-width:105px;display:flex;flex-direction:column;
+  justify-content:center;gap:1px}
+/* Grupo 4 — Badge: margin-left:auto empurra para a direita */
+.rr-stat{margin-left:auto;flex-shrink:0;display:flex;align-items:center}
+/* Grupo 5 — Kebab: 24px do badge, 16px da borda direita */
+.rr-actions{flex-shrink:0;display:flex;align-items:center;
+  padding-left:4px;padding-right:16px}
 .col-label{font-size:10px;color:var(--g400);text-transform:uppercase;
   letter-spacing:.3px;margin-bottom:1px;white-space:nowrap}
 .col-val{font-size:12px;font-weight:500;color:var(--g800)}
@@ -209,14 +220,16 @@ body{font-family:var(--font);background:var(--bg);color:var(--g800);font-size:14
 .ab-success:hover{background:#008040}
 .ab-danger{border:1px solid var(--border);background:var(--surface);color:var(--red)}
 .ab-danger:hover{border-color:var(--red);background:var(--red-l)}
-/* Eliminar — oculto por padrão, visível no hover/focus-within da linha */
-.ab-ghost{border:none;background:none;color:var(--blue);font-weight:600;font-size:11px;
-  cursor:pointer;padding:0;font-family:var(--font);white-space:nowrap;
+/* Ícone de lixeira — oculto por padrão, visível no hover/focus-within */
+.ab-ghost{border:none;background:none;cursor:pointer;padding:0;
+  display:flex;align-items:center;justify-content:center;
+  width:28px;height:28px;border-radius:4px;color:var(--blue);
   opacity:0;visibility:hidden;pointer-events:none;
-  transition:opacity .12s,visibility .12s}
+  transition:opacity .12s,visibility .12s,background .1s;flex-shrink:0}
 .vehicle-row:hover .ab-ghost,
 .vehicle-row:focus-within .ab-ghost{opacity:1;visibility:visible;pointer-events:auto}
-.ab-ghost:hover{text-decoration:underline}
+.ab-ghost:hover{background:#F5F5F5}
+.ab-ghost:focus-visible{outline:2px solid var(--blue);outline-offset:1px}
 /* Kebab — transparente, sem borda, discreto */
 .ab-more{width:30px;height:30px;border-radius:4px;border:none;
   background:none;cursor:pointer;display:flex;align-items:center;justify-content:center;
@@ -518,37 +531,54 @@ body{font-family:var(--font);background:var(--bg);color:var(--g800);font-size:14
 .bm-cancel:hover{text-decoration:underline}
 
 /* ── HISTORY POPOVER ─────────────────────────────────────────────────── */
+/* ── HISTORY TOOLTIP — altura fixa, scroll interno ───────────────────── */
 .hist-pop{display:none;position:fixed;
-  background:var(--surface);border-radius:14px;
+  background:#fff;border-radius:10px;
   box-shadow:0 8px 40px rgba(0,0,0,.18);
-  width:320px;z-index:400;overflow:hidden}
-.hist-pop.vis{display:block;animation:popIn .18s ease}
+  width:320px;max-height:440px;z-index:400;
+  overflow:hidden;flex-direction:column}
+.hist-pop.vis{display:flex;animation:popIn .18s ease}
 /* Caret pointing down */
 .hist-pop::after{content:'';position:absolute;bottom:-8px;left:50%;
   transform:translateX(-50%);
   border-left:9px solid transparent;border-right:9px solid transparent;
-  border-top:9px solid var(--surface);
+  border-top:9px solid #fff;
   filter:drop-shadow(0 2px 2px rgba(0,0,0,.08))}
-.hist-pop-body{padding:20px 20px 0}
-.hist-pop-title{font-size:18px;font-weight:700;color:var(--g800);
-  margin-bottom:14px;line-height:1.2}
-.hist-hr{border:none;border-top:1px solid #EBEBEB;margin:14px 0}
-.hist-entry{padding:2px 0 10px}
-.he-type{font-size:13px;color:var(--g400);margin-bottom:5px;line-height:1.3}
-.he-type b{color:var(--g600);font-weight:600}
-.he-change{font-size:16px;color:var(--g800);line-height:1.5;font-weight:400}
-.he-change b{font-weight:700}
-.he-meta{font-size:13px;color:var(--g400);margin-top:8px;line-height:1.4}
-.he-meta b{color:var(--g600);font-weight:600}
-.he-date{font-size:13px;color:var(--g400);margin-top:1px}
-/* Revert button — full-width, light blue */
+/* Header fixo — não rola */
+.hist-pop-header{padding:20px 20px 0;flex-shrink:0;
+  display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
+.hist-pop-title{font-size:18px;font-weight:700;color:#1A1A1A;
+  line-height:1.2;flex:1;margin-bottom:14px}
+.hist-pop-close{background:none;border:none;cursor:pointer;
+  width:28px;height:28px;border-radius:4px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  font-size:16px;color:#666;transition:background .12s;margin-top:1px}
+.hist-pop-close:hover{background:#F5F5F5}
+.hist-pop-close:focus-visible{outline:2px solid var(--blue);outline-offset:1px}
+.hist-hr{border:none;border-top:1px solid #EBEBEB;margin:12px 0}
+/* Área scrollável — só a lista de edições */
+.hist-pop-scroll{flex:1;overflow-y:auto;padding:0 20px;min-height:0}
+.hist-pop-scroll::-webkit-scrollbar{width:4px}
+.hist-pop-scroll::-webkit-scrollbar-thumb{background:#D8D8D8;border-radius:2px}
+/* Itens do histórico */
+.hist-entry{padding:4px 0 12px}
+.he-type{font-size:13px;color:#888;margin-bottom:5px;line-height:1.3}
+.he-type b{color:#555;font-weight:600}
+.he-change{font-size:15px;color:#1A1A1A;line-height:1.5;font-weight:400}
+.he-change b{font-weight:700;color:#1A1A1A}
+.he-motivo{font-size:14px;color:#333;line-height:1.5;margin-top:1px}
+.he-motivo-val{font-weight:600;color:#1A1A1A}
+.he-meta{font-size:13px;color:#888;margin-top:8px;line-height:1.4}
+.he-meta b{color:#555;font-weight:600}
+.he-date{font-size:13px;color:#888;margin-top:1px}
+/* Footer fixo — Reverter edição sempre acessível */
 .hist-revert-btn{
-  width:100%;padding:15px 20px;
-  background:#EBF2FF;border:none;
-  font-family:var(--font);font-size:15px;font-weight:600;
+  width:100%;padding:13px 20px;flex-shrink:0;
+  background:#EBF2FF;border:none;border-radius:0 0 10px 10px;
+  font-family:var(--font);font-size:14px;font-weight:600;
   color:var(--blue);cursor:pointer;
   display:flex;align-items:center;justify-content:center;gap:8px;
-  transition:background .15s;margin-top:6px}
+  transition:background .15s;margin-top:4px}
 .hist-revert-btn:hover{background:#D6E8FF}
 .hist-revert-btn:active{background:#C2DBFF}
 
@@ -906,31 +936,19 @@ input[type=checkbox]{width:15px;height:15px;cursor:pointer;accent-color:var(--bl
 
 <!-- ═══ HISTORY POPOVER ══════════════════════════════════════════════════ -->
 <div class="hist-pop" id="hist-pop">
-  <div class="hist-pop-body">
+  <!-- Header fixo — não rola -->
+  <div class="hist-pop-header">
     <div class="hist-pop-title">Histórico de edições</div>
-
-    <hr class="hist-hr">
-
-    <div class="hist-entry">
-      <div class="he-type">Edição de veículo</div>
-      <div class="he-change">Toco para <b>Carreta</b></div>
-      <div class="he-meta">Modificado por <b>lucasperei</b></div>
-      <div class="he-date">24/12/2024</div>
-    </div>
-
-    <hr class="hist-hr">
-
-    <div class="hist-entry">
-      <div class="he-type">Edição de horário em <b>BRXSP9</b></div>
-      <div class="he-change">ETA: 08:00 para 09:00</div>
-      <div class="he-change">ETD: 09:00 para 10:00</div>
-      <div class="he-change">TT: 1h30 para 2h</div>
-      <div class="he-meta">Modificado por <b>lucasperei</b></div>
-      <div class="he-date">24/12/2024</div>
-    </div>
+    <button class="hist-pop-close" onclick="closeDrawer()"
+      aria-label="Fechar histórico de edições" title="Fechar">×</button>
   </div>
-
-  <button class="hist-revert-btn" onclick="doRevert()">↩ Reverter edição</button>
+  <hr class="hist-hr" style="margin:0 20px;flex-shrink:0">
+  <!-- Área scrollável — só a lista de edições -->
+  <div class="hist-pop-scroll" id="hist-pop-scroll">
+    <!-- preenchido dinamicamente por onEditadaEnter() -->
+  </div>
+  <!-- Footer fixo — sempre acessível -->
+  <button class="hist-revert-btn" id="hist-revert-btn" onclick="doRevert()">↩ Reverter edição</button>
 </div>
 
 <!-- ═══ BULK MODALS OVERLAY ═════════════════════════════════════════════ -->
@@ -1269,8 +1287,8 @@ const DATA = {
     { id:'r2', code:'BRXSP9 → SAL1', cpt:'10:00', day:'Seg 29/01', ftl:2, dfp:1,
       capTotal:76, capUsed:56, demand:38, lastWeek:52, conf:'CONFIÁVEL', edited:true,
       history:[
-        { label:'Edição de veículo', changes:['Toco para Carreta'], who:'lucasperei', date:'24/12/2024' },
-        { label:'Edição de horário em BRXSP9', changes:['ETA: 08:00 para 09:00','ETD: 09:00 para 10:00','TT: 1h30 para 2h'], who:'lucasperei', date:'24/12/2024' }
+        { label:'Edição de veículo', changes:['Toco para Carreta','Motivo: XPTO'], who:'lucasperei', date:'24/12/2024' },
+        { label:'Edição de horário em BRXSP9', changes:['ETA: 08:00 para 09:00','ETD: 09:00 para 10:00','TT: 1h30 para 2h','Motivo: Ajuste de janela de carga'], who:'lucasperei', date:'24/12/2024' }
       ],
       vehicles:[
         { id:'v3', type:'Carreta', mode:'FTL', carrier:'Jomed', attrs:['ETD','PAL','PAL'],
@@ -1389,10 +1407,10 @@ function renderRoute(r) {
   return `
 <div class="route-card${sel?' selected':''}${r.edited?' has-editada':''}" id="rc-${r.id}" style="position:relative">
   ${r.edited ? `<span class="editada-tag" tabindex="0"
-    onmouseenter="onEditadaEnter(event,'${r.id}')"
-    onmouseleave="onEditadaLeave()"
-    onfocus="onEditadaEnter(event,'${r.id}')"
-    onblur="onEditadaLeave()"
+    role="button" aria-haspopup="dialog" aria-expanded="false"
+    aria-controls="hist-pop" id="editada-tag-${r.id}"
+    onclick="onEditadaClick(event,'${r.id}')"
+    onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();onEditadaClick(event,'${r.id}')}"
     title="Ver histórico de edições">EDITADA</span>` : ''}
   <div class="route-row${hasVeh?' has-vehicles':''}">
     <div class="rr-chk" style="${r.edited?'padding-top:18px':''}">
@@ -1519,7 +1537,13 @@ function renderVehicleRow(v, route, editable) {
   <div class="vc-eta2">${timeEditCell(v.eta2, v.eta2Day, v.eta2Loc, 'eta2')}</div>
   <div class="vc-etd2">${timeEditCell(v.etd2, v.etd2Day, v.etd2Loc, 'etd2')}</div>
   <div class="vc-action">
-    ${canEdit ? `<button class="ab-ghost" onclick="removeVehicle('${v.id}','${route.id}')">Eliminar</button>` : ''}
+    ${canEdit ? `<button class="ab-ghost" onclick="removeVehicle('${v.id}','${route.id}')"
+        aria-label="Eliminar vehículo" title="Eliminar vehículo">
+        <svg width="15" height="15" viewBox="0 0 15 15" fill="none" aria-hidden="true">
+          <path d="M1.5 4h12M6 4V2.5A.5.5 0 016.5 2h2a.5.5 0 01.5.5V4M5 11.5V6M7.5 11.5V6M10 11.5V6M3 4l.6 8.5A.5.5 0 004.1 13h6.8a.5.5 0 00.5-.5L12 4"
+            stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>` : ''}
   </div>
 </div>`;
 } // fim renderVehicleRow
@@ -1764,11 +1788,14 @@ function findRouteByVehicle(vid) {
 }
 function applyVehicleEdit() {
   const newType = document.getElementById('ev-type').value;
+  const reason  = document.getElementById('ev-reason').value;
   const r = findRouteByVehicle(currentEditVId);
   if (r) {
     const v = r.vehicles.find(vv => vv.id === currentEditVId);
     if (v) {
-      addHistory(r.id, { label:'Edição de veículo', changes:[`${v.type} para ${newType}`] });
+      const changes = [`${v.type} para ${newType}`];
+      if (reason) changes.push(`Motivo: ${reason}`);
+      addHistory(r.id, { label:'Edição de veículo', changes });
       v.type = newType; r.edited = true;
     }
   }
@@ -1792,11 +1819,14 @@ function openCarrierEditor(event, vid, currentCarrier) {
 }
 function applyCarrierEdit() {
   const newCarrier = document.getElementById('ec-carrier').value;
+  const reason     = document.getElementById('ec-reason').value;
   const r = findRouteByVehicle(currentEditVId);
   if (r) {
     const v = r.vehicles.find(vv => vv.id === currentEditVId);
     if (v) {
-      addHistory(r.id, { label:'Edição de transportadora', changes:[`${v.carrier} para ${newCarrier}`] });
+      const changes = [`${v.carrier} para ${newCarrier}`];
+      if (reason) changes.push(`Motivo: ${reason}`);
+      addHistory(r.id, { label:'Edição de transportadora', changes });
       v.carrier = newCarrier; r.edited = true;
     }
   }
@@ -1939,6 +1969,11 @@ function openDrawer(routeId, triggerEl) {
 }
 function closeDrawer() {
   document.getElementById('hist-pop').classList.remove('vis');
+  if (currentHistRouteId) {
+    const tag = document.getElementById('editada-tag-' + currentHistRouteId);
+    if (tag) tag.setAttribute('aria-expanded', 'false');
+    currentHistRouteId = null;
+  }
 }
 function doRevert(routeId) {
   const route = Object.values(DATA).flat().find(x => x.id === routeId);
@@ -2249,48 +2284,75 @@ function showToast(msg, type='info') {
 /* ═══════════════════════════════════
    EDITADA TAG — hover abre histórico
 ═══════════════════════════════════ */
-let editadaLeaveTimer = null;
-function onEditadaEnter(event, routeId) {
-  clearTimeout(editadaLeaveTimer);
-  // Encontra a rota e renderiza histórico real
+let editadaLeaveTimer = null; // mantido para retrocompatibilidade
+/* ─── HISTORY POPOVER — click-to-open, dismissible ─────────────────── */
+/* currentHistRouteId declarado acima */
+
+function formatHistChange(text) {
+  if (text.startsWith('Motivo:')) return null;
+  return text.replace(/\bpara\s+(\S+)/g, (_, val) => `para <b>${val}</b>`);
+}
+
+function renderHistContent(routeId) {
   const route = Object.values(DATA).flat().find(x => x.id === routeId);
-  const pop = document.getElementById('hist-pop');
+  const scroll = document.getElementById('hist-pop-scroll');
   if (route && route.history && route.history.length > 0) {
-    const body = pop.querySelector('.hist-pop-body');
-    let html = `<div class="hist-pop-title">Histórico de edições</div>`;
+    let html = '';
     route.history.forEach((item, i) => {
-      html += `<hr class="hist-hr">
-        <div class="hist-entry">
-          <div class="he-type">${item.label}</div>
-          ${item.changes.map(c => `<div class="he-change">${c}</div>`).join('')}
-          ${item.who ? `<div class="he-meta">Modificado por <b>${item.who}</b></div>` : ''}
-          ${item.date ? `<div class="he-date">${item.date}</div>` : ''}
-        </div>`;
+      if (i > 0) html += `<hr class="hist-hr">`;
+      const mainChanges = item.changes.filter(c => !c.startsWith('Motivo:'));
+      const motivoEntry = item.changes.find(c => c.startsWith('Motivo:'));
+      const motivoRaw = motivoEntry ? motivoEntry.replace(/^Motivo:\s*/, '').trim() : null;
+      // Só exibe se o valor for real — nunca exibe undefined, null ou vazio
+      const motivoText = (motivoRaw && motivoRaw !== 'undefined' && motivoRaw !== 'null') ? motivoRaw : null;
+      html += `<div class="hist-entry">
+        <div class="he-type">${item.label}</div>
+        ${mainChanges.map(c => `<div class="he-change">${formatHistChange(c)||c}</div>`).join('')}
+        ${motivoText ? `<div class="he-motivo">Motivo: <span class="he-motivo-val">${motivoText}</span></div>` : ''}
+        ${item.who ? `<div class="he-meta">Modificado por <b>${item.who}</b></div>` : ''}
+        ${item.date ? `<div class="he-date">${item.date}</div>` : ''}
+      </div>`;
     });
-    body.innerHTML = html;
-    // Botão reverter aponta para a rota real
-    pop.querySelector('.hist-revert-btn').onclick = () => doRevert(routeId);
+    scroll.innerHTML = html;
+  } else {
+    scroll.innerHTML = `<div class="hist-entry" style="color:#999;font-size:13px;padding:12px 0">
+      Nenhuma edição registrada.</div>`;
   }
-  const r = event.currentTarget.getBoundingClientRect();
-  const pw = 320;
+  document.getElementById('hist-revert-btn').onclick = () => doRevert(routeId);
+}
+
+function positionHistPop(triggerEl) {
+  const pop = document.getElementById('hist-pop');
+  const r = triggerEl.getBoundingClientRect();
+  const pw = 320, ph = 440;
   let left = r.left;
   if (left + pw > window.innerWidth - 12) left = window.innerWidth - pw - 12;
   if (left < 8) left = 8;
+  const topAbove = r.top - ph - 12;
   pop.style.left = left + 'px';
-  pop.style.top = (r.bottom + 8) + 'px';
-  pop.classList.add('vis');
+  pop.style.top = (topAbove >= 8 ? topAbove : r.bottom + 8) + 'px';
 }
-function onEditadaLeave() {
-  editadaLeaveTimer = setTimeout(() => {
-    const pop = document.getElementById('hist-pop');
-    if (!pop.matches(':hover')) pop.classList.remove('vis');
-  }, 120);
-}
-document.addEventListener('mouseleave', e => {
-  if (e.target?.id === 'hist-pop') {
-    editadaLeaveTimer = setTimeout(() => closeDrawer(), 120);
+
+function onEditadaClick(event, routeId) {
+  event.stopPropagation();
+  const pop = document.getElementById('hist-pop');
+  const tag = event.currentTarget;
+
+  // Se já está aberto para esta rota, fecha (toggle)
+  if (pop.classList.contains('vis') && currentHistRouteId === routeId) {
+    closeDrawer(); return;
   }
-}, true);
+
+  // Fecha histórico anterior se havia outro aberto
+  if (pop.classList.contains('vis')) closeDrawer();
+
+  currentHistRouteId = routeId;
+  renderHistContent(routeId);
+  positionHistPop(tag);
+  pop.classList.add('vis');
+  tag.setAttribute('aria-expanded', 'true');
+  document.getElementById('hist-pop-scroll').scrollTop = 0;
+}
 
 /* ═══════════════════════════════════
    CLOSE ON OUTSIDE CLICK / ESC
