@@ -140,7 +140,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--g800);font-size:14
 .route-card{background:var(--surface);border:1px solid var(--border);border-radius:6px;
   margin-bottom:8px;overflow:hidden;transition:box-shadow .15s}
 .route-card:hover{box-shadow:0 2px 8px rgba(0,0,0,.07)}
-.route-card.selected{border-color:var(--blue);box-shadow:0 0 0 1px var(--blue)}
+.route-card.selected{border-color:var(--border);box-shadow:none}
 
 /* ── ROUTE ROW — CSS Grid 5 grupos ──────────────────────────────────── */
 /* col: chk | exp | route-info | ftl-dfp | pallets(flex) | badge | actions */
@@ -374,7 +374,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--g800);font-size:14
   font-weight:500;color:var(--blue);cursor:pointer;padding:0;white-space:nowrap}
 .bb-link:disabled,.bb-link[disabled]{color:var(--g400);cursor:not-allowed}
 .bb-link:not(:disabled):hover{text-decoration:underline}
-.bb-link.bb-link-danger{color:var(--red)}
+.bb-link.bb-link-danger{color:var(--blue)}
 .bb-link.bb-link-danger:hover{text-decoration:underline}
 /* Botão "Editar ▼" com dropdown */
 .bb-edit-btn{display:flex;align-items:center;gap:4px;height:30px;padding:0 12px;
@@ -463,28 +463,59 @@ body{font-family:var(--font);background:var(--bg);color:var(--g800);font-size:14
 .btn-pri{background:var(--blue);color:#fff}
 .btn-pri:hover{background:var(--blue-d)}
 
-/* ── BULK MODALS ─────────────────────────────────────────────────────── */
-.modal-wide{width:600px;max-width:96vw}
-.bm-body{padding:24px}
-.bm-field{margin-bottom:16px}
-.bm-label{display:block;font-size:12px;font-weight:600;color:var(--g600);margin-bottom:6px}
-.bm-select{width:100%;height:40px;padding:0 12px;border:1px solid #D5D9E0;border-radius:4px;
-  font-size:13px;color:var(--g800);font-family:var(--font);background:#fff;cursor:pointer}
-.bm-select:focus{border-color:var(--blue);outline:none;box-shadow:0 0 0 2px rgba(52,131,250,.12)}
-.bm-select:disabled{background:var(--g50);cursor:not-allowed;color:var(--g400)}
-/* Seções do modal de horário */
-.bm-section{margin-bottom:20px}
-.bm-section-title{font-size:11px;font-weight:700;color:var(--g500);text-transform:uppercase;
-  letter-spacing:.5px;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--g100)}
-.bm-grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-/* Checkboxes de atributos */
-.bm-attr-item{display:flex;align-items:center;gap:10px;height:36px;padding:0 2px;
-  font-size:13px;color:var(--g800);cursor:pointer;border-radius:4px;transition:background .1s}
-.bm-attr-item:hover{background:var(--g50)}
-.bm-attr-item input[type=checkbox]{accent-color:var(--blue);width:15px;height:15px;cursor:pointer}
-/* Rodapé */
-.bm-footer{padding:14px 24px;border-top:1px solid var(--border);
-  display:flex;align-items:center;justify-content:flex-end;gap:12px}
+/* ── BULK MODALS — padrão visual das imagens de referência ─────────── */
+.bm-card{background:#fff;border-radius:6px;width:460px;max-width:96vw;padding:32px;
+  position:relative;box-shadow:0 8px 40px rgba(0,0,0,.18);animation:slideUp .18s ease}
+.bm-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:28px}
+.bm-title{font-size:20px;font-weight:600;color:#1A1A1A;line-height:1.2}
+.bm-x{background:none;border:none;cursor:pointer;font-size:18px;color:#999;padding:0;
+  line-height:1;margin-top:2px;transition:color .12s;font-family:inherit}
+.bm-x:hover{color:#333}
+.bm-field{margin-bottom:20px}
+.bm-label{display:block;font-size:12px;font-weight:500;color:#555;margin-bottom:8px}
+.bm-select{width:100%;height:44px;padding:0 12px;border:1.5px solid #D5D9E0;border-radius:4px;
+  font-size:13px;color:#333;font-family:var(--font);background:#fff;cursor:pointer;
+  transition:border-color .12s}
+.bm-select:focus{border-color:var(--blue);outline:none}
+/* Custom attr multi-select */
+.bm-attr-trigger{display:flex;align-items:center;justify-content:space-between;
+  width:100%;height:44px;padding:0 12px;border:1.5px solid #D5D9E0;border-radius:4px;
+  background:#fff;cursor:pointer;font-size:13px;font-family:var(--font);color:#999;
+  transition:border-color .12s;text-align:left}
+.bm-attr-trigger.has-val{color:#333}
+.bm-attr-trigger.open,.bm-attr-trigger:focus{border-color:var(--blue);outline:none}
+.bm-attr-chev{font-size:11px;color:var(--blue);flex-shrink:0}
+.bm-attr-dropdown{display:none;border:1.5px solid #D5D9E0;border-top:none;
+  border-radius:0 0 4px 4px;background:#fff}
+.bm-attr-dropdown.open{display:block}
+.bm-attr-opt{display:flex;align-items:center;gap:10px;height:36px;padding:0 14px;
+  font-size:13px;color:#333;cursor:pointer;transition:background .1s}
+.bm-attr-opt:hover{background:#F5F5F5}
+.bm-attr-opt input[type=checkbox]{accent-color:var(--blue);width:14px;height:14px;cursor:pointer}
+/* Input de data com ícone calendário */
+.bm-date-wrap{position:relative}
+.bm-date-input{width:100%;height:44px;padding:0 36px 0 12px;border:1.5px solid #D5D9E0;
+  border-radius:4px;font-size:13px;color:#333;font-family:var(--font);background:#fff;
+  cursor:pointer;transition:border-color .12s}
+.bm-date-input:focus{border-color:var(--blue);outline:none}
+.bm-date-ico{position:absolute;right:11px;top:50%;transform:translateY(-50%);
+  color:#999;pointer-events:none;font-size:15px}
+/* Layout grid das seções de horário */
+.bm-section-lbl{font-size:13px;font-weight:400;color:#555;margin-bottom:16px}
+.bm-section-lbl b{font-weight:600;color:#333}
+.bm-row2{display:grid;grid-template-columns:1.7fr 1fr;gap:12px;margin-bottom:14px}
+.bm-row3{display:grid;grid-template-columns:1.7fr 1fr 1fr;gap:12px;margin-bottom:14px}
+.bm-section-gap{margin-bottom:28px}
+/* Rodapé — botões à ESQUERDA, sem border-top, sem bm-footer antigo */
+.bm-footer{display:flex;align-items:center;gap:16px;margin-top:28px;border:none;padding:0}
+.bm-apply{height:38px;padding:0 22px;background:var(--blue);color:#fff;border:none;
+  border-radius:4px;font-size:14px;font-weight:600;cursor:pointer;font-family:var(--font);
+  transition:background .15s}
+.bm-apply:disabled{background:#B0C7E8;cursor:not-allowed}
+.bm-apply:not(:disabled):hover{background:var(--blue-d)}
+.bm-cancel{background:none;border:none;color:var(--blue);font-size:14px;font-weight:500;
+  cursor:pointer;font-family:var(--font);padding:0}
+.bm-cancel:hover{text-decoration:underline}
 
 /* ── HISTORY POPOVER ─────────────────────────────────────────────────── */
 .hist-pop{display:none;position:fixed;
@@ -690,7 +721,7 @@ input[type=checkbox]{width:15px;height:15px;cursor:pointer;accent-color:var(--bl
     <button class="edit-dropdown-item" onclick="bulkAction('transportadora');closeEditDropdown()">Transportadora</button>
     <button class="edit-dropdown-item" onclick="bulkAction('atributos');closeEditDropdown()">Atributos</button>
     <button class="edit-dropdown-item" onclick="bulkAction('horario');closeEditDropdown()">Horário e transit time</button>
-    <button class="edit-dropdown-item item-danger item-sep" id="dropdown-eliminar" onclick="bulkAction('eliminar');closeEditDropdown()">Eliminar veículo</button>
+    <!-- Eliminar veículo removido do dropdown — ação separada na barra massiva -->
   </div>
 
   <!-- ROUTES TABLE -->
@@ -905,220 +936,304 @@ input[type=checkbox]{width:15px;height:15px;cursor:pointer;accent-color:var(--bl
 <!-- ═══ BULK MODALS OVERLAY ═════════════════════════════════════════════ -->
 <div class="overlay" id="bulk-overlay" onclick="onBulkOverlayClick(event)">
 
-  <!-- Modal: Cambiar vehículo -->
-  <div class="modal" id="bm-vehicle" style="display:none" role="dialog" aria-labelledby="bm-veh-title">
-    <div class="modal-hdr">
-      <span class="modal-title" id="bm-veh-title">Cambiar vehículo</span>
-      <button class="modal-x" onclick="closeBulkModal()" aria-label="Cerrar">✕</button>
+  <!-- ── Modal: Editar veículo ─────────────────────────────────────── -->
+  <div class="bm-card" id="bm-vehicle" style="display:none" role="dialog" aria-labelledby="bm-veh-title">
+    <div class="bm-header">
+      <span class="bm-title" id="bm-veh-title">Editar veículo</span>
+      <button class="bm-x" onclick="closeBulkModal()" aria-label="Fechar">×</button>
     </div>
-    <div class="bm-body">
-      <div class="bm-field">
-        <label class="bm-label" for="bm-veh-type">Vehículo</label>
-        <select id="bm-veh-type" class="bm-select" onchange="checkBulkValid('vehicle')">
-          <option value="">Selecciona un vehículo</option>
-          <option value="Bitrem">Bitrem</option>
-          <option value="Carreta">Carreta</option>
-          <option value="Toco">Toco</option>
-          <option value="VUC">VUC</option>
-          <option value="Truck">Truck 3/4</option>
-        </select>
-      </div>
-      <div class="bm-field">
-        <label class="bm-label" for="bm-veh-reason">Motivo del cambio</label>
-        <select id="bm-veh-reason" class="bm-select" onchange="checkBulkValid('vehicle')">
-          <option value="">Selecciona un motivo</option>
-          <option>Disponibilidade de veículo</option>
-          <option>Ajuste de capacidade</option>
-          <option>Mudança de demanda</option>
-          <option>Restrição operacional</option>
-          <option>Solicitação de transportadora</option>
-        </select>
-      </div>
+    <div class="bm-field">
+      <label class="bm-label" for="bm-veh-type">Tipo de veículo</label>
+      <select id="bm-veh-type" class="bm-select" onchange="checkBulkValid('vehicle')">
+        <option value="">Seleciona o veículo</option>
+        <option value="Bitrem">Bitrem</option>
+        <option value="Carreta">Carreta</option>
+        <option value="Toco">Toco</option>
+        <option value="VUC">VUC</option>
+        <option value="Truck">Truck 3/4</option>
+      </select>
+    </div>
+    <div class="bm-field">
+      <label class="bm-label" for="bm-veh-reason">Motivo de edição</label>
+      <select id="bm-veh-reason" class="bm-select" onchange="checkBulkValid('vehicle')">
+        <option value="">Seleciona o motivo</option>
+        <option>Disponibilidade de veículo</option>
+        <option>Ajuste de capacidade</option>
+        <option>Mudança de demanda</option>
+        <option>Restrição operacional</option>
+        <option>Solicitação de transportadora</option>
+      </select>
     </div>
     <div class="bm-footer">
-      <button class="btn btn-sec" onclick="closeBulkModal()">Cancelar</button>
-      <button class="btn btn-pri" id="bm-veh-apply" disabled onclick="applyBulkVehicle()">Aplicar</button>
+      <button class="bm-apply" id="bm-veh-apply" disabled onclick="applyBulkVehicle()">Aplicar</button>
+      <button class="bm-cancel" onclick="closeBulkModal()">Cancelar</button>
     </div>
   </div>
 
-  <!-- Modal: Cambiar transportadora -->
-  <div class="modal" id="bm-carrier" style="display:none" role="dialog" aria-labelledby="bm-car-title">
-    <div class="modal-hdr">
-      <span class="modal-title" id="bm-car-title">Cambiar transportadora</span>
-      <button class="modal-x" onclick="closeBulkModal()" aria-label="Cerrar">✕</button>
+  <!-- ── Modal: Editar transportadora ──────────────────────────────── -->
+  <div class="bm-card" id="bm-carrier" style="display:none" role="dialog" aria-labelledby="bm-car-title">
+    <div class="bm-header">
+      <span class="bm-title" id="bm-car-title">Editar transportadora</span>
+      <button class="bm-x" onclick="closeBulkModal()" aria-label="Fechar">×</button>
     </div>
-    <div class="bm-body">
-      <div class="bm-field">
-        <label class="bm-label" for="bm-car-carrier">Transportadora</label>
-        <select id="bm-car-carrier" class="bm-select" onchange="checkBulkValid('carrier')">
-          <option value="">Selecciona una transportadora</option>
-          <option>Jomed</option>
-          <option>Maroni</option>
-          <option>OCA</option>
-          <option>TransBrasil</option>
-          <option>Multilog</option>
-          <option>FazendaSJT</option>
-        </select>
-      </div>
-      <div class="bm-field">
-        <label class="bm-label" for="bm-car-reason">Motivo del cambio</label>
-        <select id="bm-car-reason" class="bm-select" onchange="checkBulkValid('carrier')">
-          <option value="">Selecciona un motivo</option>
-          <option>Troca de parceiro logístico</option>
-          <option>Disponibilidade de frota</option>
-          <option>Ajuste contratual</option>
-          <option>Restrição operacional</option>
-        </select>
-      </div>
+    <div class="bm-field">
+      <label class="bm-label" for="bm-car-carrier">Transportadora</label>
+      <select id="bm-car-carrier" class="bm-select" onchange="checkBulkValid('carrier')">
+        <option value="">Seleciona a transportadora</option>
+        <option>Jomed</option>
+        <option>Maroni</option>
+        <option>OCA</option>
+        <option>TransBrasil</option>
+        <option>Multilog</option>
+        <option>FazendaSJT</option>
+      </select>
+    </div>
+    <div class="bm-field">
+      <label class="bm-label" for="bm-car-reason">Motivo de edição</label>
+      <select id="bm-car-reason" class="bm-select" onchange="checkBulkValid('carrier')">
+        <option value="">Seleciona o motivo</option>
+        <option>Troca de parceiro logístico</option>
+        <option>Disponibilidade de frota</option>
+        <option>Ajuste contratual</option>
+        <option>Restrição operacional</option>
+      </select>
     </div>
     <div class="bm-footer">
-      <button class="btn btn-sec" onclick="closeBulkModal()">Cancelar</button>
-      <button class="btn btn-pri" id="bm-car-apply" disabled onclick="applyBulkCarrier()">Aplicar</button>
+      <button class="bm-apply" id="bm-car-apply" disabled onclick="applyBulkCarrier()">Aplicar</button>
+      <button class="bm-cancel" onclick="closeBulkModal()">Cancelar</button>
     </div>
   </div>
 
-  <!-- Modal: Cambiar atributos -->
-  <div class="modal" id="bm-attrs" style="display:none" role="dialog" aria-labelledby="bm-att-title">
-    <div class="modal-hdr">
-      <span class="modal-title" id="bm-att-title">Cambiar atributos</span>
-      <button class="modal-x" onclick="closeBulkModal()" aria-label="Cerrar">✕</button>
+  <!-- ── Modal: Editar atributos ────────────────────────────────────── -->
+  <div class="bm-card" id="bm-attrs" style="display:none" role="dialog" aria-labelledby="bm-att-title">
+    <div class="bm-header">
+      <span class="bm-title" id="bm-att-title">Editar atributos</span>
+      <button class="bm-x" onclick="closeBulkModal()" aria-label="Fechar">×</button>
     </div>
-    <div class="bm-body">
+    <div class="bm-field">
       <label class="bm-label">Atributos</label>
-      <label class="bm-attr-item"><input type="checkbox" id="bm-att-pal" value="PAL" onchange="checkBulkValid('attrs')"> PAL</label>
-      <label class="bm-attr-item"><input type="checkbox" id="bm-att-ven" value="VEN" onchange="checkBulkValid('attrs')"> VEN</label>
-      <label class="bm-attr-item"><input type="checkbox" id="bm-att-cpt" value="CPT" onchange="checkBulkValid('attrs')"> CPT</label>
-      <label class="bm-attr-item"><input type="checkbox" id="bm-att-etd" value="ETD" onchange="checkBulkValid('attrs')"> ETD</label>
+      <button type="button" class="bm-attr-trigger" id="bm-attr-trigger"
+        onclick="toggleBulkAttrDropdown()" aria-expanded="false">
+        <span id="bm-attr-display">Selecione os atributos</span>
+        <span class="bm-attr-chev">▼</span>
+      </button>
+      <div class="bm-attr-dropdown" id="bm-attr-dropdown">
+        <label class="bm-attr-opt"><input type="checkbox" id="bm-att-pal" value="PAL" onchange="onBulkAttrChange()"> PAL</label>
+        <label class="bm-attr-opt"><input type="checkbox" id="bm-att-ven" value="VEN" onchange="onBulkAttrChange()"> VEN</label>
+        <label class="bm-attr-opt"><input type="checkbox" id="bm-att-cpt" value="CPT" onchange="onBulkAttrChange()"> CPT</label>
+        <label class="bm-attr-opt"><input type="checkbox" id="bm-att-etd" value="ETD" onchange="onBulkAttrChange()"> ETD</label>
+      </div>
+    </div>
+    <div class="bm-field">
+      <label class="bm-label" for="bm-att-reason">Motivo de edição</label>
+      <select id="bm-att-reason" class="bm-select" onchange="checkBulkValid('attrs')">
+        <option value="">Seleciona o motivo</option>
+        <option>Ajuste operacional</option>
+        <option>Erro no plano original</option>
+        <option>Solicitação do cliente</option>
+        <option>Restrição de capacidade</option>
+      </select>
     </div>
     <div class="bm-footer">
-      <button class="btn btn-sec" onclick="closeBulkModal()">Cancelar</button>
-      <button class="btn btn-pri" id="bm-att-apply" onclick="applyBulkAttrs()">Aplicar</button>
+      <button class="bm-apply" id="bm-att-apply" disabled onclick="applyBulkAttrs()">Aplicar</button>
+      <button class="bm-cancel" onclick="closeBulkModal()">Cancelar</button>
     </div>
   </div>
 
-  <!-- Modal: Cambiar horario -->
-  <div class="modal modal-wide" id="bm-schedule" style="display:none" role="dialog" aria-labelledby="bm-sch-title">
-    <div class="modal-hdr">
-      <span class="modal-title" id="bm-sch-title">Cambiar horario</span>
-      <button class="modal-x" onclick="closeBulkModal()" aria-label="Cerrar">✕</button>
+  <!-- ── Modal: Editar horários ─────────────────────────────────────── -->
+  <div class="bm-card" id="bm-schedule" style="display:none;max-height:90vh;overflow-y:auto" role="dialog" aria-labelledby="bm-sch-title">
+    <div class="bm-header">
+      <span class="bm-title" id="bm-sch-title">Editar horários</span>
+      <button class="bm-x" onclick="closeBulkModal()" aria-label="Fechar">×</button>
     </div>
-    <div class="bm-body" style="max-height:72vh;overflow-y:auto">
-      <div class="bm-section">
-        <div class="bm-section-title">Fechas y horarios para Origen</div>
-        <div class="bm-grid2">
-          <div class="bm-field">
-            <label class="bm-label" for="bm-eta1-day">Fecha ETA</label>
-            <select id="bm-eta1-day" class="bm-select" onchange="checkBulkValid('schedule')">
-              <option value="">— día —</option>
-              <option>SEG</option><option>TER</option><option>QUA</option>
-              <option>QUI</option><option>SEX</option><option>SÁB</option><option>DOM</option>
-            </select>
-          </div>
-          <div class="bm-field">
-            <label class="bm-label" for="bm-eta1-hour">Hora ETA</label>
-            <select id="bm-eta1-hour" class="bm-select" onchange="checkBulkValid('schedule')">
-              <option value="">— hora —</option>
-              <option>00:00</option><option>01:00</option><option>02:00</option><option>03:00</option>
-              <option>04:00</option><option>05:00</option><option>06:00</option><option>07:00</option>
-              <option>08:00</option><option>09:00</option><option>10:00</option><option>11:00</option>
-              <option>12:00</option><option>13:00</option><option>14:00</option><option>15:00</option>
-              <option>16:00</option><option>17:00</option><option>18:00</option><option>19:00</option>
-              <option>20:00</option><option>21:00</option><option>22:00</option><option>23:00</option>
-            </select>
-          </div>
-          <div class="bm-field">
-            <label class="bm-label" for="bm-etd1-day">Fecha ETD</label>
-            <select id="bm-etd1-day" class="bm-select" onchange="checkBulkValid('schedule')">
-              <option value="">— día —</option>
-              <option>SEG</option><option>TER</option><option>QUA</option>
-              <option>QUI</option><option>SEX</option><option>SÁB</option><option>DOM</option>
-            </select>
-          </div>
-          <div class="bm-field">
-            <label class="bm-label" for="bm-etd1-hour">Hora ETD</label>
-            <select id="bm-etd1-hour" class="bm-select" onchange="checkBulkValid('schedule')">
-              <option value="">— hora —</option>
-              <option>00:00</option><option>01:00</option><option>02:00</option><option>03:00</option>
-              <option>04:00</option><option>05:00</option><option>06:00</option><option>07:00</option>
-              <option>08:00</option><option>09:00</option><option>10:00</option><option>11:00</option>
-              <option>12:00</option><option>13:00</option><option>14:00</option><option>15:00</option>
-              <option>16:00</option><option>17:00</option><option>18:00</option><option>19:00</option>
-              <option>20:00</option><option>21:00</option><option>22:00</option><option>23:00</option>
-            </select>
+
+    <div class="bm-section-gap">
+      <p class="bm-section-lbl">Datas e horários para <b>Origem</b></p>
+      <div class="bm-row2">
+        <div class="bm-field">
+          <label class="bm-label">Data ETA</label>
+          <div class="bm-date-wrap">
+            <input type="date" id="bm-eta1-day" class="bm-date-input" onchange="checkBulkValid('schedule')">
+            <span class="bm-date-ico">📅</span>
           </div>
         </div>
-        <div class="bm-field" style="max-width:48%">
-          <label class="bm-label" for="bm-tt1">TT</label>
-          <select id="bm-tt1" class="bm-select" onchange="checkBulkValid('schedule')">
-            <option value="">— transit time —</option>
-            <option>30min</option><option>45min</option><option>1h</option>
-            <option>1h30min</option><option>2h</option><option>2h30min</option>
-            <option>3h</option><option>4h</option><option>5h</option>
-            <option>6h</option><option>8h</option><option>10h</option><option>12h</option>
+        <div class="bm-field">
+          <label class="bm-label" for="bm-eta1-hour">Horário ETA</label>
+          <select id="bm-eta1-hour" class="bm-select" onchange="checkBulkValid('schedule')">
+            <option value="">—</option>
+                          <option>00:00</option>
+              <option>01:00</option>
+              <option>02:00</option>
+              <option>03:00</option>
+              <option>04:00</option>
+              <option>05:00</option>
+              <option>06:00</option>
+              <option>07:00</option>
+              <option>08:00</option>
+              <option>09:00</option>
+              <option>10:00</option>
+              <option>11:00</option>
+              <option>12:00</option>
+              <option>13:00</option>
+              <option>14:00</option>
+              <option>15:00</option>
+              <option>16:00</option>
+              <option>17:00</option>
+              <option>18:00</option>
+              <option>19:00</option>
+              <option>20:00</option>
+              <option>21:00</option>
+              <option>22:00</option>
+              <option>23:00</option>
           </select>
         </div>
       </div>
-
-      <div class="bm-section">
-        <div class="bm-section-title">Fechas y horarios para Destino</div>
-        <div class="bm-grid2">
-          <div class="bm-field">
-            <label class="bm-label" for="bm-eta2-day">Fecha ETA</label>
-            <select id="bm-eta2-day" class="bm-select" onchange="checkBulkValid('schedule')">
-              <option value="">— día —</option>
-              <option>SEG</option><option>TER</option><option>QUA</option>
-              <option>QUI</option><option>SEX</option><option>SÁB</option><option>DOM</option>
-            </select>
-          </div>
-          <div class="bm-field">
-            <label class="bm-label" for="bm-eta2-hour">Hora ETA</label>
-            <select id="bm-eta2-hour" class="bm-select" onchange="checkBulkValid('schedule')">
-              <option value="">— hora —</option>
-              <option>00:00</option><option>01:00</option><option>02:00</option><option>03:00</option>
-              <option>04:00</option><option>05:00</option><option>06:00</option><option>07:00</option>
-              <option>08:00</option><option>09:00</option><option>10:00</option><option>11:00</option>
-              <option>12:00</option><option>13:00</option><option>14:00</option><option>15:00</option>
-              <option>16:00</option><option>17:00</option><option>18:00</option><option>19:00</option>
-              <option>20:00</option><option>21:00</option><option>22:00</option><option>23:00</option>
-            </select>
-          </div>
-          <div class="bm-field">
-            <label class="bm-label" for="bm-etd2-day">Fecha ETD</label>
-            <select id="bm-etd2-day" class="bm-select" onchange="checkBulkValid('schedule')">
-              <option value="">— día —</option>
-              <option>SEG</option><option>TER</option><option>QUA</option>
-              <option>QUI</option><option>SEX</option><option>SÁB</option><option>DOM</option>
-            </select>
-          </div>
-          <div class="bm-field">
-            <label class="bm-label" for="bm-etd2-hour">Hora ETD</label>
-            <select id="bm-etd2-hour" class="bm-select" onchange="checkBulkValid('schedule')">
-              <option value="">— hora —</option>
-              <option>00:00</option><option>01:00</option><option>02:00</option><option>03:00</option>
-              <option>04:00</option><option>05:00</option><option>06:00</option><option>07:00</option>
-              <option>08:00</option><option>09:00</option><option>10:00</option><option>11:00</option>
-              <option>12:00</option><option>13:00</option><option>14:00</option><option>15:00</option>
-              <option>16:00</option><option>17:00</option><option>18:00</option><option>19:00</option>
-              <option>20:00</option><option>21:00</option><option>22:00</option><option>23:00</option>
-            </select>
+      <div class="bm-row3">
+        <div class="bm-field">
+          <label class="bm-label">Data ETD</label>
+          <div class="bm-date-wrap">
+            <input type="date" id="bm-etd1-day" class="bm-date-input" onchange="checkBulkValid('schedule')">
+            <span class="bm-date-ico">📅</span>
           </div>
         </div>
-      </div>
-
-      <div class="bm-field">
-        <label class="bm-label" for="bm-sch-reason">Motivo de edición <span style="font-weight:400;color:var(--g400)">(opcional)</span></label>
-        <select id="bm-sch-reason" class="bm-select">
-          <option value="">Selecciona un motivo</option>
-          <option>Ajuste de janela de carga</option>
-          <option>Restrição operacional</option>
-          <option>Solicitação de transportadora</option>
-          <option>Erro no plano original</option>
-        </select>
+        <div class="bm-field">
+          <label class="bm-label" for="bm-etd1-hour">Horário ETD</label>
+          <select id="bm-etd1-hour" class="bm-select" onchange="checkBulkValid('schedule')">
+            <option value="">—</option>
+                          <option>00:00</option>
+              <option>01:00</option>
+              <option>02:00</option>
+              <option>03:00</option>
+              <option>04:00</option>
+              <option>05:00</option>
+              <option>06:00</option>
+              <option>07:00</option>
+              <option>08:00</option>
+              <option>09:00</option>
+              <option>10:00</option>
+              <option>11:00</option>
+              <option>12:00</option>
+              <option>13:00</option>
+              <option>14:00</option>
+              <option>15:00</option>
+              <option>16:00</option>
+              <option>17:00</option>
+              <option>18:00</option>
+              <option>19:00</option>
+              <option>20:00</option>
+              <option>21:00</option>
+              <option>22:00</option>
+              <option>23:00</option>
+          </select>
+        </div>
+        <div class="bm-field">
+          <label class="bm-label" for="bm-tt1">Tranti time</label>
+          <select id="bm-tt1" class="bm-select" onchange="checkBulkValid('schedule')">
+            <option value="">—</option>
+            <option>00:30</option><option>00:45</option><option>01:00</option>
+            <option>01:30</option><option>02:00</option><option>02:30</option>
+            <option>03:00</option><option>04:00</option><option>05:00</option>
+            <option>06:00</option><option>08:00</option><option>10:00</option><option>12:00</option>
+          </select>
+        </div>
       </div>
     </div>
+
+    <div class="bm-section-gap">
+      <p class="bm-section-lbl">Datas e horários para <b>Destino</b></p>
+      <div class="bm-row2">
+        <div class="bm-field">
+          <label class="bm-label">Fecha ETA</label>
+          <div class="bm-date-wrap">
+            <input type="date" id="bm-eta2-day" class="bm-date-input" onchange="checkBulkValid('schedule')">
+            <span class="bm-date-ico">📅</span>
+          </div>
+        </div>
+        <div class="bm-field">
+          <label class="bm-label" for="bm-eta2-hour">Horário ETA</label>
+          <select id="bm-eta2-hour" class="bm-select" onchange="checkBulkValid('schedule')">
+            <option value="">—</option>
+                          <option>00:00</option>
+              <option>01:00</option>
+              <option>02:00</option>
+              <option>03:00</option>
+              <option>04:00</option>
+              <option>05:00</option>
+              <option>06:00</option>
+              <option>07:00</option>
+              <option>08:00</option>
+              <option>09:00</option>
+              <option>10:00</option>
+              <option>11:00</option>
+              <option>12:00</option>
+              <option>13:00</option>
+              <option>14:00</option>
+              <option>15:00</option>
+              <option>16:00</option>
+              <option>17:00</option>
+              <option>18:00</option>
+              <option>19:00</option>
+              <option>20:00</option>
+              <option>21:00</option>
+              <option>22:00</option>
+              <option>23:00</option>
+          </select>
+        </div>
+      </div>
+      <div class="bm-row2">
+        <div class="bm-field">
+          <label class="bm-label">Fecha ETD</label>
+          <div class="bm-date-wrap">
+            <input type="date" id="bm-etd2-day" class="bm-date-input" onchange="checkBulkValid('schedule')">
+            <span class="bm-date-ico">📅</span>
+          </div>
+        </div>
+        <div class="bm-field">
+          <label class="bm-label" for="bm-etd2-hour">Horário ETD</label>
+          <select id="bm-etd2-hour" class="bm-select" onchange="checkBulkValid('schedule')">
+            <option value="">—</option>
+                          <option>00:00</option>
+              <option>01:00</option>
+              <option>02:00</option>
+              <option>03:00</option>
+              <option>04:00</option>
+              <option>05:00</option>
+              <option>06:00</option>
+              <option>07:00</option>
+              <option>08:00</option>
+              <option>09:00</option>
+              <option>10:00</option>
+              <option>11:00</option>
+              <option>12:00</option>
+              <option>13:00</option>
+              <option>14:00</option>
+              <option>15:00</option>
+              <option>16:00</option>
+              <option>17:00</option>
+              <option>18:00</option>
+              <option>19:00</option>
+              <option>20:00</option>
+              <option>21:00</option>
+              <option>22:00</option>
+              <option>23:00</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="bm-field">
+      <label class="bm-label" for="bm-sch-reason">Motivo de edição</label>
+      <select id="bm-sch-reason" class="bm-select" onchange="checkBulkValid('schedule')">
+        <option value="">Seleciona o motivo</option>
+        <option>Ajuste de janela de carga</option>
+        <option>Restrição operacional</option>
+        <option>Solicitação de transportadora</option>
+        <option>Erro no plano original</option>
+      </select>
+    </div>
     <div class="bm-footer">
-      <button class="btn btn-sec" onclick="closeBulkModal()">Cancelar</button>
-      <button class="btn btn-pri" id="bm-sch-apply" disabled onclick="applyBulkSchedule()">Aplicar</button>
+      <button class="bm-apply" id="bm-sch-apply" disabled onclick="applyBulkSchedule()">Aplicar</button>
+      <button class="bm-cancel" onclick="closeBulkModal()">Cancelar</button>
     </div>
   </div>
 
@@ -1432,7 +1547,17 @@ function toggleMetrics() {
    SELECTION
 ═══════════════════════════════════ */
 function toggleSelectAll(el) {
-  routes().forEach(r => el.checked ? selRoutes.add(r.id) : selRoutes.delete(r.id));
+  if (el.checked) {
+    // Seleciona todas as rotas visíveis
+    routes().forEach(r => selRoutes.add(r.id));
+    // Seleciona todos os veículos editáveis (exclui DFP/noChk)
+    routes().forEach(r => (r.vehicles || []).forEach(v => {
+      if (!v.noChk) selVehicles.add(v.id);
+    }));
+  } else {
+    selRoutes.clear();
+    selVehicles.clear();
+  }
   render(); syncBulk();
 }
 function toggleRoute(id, el) {
@@ -1450,28 +1575,39 @@ function clearSelection() {
 }
 function syncSelBar() { syncBulk(); } /* alias para compatibilidade */
 function syncBulk() {
+  // nV conta apenas veículos editáveis (DFP/noChk não entram no selVehicles por design)
   const nR = selRoutes.size, nV = selVehicles.size, total = nR + nV;
   const selText = document.getElementById('sel-count');
   const limpar = document.getElementById('bulk-limpar');
+  const chk = document.getElementById('hd-chk');
 
   if (total === 0) {
     selText.textContent = '0 rutas seleccionadas';
     selText.classList.remove('active-sel');
     limpar.style.display = 'none';
-    document.getElementById('hd-chk').checked = false;
-    document.getElementById('hd-chk').indeterminate = false;
+    chk.checked = false;
+    chk.indeterminate = false;
   } else {
+    // Texto derivado dos counts atuais — independente da ordem de seleção
     let txt = '';
-    if (nR > 0 && nV === 0)      txt = `${nR} ruta${nR>1?'s':''} seleccionada${nR>1?'s':''}`;
+    if      (nR > 0 && nV === 0) txt = `${nR} ruta${nR>1?'s':''} seleccionada${nR>1?'s':''}`;
     else if (nV > 0 && nR === 0) txt = `${nV} vehículo${nV>1?'s':''} seleccionado${nV>1?'s':''}`;
     else                          txt = `${nR} rota${nR>1?'s':''} e ${nV} veículo${nV>1?'s':''} selecionados.`;
     selText.textContent = txt;
     selText.classList.add('active-sel');
-    limpar.style.display = nR+nV > 0 ? 'inline' : 'none';
-    const n = routes().length;
-    document.getElementById('hd-chk').checked = selRoutes.size > 0 && selRoutes.size >= n;
-    document.getElementById('hd-chk').indeterminate = selRoutes.size > 0 && selRoutes.size < n;
+    limpar.style.display = 'inline';
+
+    // Checkbox principal: reflete rotas + veículos editáveis totais
+    const totalEditableVeh = routes().reduce((acc, r) =>
+      acc + (r.vehicles || []).filter(v => !v.noChk).length, 0);
+    const totalSelectableRoutes = routes().length;
+    const allSelected = selRoutes.size >= totalSelectableRoutes && selVehicles.size >= totalEditableVeh;
+    const noneSelected = selRoutes.size === 0 && selVehicles.size === 0;
+    chk.checked = allSelected && !noneSelected;
+    chk.indeterminate = !allSelected && !noneSelected;
   }
+
+  // Contexto derivado puramente dos counts atuais — nunca do histórico de seleção
   renderBulkBar(nR, nV);
 }
 
@@ -1514,9 +1650,10 @@ function renderBulkBar(nR, nV) {
     return;
   }
 
-  // Seleção mista — "Editar ▼" dropdown + ações de rota (conforme referencia-dropdown@2x)
-  document.getElementById('dropdown-eliminar').classList.remove('item-sep'); // já tem separador no DOM
+  // Seleção mista: "Eliminar vehículos" | [Editar ▼] | sep | ações de rota
   right.innerHTML = `
+    <button class="bb-link bb-link-danger" onclick="bulkAction('eliminar')">Eliminar vehículos</button>
+    <div class="bb-sep"></div>
     <div class="edit-dropdown" id="edit-dd-wrap">
       <button class="bb-edit-btn" id="bb-edit-toggle" onclick="toggleEditDropdown(event)">
         Editar <span class="bb-chev" id="bb-chev-icon">▼</span>
@@ -1524,9 +1661,8 @@ function renderBulkBar(nR, nV) {
     </div>
     <div class="bb-sep"></div>
     <button class="bb-link" onclick="bulkRevert()">Revertir ediciones</button>
-    ${isPending ? `<button class="bb-link" onclick="bulkMarkReviewed()">Marcar rotas como revisado</button>` : ''}
+    ${isPending ? `<button class="bb-link" onclick="bulkMarkReviewed()">Marcar como revisado</button>` : ''}
     ${isReviewed ? `<button class="bb-link" onclick="bulkSend()">Enviar a agendamiento</button>` : ''}`;
-  // Posiciona o dropdown flutuante em relação ao botão depois de renderizar
   setTimeout(() => positionEditDropdown(), 0);
 }
 
@@ -1876,12 +2012,13 @@ function getEditableSelectedVehicles() {
 
 function openBulkOverlay(modalId) {
   ['bm-vehicle','bm-carrier','bm-attrs','bm-schedule'].forEach(id => {
-    document.getElementById(id).style.display = 'none';
+    const el = document.getElementById(id); if (el) el.style.display = 'none';
   });
-  document.getElementById(modalId).style.display = '';
+  const modal = document.getElementById(modalId);
+  if (modal) modal.style.display = '';
   document.getElementById('bulk-overlay').classList.add('vis');
   setTimeout(() => {
-    const first = document.querySelector('#' + modalId + ' select:not(:disabled), #' + modalId + ' input');
+    const first = modal?.querySelector('select, input[type=date], .bm-attr-trigger');
     if (first) first.focus();
   }, 120);
 }
@@ -1910,9 +2047,8 @@ function bulkAction(type) {
   }
 }
 
-/* ── Modal: Vehículo ──────────────────────────────────────────────────── */
+/* ── Modal: Veículo ───────────────────────────────────────────────────── */
 function openBulkVehicleModal(n) {
-  document.getElementById('bm-veh-title').textContent = `Cambiar vehículo (${n})`;
   document.getElementById('bm-veh-type').value = '';
   document.getElementById('bm-veh-reason').value = '';
   document.getElementById('bm-veh-apply').disabled = true;
@@ -1927,13 +2063,20 @@ function checkBulkValid(type) {
     const ok = document.getElementById('bm-car-carrier').value &&
                document.getElementById('bm-car-reason').value;
     document.getElementById('bm-car-apply').disabled = !ok;
+  } else if (type === 'attrs') {
+    const hasAttrs = ['PAL','VEN','CPT','ETD'].some(a => {
+      const cb = document.getElementById('bm-att-' + a.toLowerCase());
+      return cb && cb.checked;
+    });
+    const hasReason = document.getElementById('bm-att-reason').value;
+    document.getElementById('bm-att-apply').disabled = !hasAttrs || !hasReason;
   } else if (type === 'schedule') {
     const anyFilled = ['bm-eta1-day','bm-eta1-hour','bm-etd1-day','bm-etd1-hour',
       'bm-tt1','bm-eta2-day','bm-eta2-hour','bm-etd2-day','bm-etd2-hour']
-      .some(id => document.getElementById(id).value);
-    document.getElementById('bm-sch-apply').disabled = !anyFilled;
+      .some(id => document.getElementById(id)?.value);
+    const hasReason = document.getElementById('bm-sch-reason')?.value;
+    document.getElementById('bm-sch-apply').disabled = !anyFilled || !hasReason;
   }
-  // attrs: always enabled (handled in openBulkAttrsModal)
 }
 function applyBulkVehicle() {
   const vehicles = getEditableSelectedVehicles();
@@ -1954,7 +2097,6 @@ function applyBulkVehicle() {
 
 /* ── Modal: Transportadora ────────────────────────────────────────────── */
 function openBulkCarrierModal(n) {
-  document.getElementById('bm-car-title').textContent = `Cambiar transportadora (${n})`;
   document.getElementById('bm-car-carrier').value = '';
   document.getElementById('bm-car-reason').value = '';
   document.getElementById('bm-car-apply').disabled = true;
@@ -1978,42 +2120,69 @@ function applyBulkCarrier() {
 
 /* ── Modal: Atributos ─────────────────────────────────────────────────── */
 function openBulkAttrsModal(editableVehicles, n) {
-  document.getElementById('bm-att-title').textContent = `Cambiar atributos (${n})`;
-  // Pré-seleciona a interseção de atributos dos veículos selecionados
+  // Pré-seleciona interseção dos atributos compartilhados
   const allAttrs = editableVehicles.map(({ vehicle }) => vehicle.attrs || []);
-  const intersection = allAttrs.length > 0
-    ? allAttrs.reduce((a, b) => a.filter(x => b.includes(x)))
-    : [];
+  const intersection = allAttrs.length > 0 ? allAttrs.reduce((a, b) => a.filter(x => b.includes(x))) : [];
   ['PAL','VEN','CPT','ETD'].forEach(attr => {
     const cb = document.getElementById('bm-att-' + attr.toLowerCase());
     if (cb) cb.checked = intersection.includes(attr);
   });
+  document.getElementById('bm-att-reason').value = '';
+  document.getElementById('bm-att-apply').disabled = true;
+  updateAttrTriggerDisplay();
   openBulkOverlay('bm-attrs');
 }
+
+/* Custom multi-select de atributos */
+function toggleBulkAttrDropdown() {
+  const trigger = document.getElementById('bm-attr-trigger');
+  const dropdown = document.getElementById('bm-attr-dropdown');
+  const isOpen = dropdown.classList.contains('open');
+  dropdown.classList.toggle('open', !isOpen);
+  trigger.classList.toggle('open', !isOpen);
+  trigger.setAttribute('aria-expanded', !isOpen);
+}
+function onBulkAttrChange() {
+  updateAttrTriggerDisplay();
+  checkBulkValid('attrs');
+}
+function updateAttrTriggerDisplay() {
+  const selected = ['PAL','VEN','CPT','ETD'].filter(a => {
+    const cb = document.getElementById('bm-att-' + a.toLowerCase());
+    return cb && cb.checked;
+  });
+  const trigger = document.getElementById('bm-attr-trigger');
+  if (!trigger) return;
+  trigger.querySelector('#bm-attr-display').textContent = selected.length > 0
+    ? selected.join(', ') : 'Selecione os atributos';
+  trigger.classList.toggle('has-val', selected.length > 0);
+}
+
 function applyBulkAttrs() {
   const vehicles = getEditableSelectedVehicles();
   const newAttrs = ['PAL','VEN','CPT','ETD'].filter(a => {
     const cb = document.getElementById('bm-att-' + a.toLowerCase());
     return cb && cb.checked;
   });
+  const reason = document.getElementById('bm-att-reason').value;
   vehicles.forEach(({ vehicle, route }) => {
     const old = [...vehicle.attrs];
     vehicle.attrs = newAttrs; route.edited = true;
     addHistory(route.id, {
       label: `Edição massiva de atributos (${vehicles.length} veíc.)`,
-      changes: [`${old.join(', ')||'—'} → ${newAttrs.join(', ')||'—'}`]
+      changes: [`${old.join(', ')||'—'} → ${newAttrs.join(', ')||'—'}`, `Motivo: ${reason}`]
     });
   });
   closeBulkModal(); render();
   showToast(`Atributos atualizados · ${vehicles.length} veículo${vehicles.length>1?'s':''}`, 'success');
 }
 
-/* ── Modal: Horario ───────────────────────────────────────────────────── */
+/* ── Modal: Horários ──────────────────────────────────────────────────── */
 function openBulkScheduleModal(n) {
-  document.getElementById('bm-sch-title').textContent = `Cambiar horario (${n})`;
-  ['bm-eta1-day','bm-eta1-hour','bm-etd1-day','bm-etd1-hour','bm-tt1',
-   'bm-eta2-day','bm-eta2-hour','bm-etd2-day','bm-etd2-hour','bm-sch-reason']
-    .forEach(id => { document.getElementById(id).value = ''; });
+  ['bm-eta1-hour','bm-etd1-hour','bm-tt1','bm-eta2-hour','bm-etd2-hour','bm-sch-reason']
+    .forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
+  ['bm-eta1-day','bm-etd1-day','bm-eta2-day','bm-etd2-day']
+    .forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
   document.getElementById('bm-sch-apply').disabled = true;
   openBulkOverlay('bm-schedule');
 }
@@ -2138,6 +2307,13 @@ document.addEventListener('click', e => {
   // Fecha dropdown "Editar"
   if (!e.target.closest('#edit-dropdown-menu') && !e.target.closest('#bb-edit-toggle')) {
     closeEditDropdown();
+  }
+  // Fecha dropdown de atributos se clicar fora
+  if (!e.target.closest('#bm-attr-trigger') && !e.target.closest('#bm-attr-dropdown')) {
+    const dd = document.getElementById('bm-attr-dropdown');
+    const tr = document.getElementById('bm-attr-trigger');
+    if (dd) dd.classList.remove('open');
+    if (tr) { tr.classList.remove('open'); tr.setAttribute('aria-expanded','false'); }
   }
 });
 document.addEventListener('keydown', e => {
