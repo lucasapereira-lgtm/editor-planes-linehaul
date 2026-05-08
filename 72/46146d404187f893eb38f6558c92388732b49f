@@ -1,0 +1,19 @@
+index.html
+  s_ddaeeeb7345cb2::t_a0f67dc386a350 1366-1368,1929-1931,1935-1936,1939-1946,1955,1959-1976,1978,1981,1983-2013,2049,2425
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.4",
+  "base_commit_sha": "7246146d404187f893eb38f6558c92388732b49f",
+  "prompts": {},
+  "sessions": {
+    "s_ddaeeeb7345cb2": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "23cd5bad-ae1d-4bb9-b824-90f3b842e8c8",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "lucasapereira-lgtm <Lucas.apereira@mercadolivre.com>"
+    }
+  }
+}
