@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Revisión de planes LH · Mercado Libre</title>
+<title>Revisão de planos LH · Mercado Libre</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
@@ -285,14 +285,17 @@ body{font-family:var(--font);background:var(--bg);color:var(--g800);font-size:14
 .ae-item input[type=checkbox]{accent-color:var(--blue);width:15px;height:15px;cursor:pointer}
 
 /* ── CONTEXT MENU ─────────────────────────────────────────────────────── */
-.ctx-menu{display:none;position:fixed;background:#fff;border:1px solid #DEDEDE;
-  border-radius:6px;box-shadow:0 4px 16px rgba(0,0,0,.1);width:200px;z-index:500;
-  overflow:hidden;padding:4px 0}
+.ctx-menu{display:none;position:fixed;background:#fff;
+  border:1px solid #E8E8E8;border-radius:8px;
+  box-shadow:0 4px 20px rgba(0,0,0,.12);
+  min-width:210px;z-index:500;overflow:hidden;padding:6px 0}
 .ctx-menu.vis{display:block;animation:popIn .12s ease}
-.ctx-item{height:36px;padding:0 12px;display:flex;align-items:center;
-  font-size:12px;color:#333;cursor:pointer;transition:background .1s;
-  font-family:var(--font);background:none;border:none;width:100%;text-align:left}
-.ctx-item:hover{background:#F5F5F5}
+.ctx-item{height:38px;padding:0 16px;display:flex;align-items:center;
+  font-size:13px;color:#444;cursor:pointer;transition:background .1s;
+  font-family:var(--font);background:none;border:none;width:100%;text-align:left;
+  font-weight:400;letter-spacing:0}
+.ctx-item:hover{background:#F7F7F7}
+.ctx-item.primary{color:var(--blue);font-weight:500}
 .ctx-item.danger{color:var(--red)}
 
 /* ── VEHICLE SUBTABLE — grid compartilhado via --veh-grid ───────────── */
@@ -620,7 +623,7 @@ input[type=checkbox]{width:15px;height:15px;cursor:pointer;accent-color:var(--bl
     </svg>
   </a>
   <div class="hdr-space"></div>
-  <div class="hdr-site">Estás viendo: <b>MLB</b> <span class="hdr-site-arr">›</span></div>
+  <div class="hdr-site">Você está vendo: <b>MLB</b> <span class="hdr-site-arr">›</span></div>
   <div class="hdr-div"></div>
   <div class="hdr-user">
     <div class="hdr-avatar">LP</div>
@@ -645,19 +648,19 @@ input[type=checkbox]{width:15px;height:15px;cursor:pointer;accent-color:var(--bl
 <main class="main">
 <div class="page">
 
-  <h1 class="page-title">Revisión de planes LH</h1>
+  <h1 class="page-title">Revisão de planos LH</h1>
 
   <!-- FILTERS -->
   <div class="filters">
     <div class="filter-row">
-      <span class="filter-label">Estás viendo</span>
+      <span class="filter-label">Você está vendo</span>
       <div class="filter-date">
         <span class="cal-icon">📅</span>
         18 al 25 de marzo
       </div>
-      <div class="filter-select" style="min-width:160px">Regiones <span style="flex:1"></span><span class="chev">▾</span></div>
+      <div class="filter-select" style="min-width:160px">Regiões <span style="flex:1"></span><span class="chev">▾</span></div>
       <div class="filter-select" style="min-width:150px">
-        <span style="color:var(--g400)">Origen:</span>&nbsp;<span style="color:var(--blue);font-weight:500">Todos</span>
+        <span style="color:var(--g400)">Origem:</span>&nbsp;<span style="color:var(--blue);font-weight:500">Todos</span>
         <span style="flex:1"></span><span class="chev">▾</span>
       </div>
       <div class="filter-select" style="min-width:170px">
@@ -668,14 +671,14 @@ input[type=checkbox]{width:15px;height:15px;cursor:pointer;accent-color:var(--bl
     <div class="filter-row">
       <div class="search-box">
         <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="6" cy="6" r="4.5" stroke="#B0B0B0" stroke-width="1.3"/><path d="M9.5 9.5L12 12" stroke="#B0B0B0" stroke-width="1.3" stroke-linecap="round"/></svg>
-        <input type="text" placeholder="Nodo, día, fecha, CPT" id="search-input">
+        <input type="text" placeholder="Nó, dia, data, CPT" id="search-input">
       </div>
-      <div class="filter-pill">Confianza: <span class="fp-val">Todos</span><span class="fp-chev">▾</span></div>
-      <div class="filter-pill">Días: <span class="fp-val">Todos</span><span class="fp-chev">▾</span></div>
-      <div class="filter-pill">CPT: <span class="fp-val">Todo el día</span><span class="fp-chev">▾</span></div>
+      <div class="filter-pill">Confiança: <span class="fp-val">Todos</span><span class="fp-chev">▾</span></div>
+      <div class="filter-pill">Dias: <span class="fp-val">Todos</span><span class="fp-chev">▾</span></div>
+      <div class="filter-pill">CPT: <span class="fp-val">O dia todo</span><span class="fp-chev">▾</span></div>
       <div class="filter-other">
         <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="4" cy="7" r="2" stroke="currentColor" stroke-width="1.3"/><circle cx="10" cy="7" r="2" stroke="currentColor" stroke-width="1.3"/><line x1="1" y1="7" x2="2" y2="7" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><line x1="6" y1="7" x2="8" y2="7" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><line x1="12" y1="7" x2="13" y2="7" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
-        Filtrar otras opciones
+        Filtrar outras opções
       </div>
     </div>
   </div>
@@ -683,19 +686,19 @@ input[type=checkbox]{width:15px;height:15px;cursor:pointer;accent-color:var(--bl
   <!-- METRICS PANEL -->
   <div class="metrics-panel" id="metrics-panel">
     <div class="metrics-hdr" onclick="toggleMetrics()">
-      <span class="metrics-hdr-title">Métricas del plan</span>
+      <span class="metrics-hdr-title">Métricas do plano</span>
       <span class="metrics-toggle open" id="metrics-toggle">▾</span>
     </div>
     <div class="metrics-body" id="metrics-body">
-      <div class="metric-col active" id="mc-pending" onclick="switchTab('pending')" title="Ver Por revisar">
-        <div class="mc-title"><span class="mc-dot mc-dot-pending"></span>Por revisar</div>
+      <div class="metric-col active" id="mc-pending" onclick="switchTab('pending')" title="Ver A revisar">
+        <div class="mc-title"><span class="mc-dot mc-dot-pending"></span>A revisar</div>
         <div class="mc-row">
           <div class="mc-item">
-            <span class="mc-item-label">Rutas</span>
+            <span class="mc-item-label">Rotas</span>
             <span class="mc-item-val" id="mv-r-pending">70 <span>de 100</span></span>
           </div>
           <div class="mc-item">
-            <span class="mc-item-label">Vehículos</span>
+            <span class="mc-item-label">Veículos</span>
             <span class="mc-item-val" id="mv-v-pending">200 <span>de 350</span></span>
           </div>
         </div>
@@ -705,25 +708,25 @@ input[type=checkbox]{width:15px;height:15px;cursor:pointer;accent-color:var(--bl
         <div class="mc-title"><span class="mc-dot mc-dot-reviewed"></span>Revisado</div>
         <div class="mc-row">
           <div class="mc-item">
-            <span class="mc-item-label">Rutas</span>
+            <span class="mc-item-label">Rotas</span>
             <span class="mc-item-val">0 <span>de 100</span></span>
           </div>
           <div class="mc-item">
-            <span class="mc-item-label">Vehículos</span>
+            <span class="mc-item-label">Veículos</span>
             <span class="mc-item-val">0 <span>de 350</span></span>
           </div>
         </div>
         <div class="mc-ftl"><span>FTL <b>0</b></span><span>DFP <b>0</b></span></div>
       </div>
-      <div class="metric-col" id="mc-sent" onclick="switchTab('sent')" title="Ver Enviado a agendamiento">
-        <div class="mc-title"><span class="mc-dot mc-dot-sent"></span>Enviado a agendamiento</div>
+      <div class="metric-col" id="mc-sent" onclick="switchTab('sent')" title="Ver Enviado para agendamento">
+        <div class="mc-title"><span class="mc-dot mc-dot-sent"></span>Enviado para agendamento</div>
         <div class="mc-row">
           <div class="mc-item">
-            <span class="mc-item-label">Rutas</span>
+            <span class="mc-item-label">Rotas</span>
             <span class="mc-item-val">0 <span>de 100</span></span>
           </div>
           <div class="mc-item">
-            <span class="mc-item-label">Vehículos</span>
+            <span class="mc-item-label">Veículos</span>
             <span class="mc-item-val">0 <span>de 350</span></span>
           </div>
         </div>
@@ -737,7 +740,7 @@ input[type=checkbox]{width:15px;height:15px;cursor:pointer;accent-color:var(--bl
     <div class="bulk-top" id="bulk-top">
       <div class="bulk-left">
         <input type="checkbox" id="hd-chk" onchange="toggleSelectAll(this)">
-        <span class="bulk-sel-text" id="sel-count">0 rutas seleccionadas</span>
+        <span class="bulk-sel-text" id="sel-count">0 rotas selecionadas</span>
         <button class="bulk-limpar" id="bulk-limpar" style="display:none" onclick="clearSelection()">Limpar seleção</button>
       </div>
       <div class="bulk-right" id="bulk-right">
@@ -747,10 +750,10 @@ input[type=checkbox]{width:15px;height:15px;cursor:pointer;accent-color:var(--bl
   </div>
   <!-- Dropdown do botão Editar (posicionado via JS) -->
   <div class="edit-dropdown-menu" id="edit-dropdown-menu">
-    <button class="edit-dropdown-item item-active" onclick="bulkAction('vehículo');closeEditDropdown()">Veículo</button>
+    <button class="edit-dropdown-item item-active" onclick="bulkAction('veiculo');closeEditDropdown()">Veículo</button>
     <button class="edit-dropdown-item" onclick="bulkAction('transportadora');closeEditDropdown()">Transportadora</button>
     <button class="edit-dropdown-item" onclick="bulkAction('atributos');closeEditDropdown()">Atributos</button>
-    <button class="edit-dropdown-item" onclick="bulkAction('horario');closeEditDropdown()">Horário e transit time</button>
+    <button class="edit-dropdown-item" onclick="bulkAction('horario');closeEditDropdown()">Horário e tempo de trânsito</button>
     <!-- Eliminar veículo removido do dropdown — ação separada na barra massiva -->
   </div>
 
@@ -777,9 +780,9 @@ input[type=checkbox]{width:15px;height:15px;cursor:pointer;accent-color:var(--bl
 
 <!-- ═══ EDITOR: VEÍCULO ══════════════════════════════════════════════════ -->
 <div class="cell-editor" id="ed-vehicle">
-  <div class="ed-title">Cambiar tipo de vehículo</div>
+  <div class="ed-title">Alterar tipo de veículo</div>
   <div class="ed-field">
-    <label class="ed-label">Tipo de vehículo</label>
+    <label class="ed-label">Tipo de veículo</label>
     <select class="ed-select" id="ev-type" onchange="checkEditorValid('vehicle')">
       <option value="">— seleccionar —</option>
       <option value="Bitrem">Bitrem</option>
@@ -790,9 +793,9 @@ input[type=checkbox]{width:15px;height:15px;cursor:pointer;accent-color:var(--bl
     </select>
   </div>
   <div class="ed-field">
-    <label class="ed-label">Motivo del cambio</label>
+    <label class="ed-label">Motivo da alteração</label>
     <select class="ed-select" id="ev-reason" onchange="checkEditorValid('vehicle')">
-      <option value="">Selecciona un motivo</option>
+      <option value="">Selecione um motivo</option>
       <option>Disponibilidade de veículo</option>
       <option>Ajuste de capacidade</option>
       <option>Mudança de demanda</option>
@@ -808,7 +811,7 @@ input[type=checkbox]{width:15px;height:15px;cursor:pointer;accent-color:var(--bl
 
 <!-- ═══ EDITOR: TRANSPORTADORA ══════════════════════════════════════════ -->
 <div class="cell-editor" id="ed-carrier">
-  <div class="ed-title">Cambiar transportadora</div>
+  <div class="ed-title">Alterar transportadora</div>
   <div class="ed-field">
     <label class="ed-label">Transportadora</label>
     <select class="ed-select" id="ec-carrier" onchange="checkEditorValid('carrier')">
@@ -822,9 +825,9 @@ input[type=checkbox]{width:15px;height:15px;cursor:pointer;accent-color:var(--bl
     </select>
   </div>
   <div class="ed-field">
-    <label class="ed-label">Motivo del cambio</label>
+    <label class="ed-label">Motivo da alteração</label>
     <select class="ed-select" id="ec-reason" onchange="checkEditorValid('carrier')">
-      <option value="">Selecciona un motivo</option>
+      <option value="">Selecione um motivo</option>
       <option>Troca de parceiro logístico</option>
       <option>Disponibilidade de frota</option>
       <option>Ajuste contratual</option>
@@ -841,7 +844,7 @@ input[type=checkbox]{width:15px;height:15px;cursor:pointer;accent-color:var(--bl
 <div class="cell-editor" id="ed-eta">
   <div class="ed-title" id="eta-title">Editar ETA</div>
   <div class="ed-field">
-    <label class="ed-label">Fecha</label>
+    <label class="ed-label">Data</label>
     <select class="ed-select" id="eta-day" onchange="checkEditorValid('eta')">
       <option>SEG</option><option>TER</option><option>QUA</option>
       <option>QUI</option><option>SEX</option><option>SÁB</option><option>DOM</option>
@@ -868,7 +871,7 @@ input[type=checkbox]{width:15px;height:15px;cursor:pointer;accent-color:var(--bl
 <div class="cell-editor" id="ed-tt" style="width:280px">
   <div class="ed-title">Editar TT</div>
   <div class="ed-field">
-    <label class="ed-label">Transit time</label>
+    <label class="ed-label">Tempo de trânsito</label>
     <select class="ed-select" id="tt-value" onchange="checkEditorValid('tt')">
       <option>30min</option><option>45min</option><option>1h</option>
       <option>1h30min</option><option>2h</option><option>2h30min</option>
@@ -895,7 +898,7 @@ input[type=checkbox]{width:15px;height:15px;cursor:pointer;accent-color:var(--bl
   <div class="modal">
     <div class="modal-hdr">
       <div>
-        <div class="modal-title">Motivo de edición</div>
+        <div class="modal-title">Motivo da edição</div>
         <div class="modal-sub" id="modal-ctx">Vehículo · ruta</div>
       </div>
       <button class="modal-x" onclick="closeModal()">✕</button>
@@ -909,7 +912,7 @@ input[type=checkbox]{width:15px;height:15px;cursor:pointer;accent-color:var(--bl
       <label class="flbl">¿Por qué realizas este cambio?</label>
       <div class="reason-grid">
         <button class="ro" onclick="selReason(this)">Ajuste de capacidad</button>
-        <button class="ro" onclick="selReason(this)">Disponibilidad de vehículo</button>
+        <button class="ro" onclick="selReason(this)">Disponibilidade de veículo</button>
         <button class="ro" onclick="selReason(this)">Cambio de demanda</button>
         <button class="ro" onclick="selReason(this)">Restricción operacional</button>
         <button class="ro" onclick="selReason(this)">Solicitud de transportadora</button>
@@ -927,11 +930,14 @@ input[type=checkbox]{width:15px;height:15px;cursor:pointer;accent-color:var(--bl
 
 <!-- ═══ CONTEXT MENU ════════════════════════════════════════════════════ -->
 <div class="ctx-menu" id="ctx-menu">
-  <button class="ctx-item" id="ctx-deactivate" onclick="ctxDeactivate()">Desativar rota</button>
-  <button class="ctx-item" id="ctx-review" onclick="ctxMarkReviewed()">Marcar como revisado</button>
-  <button class="ctx-item" id="ctx-history" onclick="ctxHistory()">Ver histórico de edições</button>
-  <button class="ctx-item" id="ctx-back" style="display:none" onclick="ctxBackToPending()">← Voltar para edição</button>
-  <button class="ctx-item" id="ctx-send" style="display:none" onclick="ctxSend()">↑ Enviar a agendamiento</button>
+  <!-- Ações do tab "A revisar" -->
+  <button class="ctx-item primary" id="ctx-review"     onclick="ctxMarkReviewed()" style="display:none">Marcar como revisado</button>
+  <button class="ctx-item"         id="ctx-revert"     onclick="ctxRevert()"       style="display:none">Reverter edições</button>
+  <button class="ctx-item"         id="ctx-deactivate" onclick="ctxDeactivate()"   style="display:none">Desativar rota</button>
+  <!-- Ações do tab "Revisado" -->
+  <button class="ctx-item primary" id="ctx-send"       onclick="ctxSend()"         style="display:none">Enviar para agendamento</button>
+  <button class="ctx-item"         id="ctx-back"       onclick="ctxBackToPending()" style="display:none">Voltar para edição</button>
+  <!-- Histórico: NÃO entra no menu — é consulta contextual da tag EDITADA -->
 </div>
 
 <!-- ═══ HISTORY POPOVER ══════════════════════════════════════════════════ -->
@@ -940,7 +946,7 @@ input[type=checkbox]{width:15px;height:15px;cursor:pointer;accent-color:var(--bl
   <div class="hist-pop-header">
     <div class="hist-pop-title">Histórico de edições</div>
     <button class="hist-pop-close" onclick="closeDrawer()"
-      aria-label="Fechar histórico de edições" title="Fechar">×</button>
+      aria-label="Datar histórico de edições" title="Datar">×</button>
   </div>
   <hr class="hist-hr" style="margin:0 20px;flex-shrink:0">
   <!-- Área scrollável — só a lista de edições -->
@@ -958,12 +964,12 @@ input[type=checkbox]{width:15px;height:15px;cursor:pointer;accent-color:var(--bl
   <div class="bm-card" id="bm-vehicle" style="display:none" role="dialog" aria-labelledby="bm-veh-title">
     <div class="bm-header">
       <span class="bm-title" id="bm-veh-title">Editar veículo</span>
-      <button class="bm-x" onclick="closeBulkModal()" aria-label="Fechar">×</button>
+      <button class="bm-x" onclick="closeBulkModal()" aria-label="Datar">×</button>
     </div>
     <div class="bm-field">
       <label class="bm-label" for="bm-veh-type">Tipo de veículo</label>
       <select id="bm-veh-type" class="bm-select" onchange="checkBulkValid('vehicle')">
-        <option value="">Seleciona o veículo</option>
+        <option value="">Selecione o veículo</option>
         <option value="Bitrem">Bitrem</option>
         <option value="Carreta">Carreta</option>
         <option value="Toco">Toco</option>
@@ -974,7 +980,7 @@ input[type=checkbox]{width:15px;height:15px;cursor:pointer;accent-color:var(--bl
     <div class="bm-field">
       <label class="bm-label" for="bm-veh-reason">Motivo de edição</label>
       <select id="bm-veh-reason" class="bm-select" onchange="checkBulkValid('vehicle')">
-        <option value="">Seleciona o motivo</option>
+        <option value="">Selecione um motivo</option>
         <option>Disponibilidade de veículo</option>
         <option>Ajuste de capacidade</option>
         <option>Mudança de demanda</option>
@@ -992,7 +998,7 @@ input[type=checkbox]{width:15px;height:15px;cursor:pointer;accent-color:var(--bl
   <div class="bm-card" id="bm-carrier" style="display:none" role="dialog" aria-labelledby="bm-car-title">
     <div class="bm-header">
       <span class="bm-title" id="bm-car-title">Editar transportadora</span>
-      <button class="bm-x" onclick="closeBulkModal()" aria-label="Fechar">×</button>
+      <button class="bm-x" onclick="closeBulkModal()" aria-label="Datar">×</button>
     </div>
     <div class="bm-field">
       <label class="bm-label" for="bm-car-carrier">Transportadora</label>
@@ -1009,7 +1015,7 @@ input[type=checkbox]{width:15px;height:15px;cursor:pointer;accent-color:var(--bl
     <div class="bm-field">
       <label class="bm-label" for="bm-car-reason">Motivo de edição</label>
       <select id="bm-car-reason" class="bm-select" onchange="checkBulkValid('carrier')">
-        <option value="">Seleciona o motivo</option>
+        <option value="">Selecione um motivo</option>
         <option>Troca de parceiro logístico</option>
         <option>Disponibilidade de frota</option>
         <option>Ajuste contratual</option>
@@ -1026,7 +1032,7 @@ input[type=checkbox]{width:15px;height:15px;cursor:pointer;accent-color:var(--bl
   <div class="bm-card" id="bm-attrs" style="display:none" role="dialog" aria-labelledby="bm-att-title">
     <div class="bm-header">
       <span class="bm-title" id="bm-att-title">Editar atributos</span>
-      <button class="bm-x" onclick="closeBulkModal()" aria-label="Fechar">×</button>
+      <button class="bm-x" onclick="closeBulkModal()" aria-label="Datar">×</button>
     </div>
     <div class="bm-field">
       <label class="bm-label">Atributos</label>
@@ -1045,7 +1051,7 @@ input[type=checkbox]{width:15px;height:15px;cursor:pointer;accent-color:var(--bl
     <div class="bm-field">
       <label class="bm-label" for="bm-att-reason">Motivo de edição</label>
       <select id="bm-att-reason" class="bm-select" onchange="checkBulkValid('attrs')">
-        <option value="">Seleciona o motivo</option>
+        <option value="">Selecione um motivo</option>
         <option>Ajuste operacional</option>
         <option>Erro no plano original</option>
         <option>Solicitação do cliente</option>
@@ -1062,7 +1068,7 @@ input[type=checkbox]{width:15px;height:15px;cursor:pointer;accent-color:var(--bl
   <div class="bm-card" id="bm-schedule" style="display:none;max-height:90vh;overflow-y:auto" role="dialog" aria-labelledby="bm-sch-title">
     <div class="bm-header">
       <span class="bm-title" id="bm-sch-title">Editar horários</span>
-      <button class="bm-x" onclick="closeBulkModal()" aria-label="Fechar">×</button>
+      <button class="bm-x" onclick="closeBulkModal()" aria-label="Datar">×</button>
     </div>
 
     <div class="bm-section-gap">
@@ -1145,7 +1151,7 @@ input[type=checkbox]{width:15px;height:15px;cursor:pointer;accent-color:var(--bl
           </select>
         </div>
         <div class="bm-field">
-          <label class="bm-label" for="bm-tt1">Tranti time</label>
+          <label class="bm-label" for="bm-tt1">Tempo de trânsito</label>
           <select id="bm-tt1" class="bm-select" onchange="checkBulkValid('schedule')">
             <option value="">—</option>
             <option>00:30</option><option>00:45</option><option>01:00</option>
@@ -1161,7 +1167,7 @@ input[type=checkbox]{width:15px;height:15px;cursor:pointer;accent-color:var(--bl
       <p class="bm-section-lbl">Datas e horários para <b>Destino</b></p>
       <div class="bm-row2">
         <div class="bm-field">
-          <label class="bm-label">Fecha ETA</label>
+          <label class="bm-label">Data ETA</label>
           <div class="bm-date-wrap">
             <input type="date" id="bm-eta2-day" class="bm-date-input" onchange="checkBulkValid('schedule')">
             <span class="bm-date-ico">📅</span>
@@ -1200,7 +1206,7 @@ input[type=checkbox]{width:15px;height:15px;cursor:pointer;accent-color:var(--bl
       </div>
       <div class="bm-row2">
         <div class="bm-field">
-          <label class="bm-label">Fecha ETD</label>
+          <label class="bm-label">Data ETD</label>
           <div class="bm-date-wrap">
             <input type="date" id="bm-etd2-day" class="bm-date-input" onchange="checkBulkValid('schedule')">
             <span class="bm-date-ico">📅</span>
@@ -1242,7 +1248,7 @@ input[type=checkbox]{width:15px;height:15px;cursor:pointer;accent-color:var(--bl
     <div class="bm-field">
       <label class="bm-label" for="bm-sch-reason">Motivo de edição</label>
       <select id="bm-sch-reason" class="bm-select" onchange="checkBulkValid('schedule')">
-        <option value="">Seleciona o motivo</option>
+        <option value="">Selecione um motivo</option>
         <option>Ajuste de janela de carga</option>
         <option>Restrição operacional</option>
         <option>Solicitação de transportadora</option>
@@ -1430,10 +1436,10 @@ function renderRoute(r) {
     </div>
     <div class="rr-pallets">
       <div class="rr-cap">
-        <div class="col-label">Capacidad total</div>
+        <div class="col-label">Capacidade total</div>
         <div class="col-val col-info">
           ${r.capTotal} de <span style="color:var(--blue);font-weight:600">${r.capUsed}</span> pallets
-          <span class="info-icon" title="Capacidad utilizada vs. total">ⓘ</span>
+          <span class="info-icon" title="Capacidade utilizada vs. total">ⓘ</span>
         </div>
       </div>
       <div class="rr-demand">
@@ -1538,7 +1544,7 @@ function renderVehicleRow(v, route, editable) {
   <div class="vc-etd2">${timeEditCell(v.etd2, v.etd2Day, v.etd2Loc, 'etd2')}</div>
   <div class="vc-action">
     ${canEdit ? `<button class="ab-ghost" onclick="removeVehicle('${v.id}','${route.id}')"
-        aria-label="Eliminar vehículo" title="Eliminar vehículo">
+        aria-label="Eliminar veículo" title="Eliminar veículo">
         <svg width="15" height="15" viewBox="0 0 15 15" fill="none" aria-hidden="true">
           <path d="M1.5 4h12M6 4V2.5A.5.5 0 016.5 2h2a.5.5 0 01.5.5V4M5 11.5V6M7.5 11.5V6M10 11.5V6M3 4l.6 8.5A.5.5 0 004.1 13h6.8a.5.5 0 00.5-.5L12 4"
             stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
@@ -1606,7 +1612,7 @@ function syncBulk() {
   const chk = document.getElementById('hd-chk');
 
   if (total === 0) {
-    selText.textContent = '0 rutas seleccionadas';
+    selText.textContent = '0 rotas selecionadas';
     selText.classList.remove('active-sel');
     limpar.style.display = 'none';
     chk.checked = false;
@@ -1614,8 +1620,8 @@ function syncBulk() {
   } else {
     // Texto derivado dos counts atuais — independente da ordem de seleção
     let txt = '';
-    if      (nR > 0 && nV === 0) txt = `${nR} ruta${nR>1?'s':''} seleccionada${nR>1?'s':''}`;
-    else if (nV > 0 && nR === 0) txt = `${nV} vehículo${nV>1?'s':''} seleccionado${nV>1?'s':''}`;
+    if      (nR > 0 && nV === 0) txt = `${nR} rota${nR>1?'s':''} selecionada${nR>1?'s':''}`;
+    else if (nV > 0 && nR === 0) txt = `${nV} veículo${nV>1?'s':''} selecionado${nV>1?'s':''}`;
     else                          txt = `${nR} rota${nR>1?'s':''} e ${nV} veículo${nV>1?'s':''} selecionados.`;
     selText.textContent = txt;
     selText.classList.add('active-sel');
@@ -1646,15 +1652,15 @@ function renderBulkBar(nR, nV) {
     right.innerHTML = `
       <button class="bb-edit-btn" disabled>Editar <span class="bb-chev">▼</span></button>
       <div class="bb-sep"></div>
-      <button class="bb-link" disabled>Revertir ediciones</button>
+      <button class="bb-link" disabled>Reverter edições</button>
       <button class="bb-link" disabled>Marcar como revisado</button>`;
     return;
   }
 
   if (nV > 0 && nR === 0) {
-    // Somente veículos — barra enxuta: "Eliminar vehículos" | sep | [Editar ▼]
+    // Somente veículos — barra enxuta: "Eliminar veículos" | sep | [Editar ▼]
     right.innerHTML = `
-      <button class="bb-link bb-link-danger" onclick="bulkAction('eliminar')">Eliminar vehículos</button>
+      <button class="bb-link bb-link-danger" onclick="bulkAction('eliminar')">Eliminar veículos</button>
       <div class="bb-sep"></div>
       <div class="edit-dropdown" id="edit-dd-wrap">
         <button class="bb-edit-btn" id="bb-edit-toggle" onclick="toggleEditDropdown(event)">
@@ -1668,15 +1674,15 @@ function renderBulkBar(nR, nV) {
   if (nR > 0 && nV === 0) {
     // Somente rotas
     right.innerHTML = `
-      <button class="bb-link" onclick="bulkRevert()">Revertir ediciones</button>
+      <button class="bb-link" onclick="bulkRevert()">Reverter edições</button>
       ${isPending ? `<button class="bb-link" onclick="bulkMarkReviewed()">Marcar como revisado</button>` : ''}
-      ${isReviewed ? `<button class="bb-link" onclick="bulkSend()">Enviar a agendamiento</button>` : ''}`;
+      ${isReviewed ? `<button class="bb-link" onclick="bulkSend()">Enviar para agendamento</button>` : ''}`;
     return;
   }
 
-  // Seleção mista: "Eliminar vehículos" | [Editar ▼] | sep | ações de rota
+  // Seleção mista: "Eliminar veículos" | [Editar ▼] | sep | ações de rota
   right.innerHTML = `
-    <button class="bb-link bb-link-danger" onclick="bulkAction('eliminar')">Eliminar vehículos</button>
+    <button class="bb-link bb-link-danger" onclick="bulkAction('eliminar')">Eliminar veículos</button>
     <div class="bb-sep"></div>
     <div class="edit-dropdown" id="edit-dd-wrap">
       <button class="bb-edit-btn" id="bb-edit-toggle" onclick="toggleEditDropdown(event)">
@@ -1684,9 +1690,9 @@ function renderBulkBar(nR, nV) {
       </button>
     </div>
     <div class="bb-sep"></div>
-    <button class="bb-link" onclick="bulkRevert()">Revertir ediciones</button>
+    <button class="bb-link" onclick="bulkRevert()">Reverter edições</button>
     ${isPending ? `<button class="bb-link" onclick="bulkMarkReviewed()">Marcar como revisado</button>` : ''}
-    ${isReviewed ? `<button class="bb-link" onclick="bulkSend()">Enviar a agendamiento</button>` : ''}`;
+    ${isReviewed ? `<button class="bb-link" onclick="bulkSend()">Enviar para agendamento</button>` : ''}`;
   setTimeout(() => positionEditDropdown(), 0);
 }
 
@@ -1799,7 +1805,7 @@ function applyVehicleEdit() {
       v.type = newType; r.edited = true;
     }
   }
-  closeAllEditors(); render(); showToast('Tipo de vehículo actualizado', 'success');
+  closeAllEditors(); render(); showToast('Tipo de veículo actualizado', 'success');
 }
 
 /* TRANSPORTADORA */
@@ -1903,7 +1909,7 @@ function applyTTEdit() {
     const v = r.vehicles?.find(vv => vv.id === currentEditVId);
     if (v) { v.tt1 = val; r.edited = true; break; }
   }
-  closeAllEditors(); render(); showToast('Transit time atualizado', 'success');
+  closeAllEditors(); render(); showToast('Tempo de trânsito atualizado', 'success');
 }
 
 /* aliases para compatibilidade */
@@ -1924,10 +1930,11 @@ function openCtxMenu(event, routeId, tab) {
 
   // Mostra/esconde itens conforme tab
   document.getElementById('ctx-deactivate').style.display = tab === 'pending' ? 'flex' : 'none';
-  document.getElementById('ctx-review').style.display = tab === 'pending' ? 'flex' : 'none';
-  document.getElementById('ctx-back').style.display = tab === 'reviewed' ? 'flex' : 'none';
-  document.getElementById('ctx-send').style.display = tab === 'reviewed' ? 'flex' : 'none';
-  document.getElementById('ctx-history').style.display = 'flex';
+  document.getElementById('ctx-review').style.display    = tab === 'pending' ? 'flex' : 'none';
+  document.getElementById('ctx-revert').style.display    = tab === 'pending' ? 'flex' : 'none';
+  document.getElementById('ctx-back').style.display      = tab === 'reviewed' ? 'flex' : 'none';
+  document.getElementById('ctx-send').style.display      = tab === 'reviewed' ? 'flex' : 'none';
+  // ctx-history removido — histórico é ação contextual da tag EDITADA, não do menu
 
   menu.classList.add('vis');
   const rect = event.currentTarget.getBoundingClientRect();
@@ -1937,8 +1944,9 @@ function openCtxMenu(event, routeId, tab) {
   menu.style.top = (rect.bottom + 4) + 'px';
 }
 function closeCtxMenu() { document.getElementById('ctx-menu').classList.remove('vis'); }
-function ctxDeactivate() { closeCtxMenu(); deactivate(ctxRouteId); }
-function ctxMarkReviewed() { closeCtxMenu(); markReviewed(ctxRouteId); }
+function ctxDeactivate()    { closeCtxMenu(); deactivate(ctxRouteId); }
+function ctxMarkReviewed()  { closeCtxMenu(); markReviewed(ctxRouteId); }
+function ctxRevert()        { closeCtxMenu(); showToast('Edições da rota revertidas', 'warn'); }
 function ctxBackToPending() { closeCtxMenu(); backToPending(ctxRouteId); }
 function ctxSend() { closeCtxMenu(); sendToScheduling(ctxRouteId); }
 function ctxHistory() {
@@ -1996,12 +2004,12 @@ function doRevert(routeId) {
 function markReviewed(id) {
   const idx = DATA.pending.findIndex(r => r.id === id);
   if (idx !== -1) { const r = DATA.pending.splice(idx,1)[0]; r.status='reviewed'; DATA.reviewed.push(r); }
-  render(); showToast('Ruta marcada como revisada', 'success');
+  render(); showToast('Rota marcada como revisada', 'success');
 }
 function backToPending(id) {
   const idx = DATA.reviewed.findIndex(r => r.id === id);
   if (idx !== -1) { const r = DATA.reviewed.splice(idx,1)[0]; DATA.pending.push(r); }
-  render(); showToast('Ruta movida a Por revisar', 'info');
+  render(); showToast('Ruta movida a A revisar', 'info');
 }
 function sendToScheduling(id) {
   const allRoutes = [...DATA.pending,...DATA.reviewed];
@@ -2012,7 +2020,7 @@ function sendToScheduling(id) {
     r.travelId = 'TRV-2026-' + (Math.floor(Math.random()*900)+100);
     DATA.sent.push(r);
   }
-  render(); showToast('Ruta enviada a agendamiento · ' + r?.travelId, 'success');
+  render(); showToast('Rota enviada para agendamento · ' + r?.travelId, 'success');
 }
 function deactivate(id) { showToast('Ruta desactivada', 'info'); }
 function removeVehicle(vid, rid) { showToast('Vehículo eliminado', 'warn'); }
@@ -2074,7 +2082,7 @@ function bulkAction(type) {
   }
   const n = editableVehicles.length;
   switch (type) {
-    case 'vehículo':       openBulkVehicleModal(n); break;
+    case 'veiculo':       openBulkVehicleModal(n); break;
     case 'transportadora': openBulkCarrierModal(n); break;
     case 'atributos':      openBulkAttrsModal(editableVehicles, n); break;
     case 'horario':        openBulkScheduleModal(n); break;
@@ -2343,7 +2351,7 @@ function onEditadaClick(event, routeId) {
     closeDrawer(); return;
   }
 
-  // Fecha histórico anterior se havia outro aberto
+  // Data histórico anterior se havia outro aberto
   if (pop.classList.contains('vis')) closeDrawer();
 
   currentHistRouteId = routeId;
@@ -2366,11 +2374,11 @@ document.addEventListener('click', e => {
   if (!e.target.closest('#ed-attrs') && !e.target.closest('.editable-cell')) {
     document.getElementById('ed-attrs')?.classList.remove('vis');
   }
-  // Fecha dropdown "Editar"
+  // Data dropdown "Editar"
   if (!e.target.closest('#edit-dropdown-menu') && !e.target.closest('#bb-edit-toggle')) {
     closeEditDropdown();
   }
-  // Fecha dropdown de atributos se clicar fora
+  // Data dropdown de atributos se clicar fora
   if (!e.target.closest('#bm-attr-trigger') && !e.target.closest('#bm-attr-dropdown')) {
     const dd = document.getElementById('bm-attr-dropdown');
     const tr = document.getElementById('bm-attr-trigger');
@@ -2385,7 +2393,7 @@ document.addEventListener('keydown', e => {
 });
 
 /* ═══════════════════════════════════
-   INIT — estado inicial: Por revisar, r1 e r2 expandidas
+   INIT — estado inicial: A revisar, r1 e r2 expandidas
 ═══════════════════════════════════ */
 expanded.add('r1');
 expanded.add('r2');
