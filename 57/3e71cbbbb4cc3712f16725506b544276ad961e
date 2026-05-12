@@ -1,0 +1,19 @@
+index.html
+  s_ddaeeeb7345cb2::t_474de1e4f3e2b1 397-404,1450-1458,1460-1462,1464-1474,1476-1477,1479-1482,1484,1486-1487,1489-1491,1493-1497,1499-1521,1523-1554,1556-1728,1730,1732-1736,1738-1749,1751-1776,1778,1780-1782,1784-1785,1787-1798,1800-1826,1830,2593-2599,3238,3240-3265,3268-3280
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.6",
+  "base_commit_sha": "573e71cbbbb4cc3712f16725506b544276ad961e",
+  "prompts": {},
+  "sessions": {
+    "s_ddaeeeb7345cb2": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "23cd5bad-ae1d-4bb9-b824-90f3b842e8c8",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "lucasapereira-lgtm <Lucas.apereira@mercadolivre.com>"
+    }
+  }
+}
