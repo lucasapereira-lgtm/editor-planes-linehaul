@@ -152,7 +152,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--g800);font-size:14
 */
 .route-row{
   display:flex;align-items:center;
-  min-height:62px;border-bottom:0;cursor:default;
+  min-height:70px;border-bottom:0;cursor:default;
   gap:20px}
 .route-row.has-vehicles{border-bottom:1px solid #E5E5E5}
 .rr-chk{width:48px;flex-shrink:0;display:flex;align-items:center;justify-content:center}
@@ -173,12 +173,26 @@ body{font-family:var(--font);background:var(--bg);color:var(--g800);font-size:14
   font-size:13px;color:var(--g700);font-weight:500;white-space:nowrap}
 /* Grupo 3 — Métricas (display:contents faz os filhos serem flex items diretos) */
 .rr-pallets{display:contents}
-.rr-cap{flex:0 0 auto;min-width:115px;display:flex;flex-direction:column;
-  justify-content:center;gap:1px}
-.rr-demand{flex:0 0 auto;min-width:108px;display:flex;flex-direction:column;
-  justify-content:center;gap:1px}
-.rr-lw{flex:0 0 auto;min-width:105px;display:flex;flex-direction:column;
-  justify-content:center;gap:1px}
+.rr-cap{flex:0 0 auto;min-width:130px;display:flex;flex-direction:column;justify-content:center;gap:2px}
+.rr-demand{flex:0 0 auto;min-width:108px;display:flex;flex-direction:column;justify-content:center;gap:1px}
+.rr-lw{flex:0 0 auto;min-width:108px;display:flex;flex-direction:column;justify-content:center;gap:1px}
+/* Variação de volume */
+.rr-variation{flex:0 0 auto;min-width:90px;display:flex;flex-direction:column;justify-content:center;gap:2px}
+/* Sub-linha discreta (fast/flex/diferidos) */
+.col-subval{font-size:10px;color:var(--g400);white-space:nowrap;line-height:1.3}
+/* Capacidade: ring + texto + link */
+.cap-ring-wrap{display:flex;align-items:center;gap:6px}
+.cap-text{display:flex;flex-direction:column;gap:1px}
+.cap-link{font-size:10px;color:var(--blue);cursor:pointer;line-height:1.2}
+.cap-link:hover{text-decoration:underline}
+/* Mini bar chart */
+.vol-chart{display:flex;align-items:flex-end;gap:5px}
+.vol-group{display:flex;flex-direction:column;align-items:center;gap:2px}
+.vol-bars{display:flex;align-items:flex-end;gap:2px;height:28px}
+.vol-bar{width:5px;border-radius:2px 2px 0 0;min-height:2px}
+.vol-bar-a{background:#3483FA}
+.vol-bar-b{background:#A5C5F5}
+.vol-lbl{font-size:9px;color:var(--g400);line-height:1}
 /* Grupo 4 — Badge: margin-left:auto empurra para a direita */
 .rr-stat{margin-left:auto;flex-shrink:0;display:flex;align-items:center}
 /* Grupo 5 — Kebab: 24px do badge, 16px da borda direita */
@@ -341,6 +355,9 @@ body{font-family:var(--font);background:var(--bg);color:var(--g800);font-size:14
 .vt-time{font-size:12px;font-weight:600;color:var(--g800)}
 .vt-day{font-size:11px;font-weight:400;color:var(--g500)}
 .vt-loc{font-size:11px;color:var(--g400)}
+/* Modo FTL/DFP abaixo do tipo de veículo — mesmo padrão dos facilities */
+.vt-mode-label{font-size:10px;color:var(--g400);text-transform:uppercase;
+  line-height:1.2;margin-top:1px;letter-spacing:.2px}
 .vt-tt{font-size:12px;font-weight:400;color:var(--g700)}
 
 /* Tipo de veículo — texto simples, sem chip colorido */
@@ -511,15 +528,21 @@ body{font-family:var(--font);background:var(--bg);color:var(--g800);font-size:14
 .bm-attr-opt:hover{background:#F5F5F5}
 .bm-attr-opt input[type=checkbox]{accent-color:var(--blue);width:14px;height:14px;cursor:pointer}
 /* Input de data com ícone calendário */
-.bm-date-wrap{position:relative}
-.bm-date-input{width:100%;height:44px;padding:0 36px 0 12px;border:1.5px solid #D5D9E0;
-  border-radius:4px;font-size:13px;color:#333;font-family:var(--font);background:#fff;
-  cursor:pointer;transition:border-color .12s}
-.bm-date-input:focus{border-color:var(--blue);outline:none}
-.bm-date-ico{position:absolute;right:11px;top:50%;transform:translateY(-50%);
-  color:#999;pointer-events:none;font-size:15px}
+/* Modal de horários */
+.bm-card-schedule{width:520px !important}
+.bm-select-lg{font-size:14px}
+.bm-path-opts{display:flex;flex-direction:column;gap:12px;margin-bottom:20px;
+  padding-bottom:20px;border-bottom:1px solid #EBEBEB}
+.bm-radio-lbl{display:flex;align-items:center;gap:10px;font-size:14px;
+  color:#333;cursor:pointer;line-height:1.4}
+.bm-radio-lbl input[type=radio]{accent-color:var(--blue);width:16px;height:16px;
+  cursor:pointer;flex-shrink:0}
+.bm-action-row{display:flex;gap:24px}
+.bm-action-opt{display:flex;align-items:center;gap:8px;font-size:13px;
+  color:#333;cursor:pointer;font-family:var(--font)}
 /* Layout grid das seções de horário */
 .bm-section-lbl{font-size:13px;font-weight:400;color:#555;margin-bottom:16px}
+.bm-av-info{font-size:13px;color:#555;line-height:1.5;margin-bottom:20px}
 .bm-section-lbl b{font-weight:600;color:#333}
 .bm-row2{display:grid;grid-template-columns:1.7fr 1fr;gap:12px;margin-bottom:14px}
 .bm-row3{display:grid;grid-template-columns:1.7fr 1fr 1fr;gap:12px;margin-bottom:14px}
@@ -935,7 +958,8 @@ input[type=checkbox]{width:15px;height:15px;cursor:pointer;accent-color:var(--bl
   <!-- Ações do tab "A revisar" -->
   <button class="ctx-item primary" id="ctx-review"     onclick="ctxMarkReviewed()" style="display:none">Marcar como revisado</button>
   <button class="ctx-item"         id="ctx-revert"     onclick="ctxRevert()"       style="display:none">Reverter edições</button>
-  <button class="ctx-item"         id="ctx-deactivate" onclick="ctxDeactivate()"   style="display:none">Desativar rota</button>
+  <button class="ctx-item"         id="ctx-deactivate"   onclick="ctxDeactivate()"   style="display:none">Desativar rota</button>
+  <button class="ctx-item"         id="ctx-add-vehicle" onclick="ctxAddVehicle()"   style="display:none">Adicionar veículo</button>
   <!-- Ações do tab "Revisado" -->
   <button class="ctx-item primary" id="ctx-send"       onclick="ctxSend()"         style="display:none">Enviar para agendamento</button>
   <button class="ctx-item"         id="ctx-back"       onclick="ctxBackToPending()" style="display:none">Voltar para edição</button>
@@ -1067,198 +1091,338 @@ input[type=checkbox]{width:15px;height:15px;cursor:pointer;accent-color:var(--bl
   </div>
 
   <!-- ── Modal: Editar horários ─────────────────────────────────────── -->
-  <div class="bm-card" id="bm-schedule" style="display:none;max-height:90vh;overflow-y:auto" role="dialog" aria-labelledby="bm-sch-title">
+  <div class="bm-card bm-card-schedule" id="bm-schedule" style="display:none;overflow-y:auto;max-height:90vh" role="dialog" aria-labelledby="bm-sch-title">
     <div class="bm-header">
       <span class="bm-title" id="bm-sch-title">Editar horários</span>
-      <button class="bm-x" onclick="closeBulkModal()" aria-label="Datar">×</button>
+      <button class="bm-x" onclick="closeBulkModal()" aria-label="Fechar modal de horários">×</button>
     </div>
 
-    <div class="bm-section-gap">
-      <p class="bm-section-lbl">Datas e horários para <b>Origem</b></p>
-      <div class="bm-row2">
-        <div class="bm-field">
-          <label class="bm-label">Data ETA</label>
-          <div class="bm-date-wrap">
-            <input type="date" id="bm-eta1-day" class="bm-date-input" onchange="checkBulkValid('schedule')">
-            <span class="bm-date-ico">📅</span>
-          </div>
-        </div>
-        <div class="bm-field">
-          <label class="bm-label" for="bm-eta1-hour">Horário ETA</label>
-          <select id="bm-eta1-hour" class="bm-select" onchange="checkBulkValid('schedule')">
-            <option value="">—</option>
-                          <option>00:00</option>
-              <option>01:00</option>
-              <option>02:00</option>
-              <option>03:00</option>
-              <option>04:00</option>
-              <option>05:00</option>
-              <option>06:00</option>
-              <option>07:00</option>
-              <option>08:00</option>
-              <option>09:00</option>
-              <option>10:00</option>
-              <option>11:00</option>
-              <option>12:00</option>
-              <option>13:00</option>
-              <option>14:00</option>
-              <option>15:00</option>
-              <option>16:00</option>
-              <option>17:00</option>
-              <option>18:00</option>
-              <option>19:00</option>
-              <option>20:00</option>
-              <option>21:00</option>
-              <option>22:00</option>
-              <option>23:00</option>
-          </select>
-        </div>
-      </div>
-      <div class="bm-row3">
-        <div class="bm-field">
-          <label class="bm-label">Data ETD</label>
-          <div class="bm-date-wrap">
-            <input type="date" id="bm-etd1-day" class="bm-date-input" onchange="checkBulkValid('schedule')">
-            <span class="bm-date-ico">📅</span>
-          </div>
-        </div>
-        <div class="bm-field">
-          <label class="bm-label" for="bm-etd1-hour">Horário ETD</label>
-          <select id="bm-etd1-hour" class="bm-select" onchange="checkBulkValid('schedule')">
-            <option value="">—</option>
-                          <option>00:00</option>
-              <option>01:00</option>
-              <option>02:00</option>
-              <option>03:00</option>
-              <option>04:00</option>
-              <option>05:00</option>
-              <option>06:00</option>
-              <option>07:00</option>
-              <option>08:00</option>
-              <option>09:00</option>
-              <option>10:00</option>
-              <option>11:00</option>
-              <option>12:00</option>
-              <option>13:00</option>
-              <option>14:00</option>
-              <option>15:00</option>
-              <option>16:00</option>
-              <option>17:00</option>
-              <option>18:00</option>
-              <option>19:00</option>
-              <option>20:00</option>
-              <option>21:00</option>
-              <option>22:00</option>
-              <option>23:00</option>
-          </select>
-        </div>
-        <div class="bm-field">
-          <label class="bm-label" for="bm-tt1">Tempo de trânsito</label>
-          <select id="bm-tt1" class="bm-select" onchange="checkBulkValid('schedule')">
-            <option value="">—</option>
-            <option>00:30</option><option>00:45</option><option>01:00</option>
-            <option>01:30</option><option>02:00</option><option>02:30</option>
-            <option>03:00</option><option>04:00</option><option>05:00</option>
-            <option>06:00</option><option>08:00</option><option>10:00</option><option>12:00</option>
-          </select>
-        </div>
-      </div>
+    <!-- Escolha de caminho -->
+    <div class="bm-path-opts">
+      <label class="bm-radio-lbl" onclick="selectSchPath('new')">
+        <input type="radio" name="sch-path" value="new" id="bm-path-new"
+          onchange="selectSchPath('new')">
+        <span>Quero definir um novo horário</span>
+      </label>
+      <label class="bm-radio-lbl" onclick="selectSchPath('shift')">
+        <input type="radio" name="sch-path" value="shift" id="bm-path-shift"
+          onchange="selectSchPath('shift')">
+        <span>Quero adiantar ou atrasar o horário atual</span>
+      </label>
     </div>
 
-    <div class="bm-section-gap">
-      <p class="bm-section-lbl">Datas e horários para <b>Destino</b></p>
-      <div class="bm-row2">
-        <div class="bm-field">
-          <label class="bm-label">Data ETA</label>
-          <div class="bm-date-wrap">
-            <input type="date" id="bm-eta2-day" class="bm-date-input" onchange="checkBulkValid('schedule')">
-            <span class="bm-date-ico">📅</span>
+    <!-- Caminho 1: definir novo horário -->
+    <div id="bm-sch-new-path" style="display:none">
+      <div class="bm-section-gap">
+        <p class="bm-section-lbl">Datas e horários para <b>Origem</b></p>
+        <div class="bm-row2">
+          <div class="bm-field">
+            <label class="bm-label" for="bm-eta1-day">Dia ETA</label>
+            <select id="bm-eta1-day" class="bm-select bm-select-lg" onchange="checkBulkValid('schedule')">
+            <option value="">Selecione</option>
+            <option value="SEG">Segunda-feira</option>
+            <option value="TER">Terça-feira</option>
+            <option value="QUA">Quarta-feira</option>
+            <option value="QUI">Quinta-feira</option>
+            <option value="SEX">Sexta-feira</option>
+            <option value="SAB">Sábado</option>
+            <option value="DOM">Domingo</option>
+            </select>
+          </div>
+          <div class="bm-field">
+            <label class="bm-label" for="bm-eta1-hour">Horário ETA</label>
+            <select id="bm-eta1-hour" class="bm-select" onchange="checkBulkValid('schedule')">
+            <option value="">--:--</option>
+            <option value="00:00">00:00</option>
+            <option value="01:00">01:00</option>
+            <option value="02:00">02:00</option>
+            <option value="03:00">03:00</option>
+            <option value="04:00">04:00</option>
+            <option value="05:00">05:00</option>
+            <option value="06:00">06:00</option>
+            <option value="07:00">07:00</option>
+            <option value="08:00">08:00</option>
+            <option value="09:00">09:00</option>
+            <option value="10:00">10:00</option>
+            <option value="11:00">11:00</option>
+            <option value="12:00">12:00</option>
+            <option value="13:00">13:00</option>
+            <option value="14:00">14:00</option>
+            <option value="15:00">15:00</option>
+            <option value="16:00">16:00</option>
+            <option value="17:00">17:00</option>
+            <option value="18:00">18:00</option>
+            <option value="19:00">19:00</option>
+            <option value="20:00">20:00</option>
+            <option value="21:00">21:00</option>
+            <option value="22:00">22:00</option>
+            <option value="23:00">23:00</option>
+            </select>
           </div>
         </div>
-        <div class="bm-field">
-          <label class="bm-label" for="bm-eta2-hour">Horário ETA</label>
-          <select id="bm-eta2-hour" class="bm-select" onchange="checkBulkValid('schedule')">
-            <option value="">—</option>
-                          <option>00:00</option>
-              <option>01:00</option>
-              <option>02:00</option>
-              <option>03:00</option>
-              <option>04:00</option>
-              <option>05:00</option>
-              <option>06:00</option>
-              <option>07:00</option>
-              <option>08:00</option>
-              <option>09:00</option>
-              <option>10:00</option>
-              <option>11:00</option>
-              <option>12:00</option>
-              <option>13:00</option>
-              <option>14:00</option>
-              <option>15:00</option>
-              <option>16:00</option>
-              <option>17:00</option>
-              <option>18:00</option>
-              <option>19:00</option>
-              <option>20:00</option>
-              <option>21:00</option>
-              <option>22:00</option>
-              <option>23:00</option>
-          </select>
-        </div>
-      </div>
-      <div class="bm-row2">
-        <div class="bm-field">
-          <label class="bm-label">Data ETD</label>
-          <div class="bm-date-wrap">
-            <input type="date" id="bm-etd2-day" class="bm-date-input" onchange="checkBulkValid('schedule')">
-            <span class="bm-date-ico">📅</span>
+        <div class="bm-row3">
+          <div class="bm-field">
+            <label class="bm-label" for="bm-etd1-day">Dia ETD</label>
+            <select id="bm-etd1-day" class="bm-select bm-select-lg" onchange="checkBulkValid('schedule')">
+            <option value="">Selecione</option>
+            <option value="SEG">Segunda-feira</option>
+            <option value="TER">Terça-feira</option>
+            <option value="QUA">Quarta-feira</option>
+            <option value="QUI">Quinta-feira</option>
+            <option value="SEX">Sexta-feira</option>
+            <option value="SAB">Sábado</option>
+            <option value="DOM">Domingo</option>
+            </select>
+          </div>
+          <div class="bm-field">
+            <label class="bm-label" for="bm-etd1-hour">Horário ETD</label>
+            <select id="bm-etd1-hour" class="bm-select" onchange="checkBulkValid('schedule')">
+            <option value="">--:--</option>
+            <option value="00:00">00:00</option>
+            <option value="01:00">01:00</option>
+            <option value="02:00">02:00</option>
+            <option value="03:00">03:00</option>
+            <option value="04:00">04:00</option>
+            <option value="05:00">05:00</option>
+            <option value="06:00">06:00</option>
+            <option value="07:00">07:00</option>
+            <option value="08:00">08:00</option>
+            <option value="09:00">09:00</option>
+            <option value="10:00">10:00</option>
+            <option value="11:00">11:00</option>
+            <option value="12:00">12:00</option>
+            <option value="13:00">13:00</option>
+            <option value="14:00">14:00</option>
+            <option value="15:00">15:00</option>
+            <option value="16:00">16:00</option>
+            <option value="17:00">17:00</option>
+            <option value="18:00">18:00</option>
+            <option value="19:00">19:00</option>
+            <option value="20:00">20:00</option>
+            <option value="21:00">21:00</option>
+            <option value="22:00">22:00</option>
+            <option value="23:00">23:00</option>
+            </select>
+          </div>
+          <div class="bm-field">
+            <label class="bm-label" for="bm-tt1">Tempo de trânsito</label>
+            <select id="bm-tt1" class="bm-select" onchange="checkBulkValid('schedule')">
+              <option value="">--:--</option>
+              <option value="00:30">00:30</option><option value="00:45">00:45</option>
+              <option value="01:00">01:00</option><option value="01:30">01:30</option>
+              <option value="02:00">02:00</option><option value="02:30">02:30</option>
+              <option value="03:00">03:00</option><option value="04:00">04:00</option>
+              <option value="06:00">06:00</option><option value="08:00">08:00</option>
+              <option value="10:00">10:00</option><option value="12:00">12:00</option>
+            </select>
           </div>
         </div>
-        <div class="bm-field">
-          <label class="bm-label" for="bm-etd2-hour">Horário ETD</label>
-          <select id="bm-etd2-hour" class="bm-select" onchange="checkBulkValid('schedule')">
-            <option value="">—</option>
-                          <option>00:00</option>
-              <option>01:00</option>
-              <option>02:00</option>
-              <option>03:00</option>
-              <option>04:00</option>
-              <option>05:00</option>
-              <option>06:00</option>
-              <option>07:00</option>
-              <option>08:00</option>
-              <option>09:00</option>
-              <option>10:00</option>
-              <option>11:00</option>
-              <option>12:00</option>
-              <option>13:00</option>
-              <option>14:00</option>
-              <option>15:00</option>
-              <option>16:00</option>
-              <option>17:00</option>
-              <option>18:00</option>
-              <option>19:00</option>
-              <option>20:00</option>
-              <option>21:00</option>
-              <option>22:00</option>
-              <option>23:00</option>
-          </select>
+      </div>
+      <div class="bm-section-gap">
+        <p class="bm-section-lbl">Datas e horários para <b>Destino</b></p>
+        <div class="bm-row2">
+          <div class="bm-field">
+            <label class="bm-label" for="bm-eta2-day">Dia ETA</label>
+            <select id="bm-eta2-day" class="bm-select bm-select-lg" onchange="checkBulkValid('schedule')">
+            <option value="">Selecione</option>
+            <option value="SEG">Segunda-feira</option>
+            <option value="TER">Terça-feira</option>
+            <option value="QUA">Quarta-feira</option>
+            <option value="QUI">Quinta-feira</option>
+            <option value="SEX">Sexta-feira</option>
+            <option value="SAB">Sábado</option>
+            <option value="DOM">Domingo</option>
+            </select>
+          </div>
+          <div class="bm-field">
+            <label class="bm-label" for="bm-eta2-hour">Horário ETA</label>
+            <select id="bm-eta2-hour" class="bm-select" onchange="checkBulkValid('schedule')">
+            <option value="">--:--</option>
+            <option value="00:00">00:00</option>
+            <option value="01:00">01:00</option>
+            <option value="02:00">02:00</option>
+            <option value="03:00">03:00</option>
+            <option value="04:00">04:00</option>
+            <option value="05:00">05:00</option>
+            <option value="06:00">06:00</option>
+            <option value="07:00">07:00</option>
+            <option value="08:00">08:00</option>
+            <option value="09:00">09:00</option>
+            <option value="10:00">10:00</option>
+            <option value="11:00">11:00</option>
+            <option value="12:00">12:00</option>
+            <option value="13:00">13:00</option>
+            <option value="14:00">14:00</option>
+            <option value="15:00">15:00</option>
+            <option value="16:00">16:00</option>
+            <option value="17:00">17:00</option>
+            <option value="18:00">18:00</option>
+            <option value="19:00">19:00</option>
+            <option value="20:00">20:00</option>
+            <option value="21:00">21:00</option>
+            <option value="22:00">22:00</option>
+            <option value="23:00">23:00</option>
+            </select>
+          </div>
+        </div>
+        <div class="bm-row2">
+          <div class="bm-field">
+            <label class="bm-label" for="bm-etd2-day">Dia ETD</label>
+            <select id="bm-etd2-day" class="bm-select bm-select-lg" onchange="checkBulkValid('schedule')">
+            <option value="">Selecione</option>
+            <option value="SEG">Segunda-feira</option>
+            <option value="TER">Terça-feira</option>
+            <option value="QUA">Quarta-feira</option>
+            <option value="QUI">Quinta-feira</option>
+            <option value="SEX">Sexta-feira</option>
+            <option value="SAB">Sábado</option>
+            <option value="DOM">Domingo</option>
+            </select>
+          </div>
+          <div class="bm-field">
+            <label class="bm-label" for="bm-etd2-hour">Horário ETD</label>
+            <select id="bm-etd2-hour" class="bm-select" onchange="checkBulkValid('schedule')">
+            <option value="">--:--</option>
+            <option value="00:00">00:00</option>
+            <option value="01:00">01:00</option>
+            <option value="02:00">02:00</option>
+            <option value="03:00">03:00</option>
+            <option value="04:00">04:00</option>
+            <option value="05:00">05:00</option>
+            <option value="06:00">06:00</option>
+            <option value="07:00">07:00</option>
+            <option value="08:00">08:00</option>
+            <option value="09:00">09:00</option>
+            <option value="10:00">10:00</option>
+            <option value="11:00">11:00</option>
+            <option value="12:00">12:00</option>
+            <option value="13:00">13:00</option>
+            <option value="14:00">14:00</option>
+            <option value="15:00">15:00</option>
+            <option value="16:00">16:00</option>
+            <option value="17:00">17:00</option>
+            <option value="18:00">18:00</option>
+            <option value="19:00">19:00</option>
+            <option value="20:00">20:00</option>
+            <option value="21:00">21:00</option>
+            <option value="22:00">22:00</option>
+            <option value="23:00">23:00</option>
+            </select>
+          </div>
         </div>
       </div>
-    </div>
-
-    <div class="bm-field">
-      <label class="bm-label" for="bm-sch-reason">Motivo de edição</label>
-      <select id="bm-sch-reason" class="bm-select" onchange="checkBulkValid('schedule')">
-        <option value="">Selecione um motivo</option>
+      <div class="bm-field">
+        <label class="bm-label" for="bm-sch-reason">Motivo de edição</label>
+        <select id="bm-sch-reason" class="bm-select" onchange="checkBulkValid('schedule')">
+        <option value="">Selecione o motivo</option>
         <option>Ajuste de janela de carga</option>
         <option>Restrição operacional</option>
         <option>Solicitação de transportadora</option>
         <option>Erro no plano original</option>
-      </select>
+        </select>
+      </div>
     </div>
+
+    <!-- Caminho 2: adiantar/atrasar -->
+    <div id="bm-sch-shift-path" style="display:none">
+      <div class="bm-field">
+        <label class="bm-label">Selecione uma ação</label>
+        <div class="bm-action-row">
+          <label class="bm-action-opt">
+            <input type="radio" name="shift-action" value="adiantar" id="bm-shift-adiantar"
+              onchange="checkBulkValid('schedule')" style="accent-color:var(--blue);cursor:pointer">
+            Adiantar
+          </label>
+          <label class="bm-action-opt">
+            <input type="radio" name="shift-action" value="atrasar" id="bm-shift-atrasar"
+              onchange="checkBulkValid('schedule')" style="accent-color:var(--blue);cursor:pointer">
+            Atrasar
+          </label>
+        </div>
+      </div>
+      <div class="bm-field">
+        <label class="bm-label" for="bm-shift-dur">Defina o quanto (HH:MM)</label>
+        <input type="text" id="bm-shift-dur" class="bm-select" placeholder="00:00"
+          oninput="checkBulkValid('schedule')" style="height:44px;padding:0 12px">
+      </div>
+      <div class="bm-field">
+        <label class="bm-label">Horários</label>
+        <!-- Multi-select reutiliza padrão bm-attr-trigger/dropdown -->
+        <button type="button" class="bm-attr-trigger" id="bm-shift-trigger"
+          onclick="toggleShiftTargetDropdown()" aria-expanded="false">
+          <span id="bm-shift-display">Selecione os horários</span>
+          <span class="bm-attr-chev">▼</span>
+        </button>
+        <div class="bm-attr-dropdown" id="bm-shift-dropdown">
+          <label class="bm-attr-opt">
+            <input type="checkbox" value="eta1" onchange="onShiftTargetChange()"> ETA origem
+          </label>
+          <label class="bm-attr-opt">
+            <input type="checkbox" value="etd1" onchange="onShiftTargetChange()"> ETD origem
+          </label>
+          <label class="bm-attr-opt">
+            <input type="checkbox" value="tt1"  onchange="onShiftTargetChange()"> Tempo de trânsito
+          </label>
+          <label class="bm-attr-opt">
+            <input type="checkbox" value="eta2" onchange="onShiftTargetChange()"> ETA destino
+          </label>
+          <label class="bm-attr-opt">
+            <input type="checkbox" value="etd2" onchange="onShiftTargetChange()"> ETD destino
+          </label>
+        </div>
+      </div>
+      <div class="bm-field">
+        <label class="bm-label" for="bm-shift-reason">Motivo de edição</label>
+        <select id="bm-shift-reason" class="bm-select" onchange="checkBulkValid('schedule')">
+        <option value="">Selecione o motivo</option>
+        <option>Ajuste de janela de carga</option>
+        <option>Restrição operacional</option>
+        <option>Solicitação de transportadora</option>
+        <option>Erro no plano original</option>
+        </select>
+      </div>
+    </div>
+
     <div class="bm-footer">
       <button class="bm-apply" id="bm-sch-apply" disabled onclick="applyBulkSchedule()">Aplicar</button>
+      <button class="bm-cancel" onclick="closeBulkModal()">Cancelar</button>
+    </div>
+  </div>
+
+  <!-- ── Modal: Adicionar veículo (individual + massivo) ────────────────── -->
+  <div class="bm-card" id="bm-add-vehicle" style="display:none" role="dialog" aria-labelledby="bm-av-title">
+    <div class="bm-header">
+      <span class="bm-title" id="bm-av-title">Adicionar veículo</span>
+      <button class="bm-x" onclick="closeBulkModal()" aria-label="Fechar">×</button>
+    </div>
+    <p class="bm-av-info" id="bm-av-info"></p>
+    <div class="bm-field">
+      <label class="bm-label" for="bm-av-type">Tipo de veículo</label>
+      <select id="bm-av-type" class="bm-select" onchange="checkAddVehicleValid()">
+        <option value="">Selecione</option>
+        <option value="Bitrem">Bitrem</option>
+        <option value="Carreta">Carreta</option>
+        <option value="Toco">Toco</option>
+        <option value="VUC">VUC</option>
+        <option value="Truck">Truck 3/4</option>
+      </select>
+    </div>
+    <div class="bm-field">
+      <label class="bm-label" for="bm-av-reason">Motivo de edição</label>
+      <select id="bm-av-reason" class="bm-select" onchange="checkAddVehicleValid()">
+        <option value="">Selecione o motivo</option>
+        <option>Ajuste de capacidade</option>
+        <option>Aumento de demanda</option>
+        <option>Disponibilidade de veículo</option>
+        <option>Solicitação operacional</option>
+        <option>Restrição de capacidade</option>
+      </select>
+    </div>
+    <p id="bm-av-no-ftl" style="display:none;font-size:12px;color:#888;margin-top:8px">
+      Não é possível adicionar veículo nesta rota, pois não há um FTL para copiar os dados.
+    </p>
+    <div class="bm-footer">
+      <button class="bm-apply" id="bm-av-apply" disabled onclick="applyAddVehicle()">Adicionar</button>
       <button class="bm-cancel" onclick="closeBulkModal()">Cancelar</button>
     </div>
   </div>
@@ -1278,6 +1442,7 @@ const DATA = {
   pending: [
     { id:'r1', code:'BRXSP9 → SAL1', cpt:'10:00', day:'Seg 29/01', ftl:2, dfp:0,
       capTotal:76, capUsed:56, demand:38, lastWeek:52, conf:'CONFIÁVEL', edited:false,
+      metrics:{ demandBreakdown:{fast:83,flex:2,deferred:7}, lastWeekBreakdown:{fast:80,flex:2,deferred:6}, volumeVariation:[{l:'S1',v:30,c:48},{l:'S2',v:24,c:18},{l:'S3',v:38,c:52},{l:'S4',v:50,c:42}] },
       vehicles:[
         { id:'v1', type:'Carreta', mode:'FTL', carrier:'Jomed', attrs:['ETD','PAL','PAL'],
           eta1:'08:00', eta1Day:'SEG', eta1Loc:'BRXSP9',
@@ -1294,6 +1459,7 @@ const DATA = {
       ]},
     { id:'r2', code:'BRXSP9 → SAL1', cpt:'10:00', day:'Seg 29/01', ftl:2, dfp:1,
       capTotal:76, capUsed:56, demand:38, lastWeek:52, conf:'CONFIÁVEL', edited:true,
+      metrics:{ demandBreakdown:{fast:83,flex:2,deferred:7}, lastWeekBreakdown:{fast:80,flex:2,deferred:6}, volumeVariation:[{l:'S1',v:42,c:48},{l:'S2',v:30,c:18},{l:'S3',v:52,c:38},{l:'S4',v:38,c:50}] },
       history:[
         { label:'Edição de veículo', changes:['Toco para Carreta','Motivo: XPTO'], who:'lucasperei', date:'24/12/2024' },
         { label:'Edição de horário em BRXSP9', changes:['ETA: 08:00 para 09:00','ETD: 09:00 para 10:00','TT: 1h30 para 2h','Motivo: Ajuste de janela de carga'], who:'lucasperei', date:'24/12/2024' }
@@ -1387,6 +1553,38 @@ let currentEditField = '';
 
 function routes() { return DATA[currentTab]; }
 
+/* Circular ring de capacidade (SVG puro, sem biblioteca) */
+function renderCapRing(score, pct) {
+  const r=14, cx=20, cy=20, circ=2*Math.PI*r;
+  const filled=Math.min((pct/100)*circ, circ);
+  return `<svg width="40" height="40" viewBox="0 0 40 40" style="flex-shrink:0">
+    <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="#EEF2F9" stroke-width="4"/>
+    <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="#3483FA" stroke-width="4"
+      stroke-dasharray="${filled.toFixed(2)} ${circ.toFixed(2)}"
+      stroke-linecap="round"
+      transform="rotate(-90, ${cx}, ${cy})"/>
+    <text x="${cx}" y="${cy+4}" text-anchor="middle" font-size="10" font-weight="700" fill="#333">${score}</text>
+  </svg>`;
+}
+
+/* Mini bar chart semanal */
+function renderVolChart(variation) {
+  if (!variation || !variation.length) return '<span class="col-subval">—</span>';
+  const maxVal = Math.max(...variation.flatMap(d => [d.v, d.c||0]), 1);
+  const maxH = 28;
+  return `<div class="vol-chart">${variation.map(d => {
+    const hA = Math.max(2, Math.round((d.v/maxVal)*maxH));
+    const hB = d.c ? Math.max(2, Math.round((d.c/maxVal)*maxH)) : 0;
+    return `<div class="vol-group">
+      <div class="vol-bars">
+        ${hB ? `<div class="vol-bar vol-bar-b" style="height:${hB}px"></div>` : ''}
+        <div class="vol-bar vol-bar-a" style="height:${hA}px"></div>
+      </div>
+      <span class="vol-lbl">${d.l}</span>
+    </div>`;
+  }).join('')}</div>`;
+}
+
 /* ═══════════════════════════════════
    RENDER
 ═══════════════════════════════════ */
@@ -1450,24 +1648,31 @@ function renderRoute(r) {
     <div class="rr-pallets">
       <div class="rr-cap">
         <div class="col-label">Capacidade total</div>
-        <div class="col-val col-info">
-          ${r.capTotal} de <span style="color:var(--blue);font-weight:600">${r.capUsed}</span> pallets
-          <span class="info-icon" title="Capacidade utilizada vs. total">ⓘ</span>
+        <div class="cap-ring-wrap">
+          ${renderCapRing(r.capTotal, Math.round((r.capUsed/r.capTotal)*100))}
+          <div class="cap-text">
+            <span class="col-val">${r.capUsed} pallets</span>
+            <span class="cap-link" onclick="showToast('Histórico de capacidade — em breve','info')">Ver histórico</span>
+          </div>
         </div>
       </div>
       <div class="rr-demand">
         <div class="col-label">Demanda esperada</div>
-        <div class="col-val col-info">
-          ${r.demand} pallets
-          <span class="info-icon" title="Demanda esperada para la ruta">ⓘ</span>
-        </div>
+        <div class="col-val">${r.demand} pallets</div>
+        ${r.metrics?.demandBreakdown
+          ? `<div class="col-subval">${r.metrics.demandBreakdown.fast} fast | ${r.metrics.demandBreakdown.flex} Flex | ${r.metrics.demandBreakdown.deferred} diferidos</div>`
+          : ''}
       </div>
       <div class="rr-lw">
         <div class="col-label">Última semana</div>
-        <div class="col-val col-info">
-          ${r.lastWeek} pallets
-          <span class="info-icon" title="Volumen de la semana anterior">ⓘ</span>
-        </div>
+        <div class="col-val">${r.lastWeek} pallets</div>
+        ${r.metrics?.lastWeekBreakdown
+          ? `<div class="col-subval">${r.metrics.lastWeekBreakdown.fast} fast | ${r.metrics.lastWeekBreakdown.flex} Flex | ${r.metrics.lastWeekBreakdown.deferred} diferidos</div>`
+          : ''}
+      </div>
+      <div class="rr-variation">
+        <div class="col-label">Variação</div>
+        ${renderVolChart(r.metrics?.volumeVariation)}
       </div>
     </div>
     <div class="rr-stat">${confBadge}</div>
@@ -1529,10 +1734,13 @@ function renderVehicleRow(v, route, editable) {
        </div>`
     : `<span class="vt-tt">${v.tt1}</span>`;
 
-  // Rótulo do veículo — DFP mostra "Tipo | DFP" em cinza
-  const typeLabel = isDFP
-    ? `<span style="font-size:12px;color:#888">${v.type} | DFP</span>`
-    : `<span style="font-size:12px;color:#1A1A1A">${v.type}</span>`;
+  // Rótulo do veículo: tipo na linha 1, FTL/DFP na linha 2 (igual facilities abaixo de ETA/ETD)
+  const modeLabel = (isDFP ? 'DFP' : (v.mode || 'FTL')).toUpperCase();
+  const nameColor = isDFP ? '#888' : '#1A1A1A';
+  const typeLabel = `<div style="display:flex;flex-direction:column;gap:0">
+    <span style="font-size:12px;color:${nameColor};line-height:1.4">${v.type}</span>
+    <span class="vt-mode-label">${modeLabel}</span>
+  </div>`;
 
   // Controlado por SHOW_VEHICLE_INFO_ICON — lógica preservada para reativação
   const infoIcon = SHOW_VEHICLE_INFO_ICON && (v.hasInfo || true)
@@ -1688,13 +1896,14 @@ function renderBulkBar(nR, nV) {
   if (nR > 0 && nV === 0) {
     // Somente rotas
     right.innerHTML = `
+      <button class="bb-link" onclick="bulkAddVehicles()">Adicionar veículos</button>
       <button class="bb-link" onclick="bulkRevert()">Reverter edições</button>
       ${isPending ? `<button class="bb-link" onclick="bulkMarkReviewed()">Marcar como revisado</button>` : ''}
       ${isReviewed ? `<button class="bb-link" onclick="bulkSend()">Enviar para agendamento</button>` : ''}`;
     return;
   }
 
-  // Seleção mista: "Eliminar veículos" | [Editar ▼] | sep | ações de rota
+  // Seleção mista: veículos (Eliminar + Editar) | sep | rotas (Adicionar + Reverter + Marcar)
   right.innerHTML = `
     <button class="bb-link bb-link-danger" onclick="bulkAction('eliminar')">Eliminar veículos</button>
     <div class="bb-sep"></div>
@@ -1704,6 +1913,7 @@ function renderBulkBar(nR, nV) {
       </button>
     </div>
     <div class="bb-sep"></div>
+    <button class="bb-link" onclick="bulkAddVehicles()">Adicionar veículos</button>
     <button class="bb-link" onclick="bulkRevert()">Reverter edições</button>
     ${isPending ? `<button class="bb-link" onclick="bulkMarkReviewed()">Marcar como revisado</button>` : ''}
     ${isReviewed ? `<button class="bb-link" onclick="bulkSend()">Enviar para agendamento</button>` : ''}`;
@@ -1955,11 +2165,12 @@ function openCtxMenu(event, routeId, tab) {
   }
   ctxTriggerEl = event.currentTarget;
 
-  document.getElementById('ctx-deactivate').style.display = tab === 'pending' ? 'flex' : 'none';
-  document.getElementById('ctx-review').style.display    = tab === 'pending' ? 'flex' : 'none';
-  document.getElementById('ctx-revert').style.display    = tab === 'pending' ? 'flex' : 'none';
-  document.getElementById('ctx-back').style.display      = tab === 'reviewed' ? 'flex' : 'none';
-  document.getElementById('ctx-send').style.display      = tab === 'reviewed' ? 'flex' : 'none';
+  document.getElementById('ctx-deactivate').style.display  = tab === 'pending' ? 'flex' : 'none';
+  document.getElementById('ctx-review').style.display     = tab === 'pending' ? 'flex' : 'none';
+  document.getElementById('ctx-revert').style.display     = tab === 'pending' ? 'flex' : 'none';
+  document.getElementById('ctx-add-vehicle').style.display= tab === 'pending' ? 'flex' : 'none';
+  document.getElementById('ctx-back').style.display       = tab === 'reviewed' ? 'flex' : 'none';
+  document.getElementById('ctx-send').style.display       = tab === 'reviewed' ? 'flex' : 'none';
 
   menu.classList.add('vis');
   const rect = event.currentTarget.getBoundingClientRect();
@@ -1992,6 +2203,122 @@ function ctxMarkReviewed()  { closeCtxMenu(); markReviewed(ctxRouteId); }
 function ctxRevert()        { closeCtxMenu(); revertRouteEdits(ctxRouteId); }
 function ctxBackToPending() { closeCtxMenu(); backToPending(ctxRouteId); }
 function ctxSend()          { closeCtxMenu(); sendToScheduling(ctxRouteId); }
+function ctxAddVehicle()    { closeCtxMenu(); openAddVehicleModal(ctxRouteId, false); }
+
+/* ─── ADICIONAR VEÍCULO ─────────────────────────────────────────────── */
+let addVehicleRouteId = null; // null = bulk
+let addVehicleIsBulk  = false;
+
+/** Retorna o último veículo FTL (não-DFP/noChk) de uma rota */
+function getLastFTL(route) {
+  const ftls = (route.vehicles || []).filter(v => !v.noChk);
+  return ftls.length > 0 ? ftls[ftls.length - 1] : null;
+}
+
+function openAddVehicleModal(routeId, isBulk) {
+  addVehicleRouteId = routeId;
+  addVehicleIsBulk  = isBulk;
+
+  // Título e info text conforme individual vs massivo
+  document.getElementById('bm-av-title').textContent = isBulk ? 'Adicionar veículos' : 'Adicionar veículo';
+  document.getElementById('bm-av-info').textContent = isBulk
+    ? 'Será adicionado um veículo por rota selecionada, copiando os dados do último FTL de cada rota. Selecione o tipo de veículo e o motivo da edição.'
+    : 'O novo veículo copiará os dados do último veículo FTL da rota. Selecione o tipo de veículo e o motivo da edição.';
+  document.getElementById('bm-av-apply').textContent = isBulk ? 'Adicionar veículos' : 'Adicionar';
+
+  // Verifica se há FTL disponível (somente no fluxo individual)
+  const noFTL = document.getElementById('bm-av-no-ftl');
+  if (!isBulk) {
+    const route = Object.values(DATA).flat().find(r => r.id === routeId);
+    const hasFTL = route && getLastFTL(route) !== null;
+    noFTL.style.display = hasFTL ? 'none' : 'block';
+  } else {
+    noFTL.style.display = 'none';
+  }
+
+  // Reset campos
+  document.getElementById('bm-av-type').value   = '';
+  document.getElementById('bm-av-reason').value = '';
+  document.getElementById('bm-av-apply').disabled = true;
+  openBulkOverlay('bm-add-vehicle');
+}
+
+function checkAddVehicleValid() {
+  const type   = document.getElementById('bm-av-type').value;
+  const reason = document.getElementById('bm-av-reason').value;
+  document.getElementById('bm-av-apply').disabled = !type || !reason;
+}
+
+function applyAddVehicle() {
+  const vehicleType = document.getElementById('bm-av-type').value;
+  const reason      = document.getElementById('bm-av-reason').value;
+
+  if (addVehicleIsBulk) {
+    // Massivo: adiciona em cada rota selecionada
+    const routeIds = [...selRoutes];
+    let added = 0, skipped = 0;
+    routeIds.forEach(rid => {
+      if (addVehicleToRoute(rid, vehicleType, reason)) added++;
+      else skipped++;
+    });
+    closeBulkModal(); render();
+    const msg = skipped > 0
+      ? `Veículos adicionados em ${added} rota${added>1?'s':''}. ${skipped} rota${skipped>1?'s':''} ignorada${skipped>1?'s':''} (sem FTL).`
+      : `Veículo adicionado em ${added} rota${added>1?'s':''}`;
+    showToast(msg, 'success');
+  } else {
+    // Individual
+    if (!addVehicleToRoute(addVehicleRouteId, vehicleType, reason)) {
+      showToast('Não há FTL disponível para copiar nesta rota', 'warn'); return;
+    }
+    closeBulkModal(); render();
+    showToast('Veículo adicionado com sucesso', 'success');
+  }
+}
+
+/** Copia último FTL, substitui tipo, adiciona à rota. Retorna true se bem-sucedido. */
+function addVehicleToRoute(routeId, vehicleType, reason) {
+  const route = Object.values(DATA).flat().find(r => r.id === routeId);
+  if (!route) return false;
+  const lastFTL = getLastFTL(route);
+  if (!lastFTL) return false;
+
+  // Deep copy do FTL base
+  const newVeh = JSON.parse(JSON.stringify(lastFTL));
+  // Novo id único, não copiar identificadores do veículo original
+  newVeh.id      = 'vadd_' + Date.now() + '_' + Math.random().toString(36).slice(2,5);
+  newVeh.type    = vehicleType;
+  newVeh.mode    = 'FTL';
+  newVeh.isAdded = true;
+  delete newVeh.noChk;      // não é DFP
+  delete newVeh.hasInfo;    // não herda marcador de editado
+
+  route.vehicles.push(newVeh);
+  route.edited = true;
+  // Garante que a rota está expandida para o usuário ver o veículo
+  expanded.add(routeId);
+
+  addHistory(routeId, {
+    label: 'Veículo adicionado',
+    changes: [`Tipo: ${vehicleType}`, `Motivo: ${reason}`]
+  });
+  return true;
+}
+
+/** Ação massiva a partir da barra massiva */
+function bulkAddVehicles() {
+  const routeIds = [...selRoutes];
+  if (!routeIds.length) return;
+  // Verifica se há pelo menos uma rota com FTL
+  const anyFTL = routeIds.some(rid => {
+    const r = Object.values(DATA).flat().find(x => x.id === rid);
+    return r && getLastFTL(r) !== null;
+  });
+  if (!anyFTL) {
+    showToast('Nenhuma rota selecionada possui FTL para copiar', 'warn'); return;
+  }
+  openAddVehicleModal(null, true);
+}
 
 /* ─── REVERTER EDIÇÕES — restaura snapshot original ─────────────────── */
 function revertRouteEdits(routeId) {
@@ -2117,7 +2444,7 @@ function getEditableSelectedVehicles() {
 }
 
 function openBulkOverlay(modalId) {
-  ['bm-vehicle','bm-carrier','bm-attrs','bm-schedule'].forEach(id => {
+  ['bm-vehicle','bm-carrier','bm-attrs','bm-schedule','bm-add-vehicle'].forEach(id => {
     const el = document.getElementById(id); if (el) el.style.display = 'none';
   });
   const modal = document.getElementById(modalId);
@@ -2177,11 +2504,19 @@ function checkBulkValid(type) {
     const hasReason = document.getElementById('bm-att-reason').value;
     document.getElementById('bm-att-apply').disabled = !hasAttrs || !hasReason;
   } else if (type === 'schedule') {
-    const anyFilled = ['bm-eta1-day','bm-eta1-hour','bm-etd1-day','bm-etd1-hour',
-      'bm-tt1','bm-eta2-day','bm-eta2-hour','bm-etd2-day','bm-etd2-hour']
-      .some(id => document.getElementById(id)?.value);
-    const hasReason = document.getElementById('bm-sch-reason')?.value;
-    document.getElementById('bm-sch-apply').disabled = !anyFilled || !hasReason;
+    let ok = false;
+    if (schPath === 'new') {
+      ok = ['bm-eta1-day','bm-eta1-hour','bm-etd1-day','bm-etd1-hour',
+        'bm-tt1','bm-eta2-day','bm-eta2-hour','bm-etd2-day','bm-etd2-hour']
+        .some(id => document.getElementById(id)?.value);
+    } else if (schPath === 'shift') {
+      const action   = document.querySelector('input[name="shift-action"]:checked')?.value;
+      const duration = document.getElementById('bm-shift-dur')?.value?.trim();
+      const targets  = getSelectedShiftTargets();
+      const durValid = /^\d{1,2}:\d{2}$/.test(duration||'');
+      ok = !!(action && durValid && targets.length > 0);
+    }
+    document.getElementById('bm-sch-apply').disabled = !ok;
   }
 }
 function applyBulkVehicle() {
@@ -2283,26 +2618,101 @@ function applyBulkAttrs() {
   showToast(`Atributos atualizados · ${vehicles.length} veículo${vehicles.length>1?'s':''}`, 'success');
 }
 
-/* ── Modal: Horários ──────────────────────────────────────────────────── */
+/* ── Modal: Horários — dois caminhos ──────────────────────────────────── */
+let schPath = null; // 'new' | 'shift'
+
+/* Multi-select de horários no caminho shift */
+function toggleShiftTargetDropdown() {
+  const dd = document.getElementById('bm-shift-dropdown');
+  const tr = document.getElementById('bm-shift-trigger');
+  const open = dd.classList.toggle('open');
+  tr.classList.toggle('open', open);
+  tr.setAttribute('aria-expanded', open);
+}
+function onShiftTargetChange() {
+  const checked = [...document.querySelectorAll('#bm-shift-dropdown input:checked')].map(c => c.value);
+  const labels = { eta1:'ETA origem', etd1:'ETD origem', tt1:'Tempo de trânsito', eta2:'ETA destino', etd2:'ETD destino' };
+  const display = document.getElementById('bm-shift-display');
+  if (checked.length === 0) {
+    display.textContent = 'Selecione os horários';
+    document.getElementById('bm-shift-trigger').classList.remove('has-val');
+  } else if (checked.length <= 2) {
+    display.textContent = checked.map(v => labels[v]).join(', ');
+    document.getElementById('bm-shift-trigger').classList.add('has-val');
+  } else {
+    display.textContent = `${checked.length} horários selecionados`;
+    document.getElementById('bm-shift-trigger').classList.add('has-val');
+  }
+  checkBulkValid('schedule');
+}
+function getSelectedShiftTargets() {
+  return [...document.querySelectorAll('#bm-shift-dropdown input:checked')].map(c => c.value);
+}
+function resetShiftTargets() {
+  document.querySelectorAll('#bm-shift-dropdown input').forEach(cb => { cb.checked = false; });
+  const display = document.getElementById('bm-shift-display');
+  if (display) display.textContent = 'Selecione os horários';
+  const tr = document.getElementById('bm-shift-trigger');
+  if (tr) { tr.classList.remove('has-val','open'); tr.setAttribute('aria-expanded','false'); }
+  const dd = document.getElementById('bm-shift-dropdown');
+  if (dd) dd.classList.remove('open');
+}
+
+function selectSchPath(path) {
+  schPath = path;
+  document.getElementById('bm-sch-new-path').style.display   = path === 'new'   ? '' : 'none';
+  document.getElementById('bm-sch-shift-path').style.display = path === 'shift' ? '' : 'none';
+  checkBulkValid('schedule');
+}
+
 function openBulkScheduleModal(n) {
-  ['bm-eta1-hour','bm-etd1-hour','bm-tt1','bm-eta2-hour','bm-etd2-hour','bm-sch-reason']
+  schPath = null;
+  document.getElementById('bm-path-new').checked   = false;
+  document.getElementById('bm-path-shift').checked = false;
+  document.getElementById('bm-sch-new-path').style.display   = 'none';
+  document.getElementById('bm-sch-shift-path').style.display = 'none';
+  // Reset campo 1
+  ['bm-eta1-day','bm-eta1-hour','bm-etd1-day','bm-etd1-hour','bm-tt1',
+   'bm-eta2-day','bm-eta2-hour','bm-etd2-day','bm-etd2-hour','bm-sch-reason']
     .forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
-  ['bm-eta1-day','bm-etd1-day','bm-eta2-day','bm-etd2-day']
-    .forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
+  // Reset campo 2
+  ['bm-shift-adiantar','bm-shift-atrasar'].forEach(id => {
+    const el = document.getElementById(id); if (el) el.checked = false;
+  });
+  ['bm-shift-dur','bm-shift-reason'].forEach(id => {
+    const el = document.getElementById(id); if (el) el.value = '';
+  });
+  resetShiftTargets();
   document.getElementById('bm-sch-apply').disabled = true;
   openBulkOverlay('bm-schedule');
 }
-function applyBulkSchedule() {
-  const vehicles = getEditableSelectedVehicles();
-  const f = (id) => document.getElementById(id).value;
-  const changes = [];
-  if (f('bm-eta1-day') || f('bm-eta1-hour')) changes.push(`ETA origem: ${f('bm-eta1-day')} ${f('bm-eta1-hour')}`);
-  if (f('bm-etd1-day') || f('bm-etd1-hour')) changes.push(`ETD origem: ${f('bm-etd1-day')} ${f('bm-etd1-hour')}`);
-  if (f('bm-tt1'))                            changes.push(`TT: ${f('bm-tt1')}`);
-  if (f('bm-eta2-day') || f('bm-eta2-hour')) changes.push(`ETA destino: ${f('bm-eta2-day')} ${f('bm-eta2-hour')}`);
-  if (f('bm-etd2-day') || f('bm-etd2-hour')) changes.push(`ETD destino: ${f('bm-etd2-day')} ${f('bm-etd2-hour')}`);
-  if (f('bm-sch-reason')) changes.push(`Motivo: ${f('bm-sch-reason')}`);
 
+/* Desloca horário operacional com ciclo de dia da semana */
+function shiftTime(day, time, deltaMinutes) {
+  const days = ['SEG','TER','QUA','QUI','SEX','SAB','DOM'];
+  const [h, m] = (time||'00:00').split(':').map(Number);
+  let totalMin = h*60 + m + deltaMinutes;
+  let dayIdx = days.indexOf(day); if (dayIdx < 0) dayIdx = 0;
+  while (totalMin < 0)      { totalMin += 24*60; dayIdx = (dayIdx - 1 + 7) % 7; }
+  while (totalMin >= 24*60) { totalMin -= 24*60; dayIdx = (dayIdx + 1) % 7; }
+  return {
+    day: days[dayIdx],
+    time: `${String(Math.floor(totalMin/60)).padStart(2,'0')}:${String(totalMin%60).padStart(2,'0')}`
+  };
+}
+
+function applyBulkSchedule() {
+  if (schPath === 'shift') { applyShiftSchedule(); return; }
+  // Caminho 1: definir novo horário
+  const vehicles = getEditableSelectedVehicles();
+  const f = id => document.getElementById(id)?.value || '';
+  const changes = [];
+  if (f('bm-eta1-day')||f('bm-eta1-hour')) changes.push(`ETA origem: ${f('bm-eta1-day')} ${f('bm-eta1-hour')}`);
+  if (f('bm-etd1-day')||f('bm-etd1-hour')) changes.push(`ETD origem: ${f('bm-etd1-day')} ${f('bm-etd1-hour')}`);
+  if (f('bm-tt1'))                          changes.push(`TT: ${f('bm-tt1')}`);
+  if (f('bm-eta2-day')||f('bm-eta2-hour')) changes.push(`ETA destino: ${f('bm-eta2-day')} ${f('bm-eta2-hour')}`);
+  if (f('bm-etd2-day')||f('bm-etd2-hour')) changes.push(`ETD destino: ${f('bm-etd2-day')} ${f('bm-etd2-hour')}`);
+  if (f('bm-sch-reason')) changes.push(`Motivo: ${f('bm-sch-reason')}`);
   vehicles.forEach(({ vehicle, route }) => {
     if (f('bm-eta1-day'))  vehicle.eta1Day = f('bm-eta1-day');
     if (f('bm-eta1-hour')) vehicle.eta1    = f('bm-eta1-hour');
@@ -2314,13 +2724,73 @@ function applyBulkSchedule() {
     if (f('bm-etd2-day'))  vehicle.etd2Day = f('bm-etd2-day');
     if (f('bm-etd2-hour')) vehicle.etd2    = f('bm-etd2-hour');
     route.edited = true;
-    addHistory(route.id, {
-      label: `Edição massiva de horários (${vehicles.length} veíc.)`,
-      changes
-    });
+    addHistory(route.id, { label:`Edição massiva de horários (${vehicles.length} veíc.)`, changes });
   });
   closeBulkModal(); render();
   showToast(`Horários atualizados · ${vehicles.length} veículo${vehicles.length>1?'s':''}`, 'success');
+}
+
+function applyShiftSchedule() {
+  const vehicles = getEditableSelectedVehicles();
+  const action   = document.querySelector('input[name="shift-action"]:checked')?.value;
+  const durStr   = document.getElementById('bm-shift-dur')?.value || '';
+  const targets  = getSelectedShiftTargets(); // array de campos selecionados
+  const reason   = document.getElementById('bm-shift-reason')?.value;
+
+  if (!targets.length) { showToast('Selecione ao menos um horário','warn'); return; }
+
+  const [dh, dm] = durStr.includes(':') ? durStr.split(':').map(Number) : [0,0];
+  const delta = (dh*60 + dm) * (action === 'atrasar' ? 1 : -1);
+
+  const fieldMap = {
+    eta1:{ day:'eta1Day', time:'eta1' }, etd1:{ day:'etd1Day', time:'etd1' },
+    eta2:{ day:'eta2Day', time:'eta2' }, etd2:{ day:'etd2Day', time:'etd2' },
+    tt1: { day:null, time:'tt1' }
+  };
+  const labels = { eta1:'ETA origem', etd1:'ETD origem', tt1:'Tempo de trânsito', eta2:'ETA destino', etd2:'ETD destino' };
+
+  // Pré-validação: TT não pode ficar negativo em nenhum veículo
+  if (targets.includes('tt1') && delta < 0) {
+    const invalid = vehicles.some(({ vehicle }) => {
+      const [h,m] = (vehicle.tt1||'00:00').split(':').map(Number);
+      return (h*60+m) + delta < 0;
+    });
+    if (invalid) { showToast('O tempo de trânsito não pode ficar negativo','warn'); return; }
+  }
+
+  vehicles.forEach(({ vehicle, route }) => {
+    const changes = [];
+
+    targets.forEach(target => {
+      const fm = fieldMap[target]; if (!fm) return;
+      const oldTime = vehicle[fm.time] || '00:00';
+      const oldDay  = fm.day ? vehicle[fm.day] : null;
+
+      if (target === 'tt1') {
+        const [h,m] = oldTime.split(':').map(Number);
+        const newMin = h*60+m+delta;
+        if (newMin < 0) return; // já validado acima, por segurança
+        vehicle.tt1 = `${String(Math.floor(newMin/60)).padStart(2,'0')}:${String(newMin%60).padStart(2,'0')}`;
+        changes.push(`${labels[target]}: ${oldTime} → ${vehicle.tt1}`);
+      } else {
+        const res = shiftTime(oldDay||'SEG', oldTime, delta);
+        vehicle[fm.time] = res.time;
+        if (fm.day) vehicle[fm.day] = res.day;
+        const oldDisplay = `${oldDay||'SEG'} ${oldTime}`;
+        const newDisplay = `${vehicle[fm.day]} ${vehicle[fm.time]}`;
+        changes.push(`${labels[target]}: ${oldDisplay} → ${newDisplay}`);
+      }
+    });
+
+    changes.push(`Operação: ${action==='atrasar'?'Atrasado':'Adiantado'} em ${durStr}`);
+    if (reason) changes.push(`Motivo: ${reason}`);
+
+    route.edited = true;
+    addHistory(route.id, { label:`Edição de horários massiva (${vehicles.length} veíc.)`, changes });
+  });
+
+  closeBulkModal(); render();
+  showToast(`Horários ${action==='atrasar'?'atrasados':'adiantados'} · ${vehicles.length} veículo${vehicles.length>1?'s':''}`, 'success');
 }
 
 function bulkEliminar(vehicles) {
@@ -2446,6 +2916,12 @@ document.addEventListener('click', e => {
     const dd = document.getElementById('bm-attr-dropdown');
     const tr = document.getElementById('bm-attr-trigger');
     if (dd) dd.classList.remove('open');
+    if (tr) { tr.classList.remove('open'); tr.setAttribute('aria-expanded','false'); }
+  }
+  // Fecha multi-select de horários ao clicar fora
+  if (!e.target.closest('#bm-shift-trigger') && !e.target.closest('#bm-shift-dropdown')) {
+    document.getElementById('bm-shift-dropdown')?.classList.remove('open');
+    const tr = document.getElementById('bm-shift-trigger');
     if (tr) { tr.classList.remove('open'); tr.setAttribute('aria-expanded','false'); }
   }
 });
