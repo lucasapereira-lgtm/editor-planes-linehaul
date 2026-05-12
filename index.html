@@ -394,7 +394,14 @@ body{font-family:var(--font);background:var(--bg);color:var(--g800);font-size:14
 /* ── BULK BAR — single-row, white, conforme referência ──────────────── */
 .bulk-bar-wrapper{
   background:var(--surface);border:1px solid var(--border);border-radius:6px;
-  margin-bottom:12px}
+  margin-bottom:12px;
+  /* Sticky: fica abaixo da topbar amarela ao rolar */
+  position:sticky;
+  top:var(--hdr-h);
+  z-index:80; /* acima da tabela, abaixo de modais (400+) */
+  transition:box-shadow .15s}
+/* Sombra sutil quando colada ao topo — detectada via sticky sentinel */
+.bulk-bar-wrapper.is-stuck{box-shadow:0 3px 12px rgba(0,0,0,.09)}
 .bulk-top{
   display:flex;align-items:center;padding:10px 16px;min-height:44px;gap:10px}
 .bulk-left{display:flex;align-items:center;gap:8px;flex:1;flex-wrap:wrap}
@@ -1440,96 +1447,386 @@ input[type=checkbox]{width:15px;height:15px;cursor:pointer;accent-color:var(--bl
 ═══════════════════════════════════ */
 const DATA = {
   pending: [
-    { id:'r1', code:'BRXSP9 → SAL1', cpt:'10:00', day:'Seg 29/01', ftl:2, dfp:0,
-      capTotal:76, capUsed:56, demand:38, lastWeek:52, conf:'CONFIÁVEL', edited:false,
-      metrics:{ demandBreakdown:{fast:83,flex:2,deferred:7}, lastWeekBreakdown:{fast:80,flex:2,deferred:6}, volumeVariation:[{l:'S1',v:30,c:48},{l:'S2',v:24,c:18},{l:'S3',v:38,c:52},{l:'S4',v:50,c:42}] },
-      vehicles:[
-        { id:'v1', type:'Carreta', mode:'FTL', carrier:'Jomed', attrs:['ETD','PAL','PAL'],
-          eta1:'08:00', eta1Day:'SEG', eta1Loc:'BRXSP9',
-          etd1:'09:00', etd1Day:'SEG', etd1Loc:'BRXSP9',
-          tt1:'1h30min',
-          eta2:'10:30', eta2Day:'SEG', eta2Loc:'SAL1',
-          etd2:'11:30', etd2Day:'SEG', etd2Loc:'SAL1', hasInfo:false },
-        { id:'v2', type:'Toco', mode:'FTL', carrier:'Maroni', attrs:['ETD','PAL','PAL'],
-          eta1:'08:00', eta1Day:'SEG', eta1Loc:'BRXSP9',
-          etd1:'09:00', etd1Day:'SEG', etd1Loc:'BRXSP9',
-          tt1:'1h30min',
-          eta2:'10:30', eta2Day:'SEG', eta2Loc:'SAL1',
-          etd2:'11:30', etd2Day:'SEG', etd2Loc:'SAL1', hasInfo:false }
-      ]},
-    { id:'r2', code:'BRXSP9 → SAL1', cpt:'10:00', day:'Seg 29/01', ftl:2, dfp:1,
-      capTotal:76, capUsed:56, demand:38, lastWeek:52, conf:'CONFIÁVEL', edited:true,
-      metrics:{ demandBreakdown:{fast:83,flex:2,deferred:7}, lastWeekBreakdown:{fast:80,flex:2,deferred:6}, volumeVariation:[{l:'S1',v:42,c:48},{l:'S2',v:30,c:18},{l:'S3',v:52,c:38},{l:'S4',v:38,c:50}] },
+    /* ── ARENA → BRASP1 ─────────────────────────────────────────────── */
+    { id:'ra1', code:'ARENA → BRASP1', cpt:'07:00', day:'Ter 04/28',
+      ftl:3, dfp:0, capTotal:48, capUsed:48, demand:59, lastWeek:34,
+      conf:'REVISAR', edited:true,
       history:[
-        { label:'Edição de veículo', changes:['Toco para Carreta','Motivo: XPTO'], who:'lucasperei', date:'24/12/2024' },
-        { label:'Edição de horário em BRXSP9', changes:['ETA: 08:00 para 09:00','ETD: 09:00 para 10:00','TT: 1h30 para 2h','Motivo: Ajuste de janela de carga'], who:'lucasperei', date:'24/12/2024' }
+        { label:'Edição de veículo', changes:['Medio para Carreta alongada','Motivo: Disponibilidade de veículo'], who:'lucasperei', date:'28/04/2026' }
       ],
+      metrics:{ demandBreakdown:{fast:42,flex:8,deferred:9}, lastWeekBreakdown:{fast:28,flex:3,deferred:3},
+        volumeVariation:[{l:'S1',v:28,c:34},{l:'S2',v:34,c:29},{l:'S3',v:41,c:38},{l:'S4',v:34,c:42}] },
       vehicles:[
-        { id:'v3', type:'Carreta', mode:'FTL', carrier:'Jomed', attrs:['ETD','PAL','PAL'],
-          eta1:'08:00', eta1Day:'SEG', eta1Loc:'BRXSP9',
-          etd1:'09:00', etd1Day:'SEG', etd1Loc:'BRXSP9',
+                { id:'v01', type:'Medio', mode:'FTL', carrier:'—', attrs:[],
+          eta1:'03:00', eta1Day:'TER', eta1Loc:'ARENA',
+          etd1:'07:00', etd1Day:'TER', etd1Loc:'ARENA',
           tt1:'1h30min',
-          eta2:'10:30', eta2Day:'SEG', eta2Loc:'SAL1',
-          etd2:'11:30', etd2Day:'SEG', etd2Loc:'SAL1', hasInfo:true },
-        { id:'v4', type:'Carreta', mode:'FTL', carrier:'Maroni', attrs:['ETD','PAL','PAL'],
-          eta1:'08:00', eta1Day:'SEG', eta1Loc:'BRXSP9',
-          etd1:'09:00', etd1Day:'SEG', etd1Loc:'BRXSP9',
+          eta2:'08:30', eta2Day:'TER', eta2Loc:'BRASP1',
+          etd2:'10:30', etd2Day:'TER', etd2Loc:'BRASP1', hasInfo:false },
+                { id:'v02', type:'Medio', mode:'FTL', carrier:'—', attrs:[],
+          eta1:'05:00', eta1Day:'TER', eta1Loc:'ARENA',
+          etd1:'07:00', etd1Day:'TER', etd1Loc:'ARENA',
           tt1:'1h30min',
-          eta2:'10:30', eta2Day:'SEG', eta2Loc:'SAL1',
-          etd2:'11:30', etd2Day:'SEG', etd2Loc:'SAL1', hasInfo:true },
-        { id:'v5', type:'Carreta', mode:'FTL', carrier:'FazendaSJT', attrs:['ETD','PAL','PAL'],
-          eta1:'08:00', eta1Day:'SEG', eta1Loc:'BRXSP9',
-          etd1:'09:00', etd1Day:'SEG', etd1Loc:'BRXSP9',
+          eta2:'08:30', eta2Day:'TER', eta2Loc:'BRASP1',
+          etd2:'10:30', etd2Day:'TER', etd2Loc:'BRASP1', hasInfo:false },
+                { id:'v03', type:'Carreta alongada', mode:'FTL', carrier:'—', attrs:[],
+          eta1:'03:00', eta1Day:'TER', eta1Loc:'ARENA',
+          etd1:'07:00', etd1Day:'TER', etd1Loc:'ARENA',
           tt1:'1h30min',
-          eta2:'10:30', eta2Day:'SEG', eta2Loc:'SAL1',
-          etd2:'11:30', etd2Day:'SEG', etd2Loc:'SAL1', hasInfo:true, noChk:true }
+          eta2:'08:30', eta2Day:'TER', eta2Loc:'BRASP1',
+          etd2:'10:30', etd2Day:'TER', etd2Loc:'BRASP1', hasInfo:false }
       ]},
-    { id:'r3', code:'BRMG01 → BRSP01', cpt:'10:00', day:'Mié 30/01', ftl:2, dfp:1,
-      capTotal:120, capUsed:105, demand:98, lastWeek:88, conf:'CONFIÁVEL', edited:false, vehicles:[] },
-    { id:'r4', code:'BRCWB → BRPOA', cpt:'14:00', day:'Jue 31/01', ftl:3, dfp:0,
-      capTotal:180, capUsed:162, demand:155, lastWeek:140, conf:'REVISAR', edited:false, vehicles:[] },
-    { id:'r5', code:'BRRJ01 → BRSP01', cpt:'09:00', day:'Vie 01/02', ftl:1, dfp:2,
-      capTotal:90, capUsed:70, demand:67, lastWeek:60, conf:'CONFIÁVEL', edited:false, vehicles:[] },
+
+    { id:'ra2', code:'ARENA → BRASP1', cpt:'01:30', day:'Qua 04/29',
+      ftl:11, dfp:0, capTotal:248, capUsed:248, demand:284, lastWeek:24,
+      conf:'REVISAR', edited:true,
+      history:[
+        { label:'Edição de horário em ARENA', changes:['ETD origem: TER 23:30 → QUA 01:30','Motivo: Ajuste de janela de carga'], who:'lucasperei', date:'29/04/2026' }
+      ],
+      metrics:{ demandBreakdown:{fast:210,flex:42,deferred:32}, lastWeekBreakdown:{fast:18,flex:4,deferred:2},
+        volumeVariation:[{l:'S1',v:24,c:18},{l:'S2',v:18,c:32},{l:'S3',v:22,c:28},{l:'S4',v:24,c:36}] },
+      vehicles:[
+                { id:'v04', type:'Vuc', mode:'FTL', carrier:'—', attrs:[],
+          eta1:'23:30', eta1Day:'TER', eta1Loc:'ARENA',
+          etd1:'01:30', etd1Day:'QUA', etd1Loc:'ARENA',
+          tt1:'1h30min',
+          eta2:'03:00', eta2Day:'QUA', eta2Loc:'BRASP1',
+          etd2:'05:00', etd2Day:'QUA', etd2Loc:'BRASP1', hasInfo:false },
+                { id:'v05', type:'Truck', mode:'FTL', carrier:'—', attrs:[],
+          eta1:'23:30', eta1Day:'TER', eta1Loc:'ARENA',
+          etd1:'01:30', etd1Day:'QUA', etd1Loc:'ARENA',
+          tt1:'1h30min',
+          eta2:'03:00', eta2Day:'QUA', eta2Loc:'BRASP1',
+          etd2:'05:00', etd2Day:'QUA', etd2Loc:'BRASP1', hasInfo:true },
+                { id:'v06', type:'Truck', mode:'FTL', carrier:'—', attrs:[],
+          eta1:'23:30', eta1Day:'TER', eta1Loc:'ARENA',
+          etd1:'01:30', etd1Day:'QUA', etd1Loc:'ARENA',
+          tt1:'1h30min',
+          eta2:'03:00', eta2Day:'QUA', eta2Loc:'BRASP1',
+          etd2:'05:00', etd2Day:'QUA', etd2Loc:'BRASP1', hasInfo:true },
+                { id:'v07', type:'Truck', mode:'FTL', carrier:'—', attrs:[],
+          eta1:'23:30', eta1Day:'TER', eta1Loc:'ARENA',
+          etd1:'01:30', etd1Day:'QUA', etd1Loc:'ARENA',
+          tt1:'1h30min',
+          eta2:'03:00', eta2Day:'QUA', eta2Loc:'BRASP1',
+          etd2:'05:00', etd2Day:'QUA', etd2Loc:'BRASP1', hasInfo:false },
+                { id:'v08', type:'Carreta', mode:'FTL', carrier:'—', attrs:[],
+          eta1:'23:30', eta1Day:'TER', eta1Loc:'ARENA',
+          etd1:'01:30', etd1Day:'QUA', etd1Loc:'ARENA',
+          tt1:'1h30min',
+          eta2:'03:00', eta2Day:'QUA', eta2Loc:'BRASP1',
+          etd2:'05:00', etd2Day:'QUA', etd2Loc:'BRASP1', hasInfo:false },
+                { id:'v09', type:'Carreta', mode:'FTL', carrier:'—', attrs:[],
+          eta1:'23:30', eta1Day:'TER', eta1Loc:'ARENA',
+          etd1:'01:30', etd1Day:'QUA', etd1Loc:'ARENA',
+          tt1:'1h30min',
+          eta2:'03:00', eta2Day:'QUA', eta2Loc:'BRASP1',
+          etd2:'05:00', etd2Day:'QUA', etd2Loc:'BRASP1', hasInfo:false },
+                { id:'v10', type:'Carreta', mode:'FTL', carrier:'—', attrs:[],
+          eta1:'23:30', eta1Day:'TER', eta1Loc:'ARENA',
+          etd1:'01:30', etd1Day:'QUA', etd1Loc:'ARENA',
+          tt1:'1h30min',
+          eta2:'03:00', eta2Day:'QUA', eta2Loc:'BRASP1',
+          etd2:'05:00', etd2Day:'QUA', etd2Loc:'BRASP1', hasInfo:false },
+                { id:'v11', type:'Carreta', mode:'FTL', carrier:'—', attrs:[],
+          eta1:'23:30', eta1Day:'TER', eta1Loc:'ARENA',
+          etd1:'01:30', etd1Day:'QUA', etd1Loc:'ARENA',
+          tt1:'1h30min',
+          eta2:'03:00', eta2Day:'QUA', eta2Loc:'BRASP1',
+          etd2:'05:00', etd2Day:'QUA', etd2Loc:'BRASP1', hasInfo:false },
+                { id:'v12', type:'Carreta', mode:'FTL', carrier:'—', attrs:[],
+          eta1:'23:30', eta1Day:'TER', eta1Loc:'ARENA',
+          etd1:'01:30', etd1Day:'QUA', etd1Loc:'ARENA',
+          tt1:'1h30min',
+          eta2:'03:00', eta2Day:'QUA', eta2Loc:'BRASP1',
+          etd2:'05:00', etd2Day:'QUA', etd2Loc:'BRASP1', hasInfo:false },
+                { id:'v13', type:'Carreta', mode:'FTL', carrier:'—', attrs:[],
+          eta1:'23:30', eta1Day:'TER', eta1Loc:'ARENA',
+          etd1:'01:30', etd1Day:'QUA', etd1Loc:'ARENA',
+          tt1:'1h30min',
+          eta2:'03:00', eta2Day:'QUA', eta2Loc:'BRASP1',
+          etd2:'05:00', etd2Day:'QUA', etd2Loc:'BRASP1', hasInfo:false },
+                { id:'v14', type:'Carreta', mode:'FTL', carrier:'—', attrs:[],
+          eta1:'23:30', eta1Day:'TER', eta1Loc:'ARENA',
+          etd1:'01:30', etd1Day:'QUA', etd1Loc:'ARENA',
+          tt1:'1h30min',
+          eta2:'03:00', eta2Day:'QUA', eta2Loc:'BRASP1',
+          etd2:'05:00', etd2Day:'QUA', etd2Loc:'BRASP1', hasInfo:false }
+      ]},
+
+    { id:'ra3', code:'ARENA → BRASP1', cpt:'01:30', day:'Qui 04/30',
+      ftl:7, dfp:0, capTotal:178, capUsed:178, demand:178, lastWeek:109,
+      conf:'REVISAR', edited:true,
+      history:[
+        { label:'Edição de horário em ARENA', changes:['ETA origem: QUA 23:30 → QUI 01:30','Motivo: Restrição operacional'], who:'lucasperei', date:'30/04/2026' }
+      ],
+      metrics:{ demandBreakdown:{fast:140,flex:22,deferred:16}, lastWeekBreakdown:{fast:88,flex:14,deferred:7},
+        volumeVariation:[{l:'S1',v:109,c:88},{l:'S2',v:142,c:120},{l:'S3',v:178,c:158},{l:'S4',v:178,c:162}] },
+      vehicles:[
+                { id:'v15', type:'Toco', mode:'FTL', carrier:'—', attrs:[],
+          eta1:'23:30', eta1Day:'QUA', eta1Loc:'ARENA',
+          etd1:'01:30', etd1Day:'QUI', etd1Loc:'ARENA',
+          tt1:'1h30min',
+          eta2:'03:00', eta2Day:'QUI', eta2Loc:'BRASP1',
+          etd2:'05:00', etd2Day:'QUI', etd2Loc:'BRASP1', hasInfo:false },
+                { id:'v16', type:'Carreta', mode:'FTL', carrier:'—', attrs:[],
+          eta1:'23:30', eta1Day:'QUA', eta1Loc:'ARENA',
+          etd1:'01:30', etd1Day:'QUI', etd1Loc:'ARENA',
+          tt1:'1h30min',
+          eta2:'03:00', eta2Day:'QUI', eta2Loc:'BRASP1',
+          etd2:'05:00', etd2Day:'QUI', etd2Loc:'BRASP1', hasInfo:true },
+                { id:'v17', type:'Carreta', mode:'FTL', carrier:'—', attrs:[],
+          eta1:'23:30', eta1Day:'QUA', eta1Loc:'ARENA',
+          etd1:'01:30', etd1Day:'QUI', etd1Loc:'ARENA',
+          tt1:'1h30min',
+          eta2:'03:00', eta2Day:'QUI', eta2Loc:'BRASP1',
+          etd2:'05:00', etd2Day:'QUI', etd2Loc:'BRASP1', hasInfo:false },
+                { id:'v18', type:'Carreta', mode:'FTL', carrier:'—', attrs:[],
+          eta1:'23:30', eta1Day:'QUA', eta1Loc:'ARENA',
+          etd1:'01:30', etd1Day:'QUI', etd1Loc:'ARENA',
+          tt1:'1h30min',
+          eta2:'03:00', eta2Day:'QUI', eta2Loc:'BRASP1',
+          etd2:'05:00', etd2Day:'QUI', etd2Loc:'BRASP1', hasInfo:false },
+                { id:'v19', type:'Carreta', mode:'FTL', carrier:'—', attrs:[],
+          eta1:'23:30', eta1Day:'QUA', eta1Loc:'ARENA',
+          etd1:'01:30', etd1Day:'QUI', etd1Loc:'ARENA',
+          tt1:'1h30min',
+          eta2:'03:00', eta2Day:'QUI', eta2Loc:'BRASP1',
+          etd2:'05:00', etd2Day:'QUI', etd2Loc:'BRASP1', hasInfo:false },
+                { id:'v20', type:'Carreta', mode:'FTL', carrier:'—', attrs:[],
+          eta1:'23:30', eta1Day:'QUA', eta1Loc:'ARENA',
+          etd1:'01:30', etd1Day:'QUI', etd1Loc:'ARENA',
+          tt1:'1h30min',
+          eta2:'03:00', eta2Day:'QUI', eta2Loc:'BRASP1',
+          etd2:'05:00', etd2Day:'QUI', etd2Loc:'BRASP1', hasInfo:false },
+                { id:'v21', type:'Carreta', mode:'FTL', carrier:'—', attrs:[],
+          eta1:'23:30', eta1Day:'QUA', eta1Loc:'ARENA',
+          etd1:'01:30', etd1Day:'QUI', etd1Loc:'ARENA',
+          tt1:'1h30min',
+          eta2:'03:00', eta2Day:'QUI', eta2Loc:'BRASP1',
+          etd2:'05:00', etd2Day:'QUI', etd2Loc:'BRASP1', hasInfo:false }
+      ]},
+
+    { id:'ra4', code:'ARENA → BRASP1', cpt:'07:00', day:'Qui 04/30',
+      ftl:2, dfp:0, capTotal:56, capUsed:52, demand:52, lastWeek:43,
+      conf:'CONFIÁVEL', edited:false,
+      metrics:{ demandBreakdown:{fast:40,flex:8,deferred:4}, lastWeekBreakdown:{fast:34,flex:6,deferred:3},
+        volumeVariation:[{l:'S1',v:43,c:50},{l:'S2',v:48,c:44},{l:'S3',v:52,c:56},{l:'S4',v:52,c:48}] },
+      vehicles:[
+                { id:'v22', type:'Carreta', mode:'FTL', carrier:'—', attrs:[],
+          eta1:'05:00', eta1Day:'QUI', eta1Loc:'ARENA',
+          etd1:'07:00', etd1Day:'QUI', etd1Loc:'ARENA',
+          tt1:'1h30min',
+          eta2:'08:30', eta2Day:'QUI', eta2Loc:'BRASP1',
+          etd2:'10:30', etd2Day:'QUI', etd2Loc:'BRASP1', hasInfo:false },
+                { id:'v23', type:'Carreta', mode:'FTL', carrier:'—', attrs:[],
+          eta1:'05:00', eta1Day:'QUI', eta1Loc:'ARENA',
+          etd1:'07:00', etd1Day:'QUI', etd1Loc:'ARENA',
+          tt1:'1h30min',
+          eta2:'08:30', eta2Day:'QUI', eta2Loc:'BRASP1',
+          etd2:'10:30', etd2Day:'QUI', etd2Loc:'BRASP1', hasInfo:false }
+      ]},
+
+    /* ── BRBA01 → BRABA1 ─────────────────────────────────────────────── */
+    { id:'ra5', code:'BRBA01 → BRABA1', cpt:'03:00', day:'Seg 04/27',
+      ftl:1, dfp:0, capTotal:28, capUsed:22, demand:22, lastWeek:5,
+      conf:'CONFIÁVEL', edited:false,
+      metrics:{ demandBreakdown:{fast:18,flex:2,deferred:2}, lastWeekBreakdown:{fast:4,flex:1,deferred:0},
+        volumeVariation:null },
+      vehicles:[
+                { id:'v24', type:'Carreta', mode:'FTL', carrier:'—', attrs:[],
+          eta1:'01:00', eta1Day:'SEG', eta1Loc:'BRBA01',
+          etd1:'03:00', etd1Day:'SEG', etd1Loc:'BRBA01',
+          tt1:'1h',
+          eta2:'04:00', eta2Day:'SEG', eta2Loc:'BRABA1',
+          etd2:'06:00', etd2Day:'SEG', etd2Loc:'BRABA1', hasInfo:false }
+      ]},
+
+    { id:'ra6', code:'BRBA01 → BRABA1', cpt:'20:00', day:'Seg 04/27',
+      ftl:2, dfp:0, capTotal:32, capUsed:31, demand:31, lastWeek:31,
+      conf:'REVISAR', edited:false,
+      metrics:{ demandBreakdown:{fast:24,flex:4,deferred:3}, lastWeekBreakdown:{fast:24,flex:5,deferred:2},
+        volumeVariation:[{l:'S1',v:28,c:31},{l:'S2',v:31,c:29},{l:'S3',v:31,c:32},{l:'S4',v:31,c:30}] },
+      vehicles:[
+                { id:'v25', type:'Truck', mode:'FTL', carrier:'—', attrs:[],
+          eta1:'18:00', eta1Day:'SEG', eta1Loc:'BRBA01',
+          etd1:'20:00', etd1Day:'SEG', etd1Loc:'BRBA01',
+          tt1:'1h',
+          eta2:'21:00', eta2Day:'SEG', eta2Loc:'BRABA1',
+          etd2:'23:00', etd2Day:'SEG', etd2Loc:'BRABA1', hasInfo:false },
+                { id:'v26', type:'Truck', mode:'FTL', carrier:'—', attrs:[],
+          eta1:'18:00', eta1Day:'SEG', eta1Loc:'BRBA01',
+          etd1:'20:00', etd1Day:'SEG', etd1Loc:'BRBA01',
+          tt1:'1h',
+          eta2:'21:00', eta2Day:'SEG', eta2Loc:'BRABA1',
+          etd2:'23:00', etd2Day:'SEG', etd2Loc:'BRABA1', hasInfo:false }
+      ]},
+
+    { id:'ra7', code:'BRBA01 → BRABA1', cpt:'03:00', day:'Ter 04/28',
+      ftl:1, dfp:0, capTotal:28, capUsed:23, demand:23, lastWeek:5,
+      conf:'REVISAR', edited:false,
+      metrics:{ demandBreakdown:{fast:18,flex:3,deferred:2}, lastWeekBreakdown:{fast:4,flex:1,deferred:0},
+        volumeVariation:null },
+      vehicles:[
+                { id:'v27', type:'Carreta', mode:'FTL', carrier:'—', attrs:[],
+          eta1:'01:00', eta1Day:'TER', eta1Loc:'BRBA01',
+          etd1:'03:00', etd1Day:'TER', etd1Loc:'BRBA01',
+          tt1:'1h',
+          eta2:'04:00', eta2Day:'TER', eta2Loc:'BRABA1',
+          etd2:'06:00', etd2Day:'TER', etd2Loc:'BRABA1', hasInfo:false }
+      ]},
+
+    { id:'ra8', code:'BRBA01 → BRABA1', cpt:'20:00', day:'Ter 04/28',
+      ftl:2, dfp:0, capTotal:32, capUsed:32, demand:32, lastWeek:44,
+      conf:'REVISAR', edited:false,
+      metrics:{ demandBreakdown:{fast:25,flex:4,deferred:3}, lastWeekBreakdown:{fast:36,flex:5,deferred:3},
+        volumeVariation:[{l:'S1',v:44,c:31},{l:'S2',v:38,c:32},{l:'S3',v:32,c:34},{l:'S4',v:32,c:33}] },
+      vehicles:[
+                { id:'v28', type:'Truck', mode:'FTL', carrier:'—', attrs:[],
+          eta1:'18:00', eta1Day:'TER', eta1Loc:'BRBA01',
+          etd1:'20:00', etd1Day:'TER', etd1Loc:'BRBA01',
+          tt1:'1h',
+          eta2:'21:00', eta2Day:'TER', eta2Loc:'BRABA1',
+          etd2:'23:00', etd2Day:'TER', etd2Loc:'BRABA1', hasInfo:false },
+                { id:'v29', type:'Truck', mode:'FTL', carrier:'—', attrs:[],
+          eta1:'18:00', eta1Day:'TER', eta1Loc:'BRBA01',
+          etd1:'20:00', etd1Day:'TER', etd1Loc:'BRBA01',
+          tt1:'1h',
+          eta2:'21:00', eta2Day:'TER', eta2Loc:'BRABA1',
+          etd2:'23:00', etd2Day:'TER', etd2Loc:'BRABA1', hasInfo:false }
+      ]},
+
+    /* ── BRXSP9 → SAL1 ───────────────────────────────────────────────── */
+    { id:'ra9', code:'BRXSP9 → SAL1', cpt:'10:00', day:'Seg 04/27',
+      ftl:2, dfp:1, capTotal:76, capUsed:56, demand:38, lastWeek:52,
+      conf:'CONFIÁVEL', edited:true,
+      history:[
+        { label:'Edição de veículo', changes:['Toco para Carreta','Motivo: XPTO'], who:'lucasperei', date:'27/04/2026' },
+        { label:'Edição de horário em BRXSP9', changes:['ETA: 08:00 para 09:00','ETD: 09:00 para 10:00','TT: 1h30 para 2h','Motivo: Ajuste de janela de carga'], who:'lucasperei', date:'27/04/2026' }
+      ],
+      metrics:{ demandBreakdown:{fast:28,flex:6,deferred:4}, lastWeekBreakdown:{fast:40,flex:8,deferred:4},
+        volumeVariation:[{l:'S1',v:48,c:52},{l:'S2',v:50,c:48},{l:'S3',v:52,c:54},{l:'S4',v:56,c:50}] },
+      vehicles:[
+                { id:'v30', type:'Carreta', mode:'FTL', carrier:'Jomed', attrs:["ETD","PAL"],
+          eta1:'09:00', eta1Day:'SEG', eta1Loc:'BRXSP9',
+          etd1:'10:30', etd1Day:'SEG', etd1Loc:'BRXSP9',
+          tt1:'1h30min',
+          eta2:'12:00', eta2Day:'SEG', eta2Loc:'SAL1',
+          etd2:'13:30', etd2Day:'SEG', etd2Loc:'SAL1', hasInfo:true },
+                { id:'v31', type:'Carreta', mode:'FTL', carrier:'Maroni', attrs:["PAL"],
+          eta1:'09:00', eta1Day:'SEG', eta1Loc:'BRXSP9',
+          etd1:'10:30', etd1Day:'SEG', etd1Loc:'BRXSP9',
+          tt1:'1h30min',
+          eta2:'12:00', eta2Day:'SEG', eta2Loc:'SAL1',
+          etd2:'13:30', etd2Day:'SEG', etd2Loc:'SAL1', hasInfo:false },
+                { id:'v32', type:'Carreta', mode:'DFP', carrier:'FazendaSJT', attrs:["ETD"],
+          eta1:'09:00', eta1Day:'SEG', eta1Loc:'BRXSP9',
+          etd1:'10:30', etd1Day:'SEG', etd1Loc:'BRXSP9',
+          tt1:'1h',
+          eta2:'12:00', eta2Day:'SEG', eta2Loc:'SAL1',
+          etd2:'13:30', etd2Day:'SEG', etd2Loc:'SAL1', hasInfo:false, noChk:true }
+      ]}
   ],
+
   reviewed: [
-    { id:'r6', code:'BRCWB → BRMG01', cpt:'08:00', day:'Mié 30/01', ftl:2, dfp:0,
-      capTotal:90, capUsed:82, demand:78, lastWeek:75, conf:'CONFIÁVEL', edited:true,
+    { id:'rr1', code:'BRXSP9 → SAL1', cpt:'07:00', day:'Ter 04/28',
+      ftl:2, dfp:0, capTotal:56, capUsed:48, demand:44, lastWeek:50,
+      conf:'CONFIÁVEL', edited:false,
+      metrics:{ demandBreakdown:{fast:34,flex:6,deferred:4}, lastWeekBreakdown:{fast:40,flex:6,deferred:4},
+        volumeVariation:[{l:'S1',v:50,c:48},{l:'S2',v:44,c:52},{l:'S3',v:48,c:46},{l:'S4',v:44,c:50}] },
       vehicles:[
-        { id:'v6', type:'Bitrem', mode:'FTL', carrier:'OCA', attrs:['CPT'],
-          eta1:'06:00', eta1Day:'MIE', eta1Loc:'BRCWB',
-          etd1:'07:00', etd1Day:'MIE', etd1Loc:'BRCWB',
-          tt1:'1h',
-          eta2:'14:00', eta2Day:'MIE', eta2Loc:'BRMG01',
-          etd2:'15:00', etd2Day:'MIE', etd2Loc:'BRMG01', hasInfo:false }
+                { id:'v33', type:'Carreta', mode:'FTL', carrier:'Jomed', attrs:["ETD","PAL"],
+          eta1:'05:00', eta1Day:'TER', eta1Loc:'BRXSP9',
+          etd1:'07:00', etd1Day:'TER', etd1Loc:'BRXSP9',
+          tt1:'1h30min',
+          eta2:'08:30', eta2Day:'TER', eta2Loc:'SAL1',
+          etd2:'10:30', etd2Day:'TER', etd2Loc:'SAL1', hasInfo:false },
+                { id:'v34', type:'Toco', mode:'FTL', carrier:'Maroni', attrs:["PAL"],
+          eta1:'05:00', eta1Day:'TER', eta1Loc:'BRXSP9',
+          etd1:'07:00', etd1Day:'TER', etd1Loc:'BRXSP9',
+          tt1:'1h30min',
+          eta2:'08:30', eta2Day:'TER', eta2Loc:'SAL1',
+          etd2:'10:30', etd2Day:'TER', etd2Loc:'SAL1', hasInfo:false }
       ]},
-    { id:'r7', code:'BRSP01 → BRSBO', cpt:'10:00', day:'Jue 31/01', ftl:1, dfp:2,
-      capTotal:60, capUsed:54, demand:50, lastWeek:48, conf:'CONFIÁVEL', edited:false, vehicles:[] },
-    { id:'r8', code:'BRRJ01 → BRMG01', cpt:'13:00', day:'Sáb 02/02', ftl:3, dfp:0,
-      capTotal:180, capUsed:165, demand:160, lastWeek:155, conf:'REVISAR', edited:false, vehicles:[] },
+
+    { id:'rr2', code:'BRBA01 → BRABA1', cpt:'03:00', day:'Qua 04/29',
+      ftl:2, dfp:1, capTotal:48, capUsed:44, demand:55, lastWeek:38,
+      conf:'REVISAR', edited:false,
+      metrics:{ demandBreakdown:{fast:42,flex:8,deferred:5}, lastWeekBreakdown:{fast:30,flex:5,deferred:3},
+        volumeVariation:null },
+      vehicles:[
+                { id:'v35', type:'Carreta', mode:'FTL', carrier:'—', attrs:[],
+          eta1:'01:00', eta1Day:'QUA', eta1Loc:'BRBA01',
+          etd1:'03:00', etd1Day:'QUA', etd1Loc:'BRBA01',
+          tt1:'1h',
+          eta2:'04:00', eta2Day:'QUA', eta2Loc:'BRABA1',
+          etd2:'06:00', etd2Day:'QUA', etd2Loc:'BRABA1', hasInfo:false },
+                { id:'v36', type:'Truck', mode:'FTL', carrier:'—', attrs:[],
+          eta1:'01:00', eta1Day:'QUA', eta1Loc:'BRBA01',
+          etd1:'03:00', etd1Day:'QUA', etd1Loc:'BRBA01',
+          tt1:'1h',
+          eta2:'04:00', eta2Day:'QUA', eta2Loc:'BRABA1',
+          etd2:'06:00', etd2Day:'QUA', etd2Loc:'BRABA1', hasInfo:false },
+                { id:'v37', type:'Carreta', mode:'DFP', carrier:'—', attrs:[],
+          eta1:'01:00', eta1Day:'QUA', eta1Loc:'BRBA01',
+          etd1:'03:00', etd1Day:'QUA', etd1Loc:'BRBA01',
+          tt1:'1h',
+          eta2:'04:00', eta2Day:'QUA', eta2Loc:'BRABA1',
+          etd2:'06:00', etd2Day:'QUA', etd2Loc:'BRABA1', hasInfo:false, noChk:true }
+      ]}
   ],
+
   sent: [
-    { id:'r9', code:'BRMG01 → BRPOA', cpt:'07:00', day:'Jue 31/01', ftl:2, dfp:1,
-      capTotal:120, capUsed:115, demand:110, lastWeek:102, conf:'CONFIÁVEL', edited:false,
+    { id:'rs1', code:'BRXSP9 → SAL1', cpt:'10:00', day:'Seg 04/27',
+      ftl:2, dfp:0, capTotal:56, capUsed:52, demand:48, lastWeek:54,
+      conf:'CONFIÁVEL', edited:false,
       travelId:'TRV-2026-00142',
+      metrics:{ demandBreakdown:{fast:38,flex:6,deferred:4}, lastWeekBreakdown:{fast:42,flex:8,deferred:4},
+        volumeVariation:[{l:'S1',v:54,c:50},{l:'S2',v:48,c:54},{l:'S3',v:52,c:48},{l:'S4',v:52,c:56}] },
       vehicles:[
-        { id:'v7', type:'Bitrem', mode:'FTL', carrier:'OCA', attrs:['CPT'],
-          eta1:'05:00', eta1Day:'JUE', eta1Loc:'BRMG01',
-          etd1:'06:00', etd1Day:'JUE', etd1Loc:'BRMG01',
-          tt1:'1h',
-          eta2:'13:00', eta2Day:'JUE', eta2Loc:'BRPOA',
-          etd2:'14:00', etd2Day:'JUE', etd2Loc:'BRPOA', hasInfo:false }
+                { id:'v38', type:'Carreta', mode:'FTL', carrier:'Jomed', attrs:["ETD","PAL"],
+          eta1:'08:00', eta1Day:'SEG', eta1Loc:'BRXSP9',
+          etd1:'10:00', etd1Day:'SEG', etd1Loc:'BRXSP9',
+          tt1:'1h30min',
+          eta2:'11:30', eta2Day:'SEG', eta2Loc:'SAL1',
+          etd2:'13:00', etd2Day:'SEG', etd2Loc:'SAL1', hasInfo:false },
+                { id:'v39', type:'Toco', mode:'FTL', carrier:'Maroni', attrs:["PAL"],
+          eta1:'08:00', eta1Day:'SEG', eta1Loc:'BRXSP9',
+          etd1:'10:00', etd1Day:'SEG', etd1Loc:'BRXSP9',
+          tt1:'1h30min',
+          eta2:'11:30', eta2Day:'SEG', eta2Loc:'SAL1',
+          etd2:'13:00', etd2Day:'SEG', etd2Loc:'SAL1', hasInfo:false }
       ]},
-    { id:'r10', code:'BRSP01 → BRRJ01', cpt:'09:00', day:'Vie 01/02', ftl:1, dfp:1,
-      capTotal:90, capUsed:85, demand:80, lastWeek:75, conf:'CONFIÁVEL', edited:true,
-      travelId:'TRV-2026-00143', vehicles:[] },
-    { id:'r11', code:'BRSBO → BRRJ01', cpt:'14:00', day:'Sáb 02/02', ftl:3, dfp:1,
-      capTotal:180, capUsed:170, demand:162, lastWeek:155, conf:'CONFIÁVEL', edited:false,
-      travelId:'TRV-2026-00144', vehicles:[] },
-    { id:'r12', code:'BRCWB → BRSP01', cpt:'11:00', day:'Lun 03/02', ftl:2, dfp:2,
-      capTotal:150, capUsed:140, demand:135, lastWeek:128, conf:'CONFIÁVEL', edited:false,
-      travelId:null, vehicles:[] },
+
+    { id:'rs2', code:'ARENA → BRASP1', cpt:'07:00', day:'Seg 04/27',
+      ftl:3, dfp:0, capTotal:48, capUsed:45, demand:42, lastWeek:40,
+      conf:'CONFIÁVEL', edited:false,
+      travelId:'TRV-2026-00143',
+      metrics:{ demandBreakdown:{fast:32,flex:6,deferred:4}, lastWeekBreakdown:{fast:30,flex:6,deferred:4},
+        volumeVariation:null },
+      vehicles:[
+                { id:'v40', type:'Carreta', mode:'FTL', carrier:'—', attrs:[],
+          eta1:'05:00', eta1Day:'SEG', eta1Loc:'ARENA',
+          etd1:'07:00', etd1Day:'SEG', etd1Loc:'ARENA',
+          tt1:'1h30min',
+          eta2:'08:30', eta2Day:'SEG', eta2Loc:'BRASP1',
+          etd2:'10:30', etd2Day:'SEG', etd2Loc:'BRASP1', hasInfo:false },
+                { id:'v41', type:'Carreta', mode:'FTL', carrier:'—', attrs:[],
+          eta1:'05:00', eta1Day:'SEG', eta1Loc:'ARENA',
+          etd1:'07:00', etd1Day:'SEG', etd1Loc:'ARENA',
+          tt1:'1h30min',
+          eta2:'08:30', eta2Day:'SEG', eta2Loc:'BRASP1',
+          etd2:'10:30', etd2Day:'SEG', etd2Loc:'BRASP1', hasInfo:false },
+                { id:'v42', type:'Medio', mode:'FTL', carrier:'—', attrs:[],
+          eta1:'05:00', eta1Day:'SEG', eta1Loc:'ARENA',
+          etd1:'07:00', etd1Day:'SEG', etd1Loc:'ARENA',
+          tt1:'1h30min',
+          eta2:'08:30', eta2Day:'SEG', eta2Loc:'BRASP1',
+          etd2:'10:30', etd2Day:'SEG', etd2Loc:'BRASP1', hasInfo:false }
+      ]}
   ]
 };
+
 
 /* Snapshot imutável do estado original — fonte de verdade para reversão */
 const ORIGINAL_DATA = JSON.parse(JSON.stringify(DATA));
@@ -2293,7 +2590,13 @@ function addVehicleToRoute(routeId, vehicleType, reason) {
   delete newVeh.noChk;      // não é DFP
   delete newVeh.hasInfo;    // não herda marcador de editado
 
-  route.vehicles.push(newVeh);
+  // Insere antes do primeiro DFP (noChk:true); sem DFP → vai ao final
+  const firstDfpIdx = route.vehicles.findIndex(v => v.noChk);
+  if (firstDfpIdx >= 0) {
+    route.vehicles.splice(firstDfpIdx, 0, newVeh);
+  } else {
+    route.vehicles.push(newVeh);
+  }
   route.edited = true;
   // Garante que a rota está expandida para o usuário ver o veículo
   expanded.add(routeId);
@@ -2932,12 +3235,49 @@ document.addEventListener('keydown', e => {
 });
 
 /* ═══════════════════════════════════
-   INIT — estado inicial: A revisar, r1 e r2 expandidas
+   INIT — estado inicial: A revisar, primeiras rotas expandidas
 ═══════════════════════════════════ */
-expanded.add('r1');
-expanded.add('r2');
+
+/* Deriva contagens reais dos cards a partir do DATA */
+function updateMetricsCards() {
+  ['pending','reviewed','sent'].forEach(tab => {
+    const tab2suffix = { pending:'pending', reviewed:'reviewed', sent:'sent' };
+    const routes = DATA[tab];
+    const allVeh = routes.flatMap(r => r.vehicles || []);
+    const suffix = tab2suffix[tab];
+    const rEl = document.getElementById('mv-r-'+suffix);
+    const vEl = document.getElementById('mv-v-'+suffix);
+    if (rEl) rEl.innerHTML = routes.length + ' <span>de 100</span>';
+    if (vEl) vEl.innerHTML = allVeh.length + ' <span>de 350</span>';
+    const mcEl = document.getElementById('mc-'+suffix);
+    if (mcEl) {
+      const ftlEl = mcEl.querySelector('.mc-ftl');
+      if (ftlEl) {
+        const nFTL = allVeh.filter(v => !v.noChk).length;
+        const nDFP = allVeh.filter(v =>  v.noChk).length;
+        ftlEl.innerHTML = '<span>FTL <b>'+nFTL+'</b></span><span>DFP <b>'+nDFP+'</b></span>';
+      }
+    }
+  });
+}
+
+updateMetricsCards();
+DATA.pending.slice(0,2).forEach(r => expanded.add(r.id));
 render();
 syncBulk();
+
+/* Sticky sentinel: ativa sombra quando a barra cola na topbar */
+(function() {
+  const wrapper = document.getElementById('bulk-wrapper');
+  if (!wrapper || !window.IntersectionObserver) return;
+  // Sentinel invisível posicionado logo acima da barra
+  const sentinel = document.createElement('div');
+  sentinel.style.cssText = 'position:absolute;height:1px;width:100%;pointer-events:none';
+  wrapper.parentNode.insertBefore(sentinel, wrapper);
+  new IntersectionObserver(([entry]) => {
+    wrapper.classList.toggle('is-stuck', !entry.isIntersecting);
+  }, { rootMargin: '-' + getComputedStyle(document.documentElement).getPropertyValue('--hdr-h').trim() + ' 0px 0px 0px', threshold: 0 }).observe(sentinel);
+})();
 </script>
 </body>
 </html>
