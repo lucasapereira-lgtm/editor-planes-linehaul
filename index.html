@@ -257,6 +257,11 @@ body{font-family:var(--font);background:var(--bg);color:var(--g800);font-size:14
   transition:border-color .12s,background .12s;gap:5px}
 .editable-cell:hover{background:#FAFAFA;border-color:#E0E0E0}
 .editable-cell.active{border-color:var(--blue)!important;background:#EEF6FF!important}
+/* Borda azul na célula pai quando editor inline está aberto */
+.vc-cell-editing{
+  outline:2px solid var(--blue);
+  outline-offset:-1px;
+  position:relative;z-index:1}
 .editable-cell .ed-arr{font-size:9px;color:var(--g300);opacity:0;
   transition:opacity .12s;margin-left:2px}
 .editable-cell:hover .ed-arr{opacity:1}
@@ -811,8 +816,7 @@ input[type=checkbox]{width:15px;height:15px;cursor:pointer;accent-color:var(--bl
 <!-- A bulk bar está integrada na .sel-bar / #bulk-wrapper abaixo das métricas -->
 
 <!-- ═══ EDITOR: VEÍCULO ══════════════════════════════════════════════════ -->
-<div class="cell-editor" id="ed-vehicle">
-  <div class="ed-title">Alterar tipo de veículo</div>
+<div class="cell-editor" id="ed-vehicle" role="dialog" aria-label="Editar tipo de veículo">
   <div class="ed-field">
     <label class="ed-label">Tipo de veículo</label>
     <select class="ed-select" id="ev-type" onchange="checkEditorValid('vehicle')">
@@ -842,8 +846,7 @@ input[type=checkbox]{width:15px;height:15px;cursor:pointer;accent-color:var(--bl
 </div>
 
 <!-- ═══ EDITOR: TRANSPORTADORA ══════════════════════════════════════════ -->
-<div class="cell-editor" id="ed-carrier">
-  <div class="ed-title">Alterar transportadora</div>
+<div class="cell-editor" id="ed-carrier" role="dialog" aria-label="Editar transportadora">
   <div class="ed-field">
     <label class="ed-label">Transportadora</label>
     <select class="ed-select" id="ec-carrier" onchange="checkEditorValid('carrier')">
@@ -873,8 +876,7 @@ input[type=checkbox]{width:15px;height:15px;cursor:pointer;accent-color:var(--bl
 </div>
 
 <!-- ═══ EDITOR: ETA ══════════════════════════════════════════════════════ -->
-<div class="cell-editor" id="ed-eta">
-  <div class="ed-title" id="eta-title">Editar ETA</div>
+<div class="cell-editor" id="ed-eta" role="dialog" id="eta-label-el" aria-label="Editar ETA/ETD">
   <div class="ed-field">
     <label class="ed-label">Data</label>
     <select class="ed-select" id="eta-day" onchange="checkEditorValid('eta')">
@@ -900,8 +902,7 @@ input[type=checkbox]{width:15px;height:15px;cursor:pointer;accent-color:var(--bl
 </div>
 
 <!-- ═══ EDITOR: TT ═══════════════════════════════════════════════════════ -->
-<div class="cell-editor" id="ed-tt" style="width:280px">
-  <div class="ed-title">Editar TT</div>
+<div class="cell-editor" id="ed-tt" role="dialog" aria-label="Editar tempo de trânsito">
   <div class="ed-field">
     <label class="ed-label">Tempo de trânsito</label>
     <select class="ed-select" id="tt-value" onchange="checkEditorValid('tt')">
@@ -2025,9 +2026,10 @@ function renderVehicleRow(v, route, editable) {
        </div>`
     : `<div>${timeCell(t, day, loc)}</div>`;
 
+  // TT sem chevron — mesmo padrão visual de ETA/ETD
   const ttEditCell = canEdit
     ? `<div class="editable-cell" onclick="openTTEditor(event,'${v.id}','${v.tt1}')">
-         <span class="vt-tt">${v.tt1}</span><span class="ed-arr">▾</span>
+         <span class="vt-tt">${v.tt1}</span>
        </div>`
     : `<span class="vt-tt">${v.tt1}</span>`;
 
@@ -2258,6 +2260,7 @@ const EDITORS = ['ed-vehicle','ed-carrier','ed-eta','ed-tt','ed-attrs'];
 function closeAllEditors() {
   EDITORS.forEach(id => { const el = document.getElementById(id); if(el) el.classList.remove('vis'); });
   document.querySelectorAll('.editable-cell.active').forEach(c => c.classList.remove('active'));
+  document.querySelectorAll('.vc-cell-editing').forEach(c => c.classList.remove('vc-cell-editing'));
   currentEditVId = null; currentEditField = '';
 }
 function positionEditor(editorId, triggerEl) {
@@ -2278,6 +2281,7 @@ function openVehicleEditor(event, vid, currentType) {
   event.stopPropagation(); closeAllEditors();
   currentEditVId = vid; currentEditFrom = currentType; currentEditField = 'vehicle';
   event.currentTarget.classList.add('active');
+  event.currentTarget.parentElement?.classList.add('vc-cell-editing');
   document.getElementById('ev-type').innerHTML =
     `<option value="${currentType}">${currentType} (actual)</option>
      <option value="">— seleccionar —</option>
@@ -2301,7 +2305,9 @@ function checkEditorValid(type) {
   } else if (type==='eta') {
     document.getElementById('eta-apply').disabled = false;
   } else if (type==='tt') {
-    document.getElementById('tt-apply').disabled = false;
+    // Só habilita se o valor mudou em relação ao original
+    const newVal = document.getElementById('tt-value').value;
+    document.getElementById('tt-apply').disabled = !newVal || newVal === currentEditFrom;
   }
 }
 function addHistory(routeId, entry) {
@@ -2334,6 +2340,7 @@ function openCarrierEditor(event, vid, currentCarrier) {
   event.stopPropagation(); closeAllEditors();
   currentEditVId = vid; currentEditFrom = currentCarrier;
   event.currentTarget.classList.add('active');
+  event.currentTarget.parentElement?.classList.add('vc-cell-editing');
   document.getElementById('ec-carrier').innerHTML =
     `<option value="${currentCarrier}">${currentCarrier} (actual)</option>
      <option value="">— seleccionar —</option>
@@ -2364,6 +2371,7 @@ function applyCarrierEdit() {
 function openAttrsEditor(event, vid) {
   event.stopPropagation(); closeAllEditors();
   currentEditVId = vid; event.currentTarget.classList.add('active');
+  event.currentTarget.parentElement?.classList.add('vc-cell-editing');
   const v = Object.values(DATA).flat().flatMap(r => r.vehicles||[]).find(vv => vv.id===vid);
   const cur = v?.attrs || [];
   document.getElementById('ed-attrs').querySelectorAll('input').forEach(cb => { cb.checked = cur.includes(cb.value); });
@@ -2384,7 +2392,8 @@ function applyAttrChange() {
 function openETAEditor(event, vid, field, currentTime, currentDay) {
   event.stopPropagation(); closeAllEditors();
   currentEditVId = vid; currentEditField = field; event.currentTarget.classList.add('active');
-  document.getElementById('eta-title').textContent = field.startsWith('eta') ? 'Editar ETA' : 'Editar ETD';
+  event.currentTarget.parentElement?.classList.add('vc-cell-editing');
+  // title element removed from inline editor (borda azul na célula indica contexto)
   document.getElementById('eta-day').value = currentDay;
   document.getElementById('eta-hour').value = currentTime;
   document.getElementById('eta-apply').disabled = true;
@@ -2418,6 +2427,7 @@ function applyTimeEdit() {
 function openTTEditor(event, vid, currentTT) {
   event.stopPropagation(); closeAllEditors();
   currentEditVId = vid; event.currentTarget.classList.add('active');
+  event.currentTarget.parentElement?.classList.add('vc-cell-editing');
   document.getElementById('tt-value').value = currentTT;
   document.getElementById('tt-apply').disabled = true;
   const ed = document.getElementById('ed-tt'); ed.classList.add('vis');
@@ -2428,7 +2438,12 @@ function applyTTEdit() {
   const allRoutes = Object.values(DATA).flat();
   for (const r of allRoutes) {
     const v = r.vehicles?.find(vv => vv.id === currentEditVId);
-    if (v) { v.tt1 = val; r.edited = true; break; }
+    if (v) {
+      const oldVal = v.tt1;
+      v.tt1 = val; r.edited = true;
+      addHistory(r.id, { label:'Edição de tempo de trânsito', changes:[`Tempo de trânsito: ${oldVal} para ${val}`] });
+      break;
+    }
   }
   closeAllEditors(); render(); showToast('Tempo de trânsito atualizado', 'success');
 }
